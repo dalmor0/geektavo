@@ -1,0 +1,1486 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Geektavo</title><link rel="icon" href="identidade/avatar.jpg"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;900&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  /* Lente 3D (GEEKTAVO/identidade-visual/05-CORES-E-FONTES.md): azul noite, lente ciano
+     (herói), lente vermelha (espelho). Sem amarelo nem dourado. A marca é escura: azul
+     noite é o padrão em qualquer sistema; data-theme="light" tem a versão giz. */
+  --noite:#07122B; --fundo2:#0E2148; --fundo3:#16305F; --ciano:#00C8FF; --verm:#FF2A4D; --giz:#EEF6FF; --cinza:#8FA0C2;
+  --ground:var(--noite); --surface:var(--fundo2); --ink:var(--giz); --muted:var(--cinza); --line:var(--fundo3);
+  --marker:var(--ciano); --marker-ink:var(--noite); --accent:var(--ciano); --espelho:var(--verm);
+  --good:#00C8FF; --good-bg:#0B2C4A; --warn:#FF8FA3; --warn-bg:#2A1733; --bad:#FF4F6D; --bad-bg:#3A0F22;
+  --ig:#F06BB0; --tt:#EEF6FF; --yt:#FF5A6A;
+  --display:"Unbounded","Arial Black",sans-serif;
+  --body:"Space Mono",ui-monospace,Menlo,monospace;
+  --mono:"Space Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ color-scheme:dark; }
+}
+:root[data-theme="dark"]{ color-scheme:dark; }
+:root[data-theme="light"]{
+  --ground:#EEF6FF; --surface:#FFFFFF; --ink:#07122B; --muted:#4A5A7A; --line:#C9D6EA;
+  --marker:#0086B3; --marker-ink:#FFFFFF; --accent:#006C91; --espelho:#D6163A;
+  --good:#006C91; --good-bg:#DDF3FB; --warn:#A3163A; --warn-bg:#FBE3EA; --bad:#C0112F; --bad-bg:#FCE1E6;
+  --ig:#C13584; --tt:#111111; --yt:#D0021B;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:15px/1.6 var(--body);margin:0}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:24px 56px;display:grid;gap:28px}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:14px 20px;position:relative;
+  margin-inline:-16px;padding:28px 16px 18px;overflow:hidden;border-bottom:1px solid var(--line)}
+/* a arte do banner (quadrinho) atrás do logo, escurecida pra o texto ler */
+header .hero{position:absolute;inset:0;background:url("banner.jpg") center 42%/cover no-repeat;z-index:0}
+header .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,18,43,.35) 0%,rgba(7,18,43,.62) 55%,var(--ground) 100%)}
+header>*:not(.hero){position:relative;z-index:1}
+/* o logo G[EE]KTAVO: os dois E viram as lentes 3D (vermelha e ciano) */
+.logo{font:900 clamp(38px,9.5vw,76px)/1 var(--display);letter-spacing:-.01em;margin:0;color:#EEF6FF;display:flex;align-items:center;gap:.03em;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+.logo .lente{display:inline-grid;width:1.02em;height:.98em;background:#EEF6FF;clip-path:polygon(0 0,100% 0,90% 100%,12% 100%);margin:0 .02em;font-style:normal}
+.logo .lente.c{clip-path:polygon(0 0,100% 0,88% 100%,10% 100%)}
+.logo .lente b{display:grid;place-items:center;margin:.07em;clip-path:inherit;background:var(--verm);color:var(--noite);font-size:.8em;font-weight:900}
+.logo .lente.c b{background:var(--ciano)}
+.logo small{font:700 12px var(--mono);letter-spacing:.08em;background:var(--ciano);color:var(--noite);padding:2px 8px;margin-left:12px;align-self:center;text-shadow:none}
+.bordao{margin:10px 0 0;font:500 clamp(12px,2.6vw,17px)/1.35 var(--display);color:#EEF6FF;letter-spacing:.01em}
+.bordao b{color:var(--ciano);font-weight:500}
+header .sub{color:#B8C4DC}
+
+.sub{color:var(--muted);margin:6px 0 0;font-size:15px}
+.controles{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select,button{font:700 13px var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:8px 12px;cursor:pointer}
+button:hover,select:hover{border-color:var(--ciano);color:var(--ciano)}
+
+.aviso{border-radius:2px;padding:12px 14px;font-size:15px;display:grid;gap:4px}
+.aviso.erro{background:var(--bad-bg);color:var(--bad)}
+.aviso.info{background:var(--warn-bg);color:var(--warn)}
+.aviso code{font-family:var(--mono);font-size:13px;word-break:break-all;color:var(--ink)}
+
+.contas{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px}
+.conta{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:14px 16px;display:grid;gap:2px;border-left:4px solid var(--ciano)}
+.conta .rede{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.conta .rede i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.conta .valor{font:900 28px/1.2 var(--display);font-variant-numeric:tabular-nums}
+.conta .det{color:var(--muted);font-size:14px}
+.delta.up{color:var(--good)} .delta.down{color:var(--bad)}
+
+h2{font:900 clamp(19px,3.4vw,26px)/1.2 var(--display);letter-spacing:-.005em;margin:0 0 12px;text-wrap:balance}
+h2 small{font:400 12.5px var(--body);text-transform:none;letter-spacing:0;color:var(--muted);margin-left:8px}
+h2 .pincel{display:inline-block;background:#040308;color:#EEF6FF;padding:.16em .5em .2em .55em;
+  clip-path:polygon(0 6%,3% 0,40% 3%,72% 0,100% 4%,99% 55%,100% 96%,62% 100%,30% 97%,2% 100%,0 60%);position:relative;margin-right:4px}
+h2 .pincel::before{content:"";position:absolute;left:0;top:14%;bottom:14%;width:5px;background:var(--verm)}
+
+.leitura p{margin:0 0 8px;max-width:68ch}
+.leitura p:last-child{margin-bottom:0}
+
+.pautas{display:grid;gap:12px}
+.pauta{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:16px 18px;display:grid;gap:10px;border-left:4px solid var(--ciano)}
+.pauta .log{font-size:19px;font-weight:700;line-height:1.35;margin:0;text-wrap:pretty}
+.pauta .gancho{margin:0;color:var(--ink)}
+.pauta .gancho b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:6px}
+.pauta .porque{margin:0;color:var(--muted);font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12.5px;font-weight:700;padding:3px 9px;border-radius:2px;border:1px solid var(--line);color:var(--muted)}
+.chip.alta{background:var(--good-bg);color:var(--good);border-color:transparent}
+.chip.confirmar{background:var(--warn-bg);color:var(--warn);border-color:transparent}
+.chip.modo{background:var(--ciano);color:var(--noite);border-color:transparent;letter-spacing:.04em;text-transform:uppercase;font-size:11.5px}
+
+.tabela{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:2px}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:14.5px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+td.n,th.n{text-align:right}
+tr:last-child td{border-bottom:0}
+.pl{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;border:1px solid currentColor;white-space:nowrap}
+.pl.instagram{color:var(--ig)} .pl.tiktok{color:var(--tt)} .pl.youtube{color:var(--yt)}
+.bar{display:inline-block;height:6px;border-radius:3px;background:var(--marker);vertical-align:middle;margin-left:6px}
+
+.radar{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.radar li{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:baseline;background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:10px 14px}
+.radar .quando{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.radar a{font-size:13px;word-break:break-all}
+
+.grade{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:820px){.grade{grid-template-columns:1fr}}
+@media (max-width:480px){.radar li{grid-template-columns:1fr;gap:2px}}
+
+.vazio{color:var(--muted);font-style:italic}
+.provas{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:15px}
+.provas dt{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+.provas dd{margin:0}
+.provas dt.espelho{color:var(--espelho)}
+.medida{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--muted)}
+.medida b{color:var(--ink);font-weight:600}
+.chip.sinal-bom{background:var(--good-bg);color:var(--good);border-color:transparent}
+.chip.sinal-ruim{background:var(--bad-bg);color:var(--bad);border-color:transparent}
+.existe{margin:0;padding-left:18px;font-size:13.5px;color:var(--muted)}
+.votos{display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-top:1px solid var(--line);padding-top:10px}
+.votos span{font-size:13px;color:var(--muted);margin-right:4px}
+.votos button{padding:5px 11px;font-size:13px;border-radius:2px}
+.votos button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.votos .estado{font-size:12.5px;color:var(--muted)}
+details.mortas{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:10px 16px}
+details.mortas summary{cursor:pointer;font-weight:700}
+details.mortas ul{margin:10px 0 4px;padding-left:18px;display:grid;gap:6px;font-size:15px}
+details.mortas li span{color:var(--muted)}
+.nicho{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:640px){.nicho{grid-template-columns:1fr}}
+.nicho h3{font:700 13px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.nicho ol{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.nicho li{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:8px 12px;display:grid;gap:2px;font-size:14.5px}
+.nicho li .meta{font-size:12.5px;color:var(--muted)}
+.classicos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px}
+.classico{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:14px 16px;display:grid;gap:8px;align-content:start;border-left:4px solid var(--ciano)}
+.classico .antes{font-size:14px;color:var(--muted)}
+.classico .ideia{margin:0;font-weight:600}
+.classico .ideia::before{content:"agora: ";font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+footer{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:16px;display:grid;gap:6px}
+footer code{font-family:var(--mono);font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+.faixa{border-radius:2px;padding:12px 14px;display:grid;gap:8px;font-size:15px;border:1px solid transparent}
+.faixa.ok{background:var(--good-bg);color:var(--good)}
+.faixa.aviso{background:var(--warn-bg);color:var(--warn)}
+.faixa.erro{background:var(--bad-bg);color:var(--bad)}
+.faixa .topo{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
+.faixa .topo b{font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.faixa .tok{font-size:13.5px;opacity:.9}
+.faixa ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.faixa li{display:grid;gap:3px}
+.faixa li .det{color:var(--ink);font-size:14px}
+.faixa code{font-family:var(--mono);font-size:12.5px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:4px 6px;word-break:break-all;user-select:all;justify-self:start}
+.lista{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.lista li{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:10px 14px;display:grid;gap:4px;font-size:14.5px}
+.lista .meta{font-size:12.5px;color:var(--muted)}
+.lista .vezes{font:600 13px var(--mono);color:var(--good);white-space:nowrap}
+.lista .topo{display:flex;gap:10px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.lista .fontes{font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:2px 10px}
+.gravar{display:grid;gap:12px}
+.gravar .pauta{border-color:var(--ink);border-width:2px}
+.roteiro{white-space:pre-wrap;font:15px/1.6 var(--body);background:var(--ground);border:1px solid var(--line);border-radius:2px;padding:12px 14px;margin:0;max-height:440px;overflow:auto}
+.perguntas{margin:0;padding-left:20px;display:grid;gap:4px}
+.pacote{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px}
+.pacote>div{border:1px solid var(--line);border-radius:2px;padding:10px 12px;display:grid;gap:6px;align-content:start;font-size:14.5px}
+.pacote .tags{color:var(--accent);font-size:13.5px}
+.rot{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.longo{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px}
+.tema{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:14px 16px;display:grid;gap:8px;align-content:start;border-left:4px solid var(--ciano)}
+.tema h3{margin:0;font-size:18px;line-height:1.3}
+.tema p{margin:0;font-size:14.5px}
+.tema ul{margin:0;padding-left:18px;font-size:14px;color:var(--muted)}
+.tema button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.crono{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.crono li{display:grid;grid-template-columns:96px 1fr;gap:10px;font-size:14.5px}
+.crono .quando{font-family:var(--mono);font-size:13px;color:var(--muted)}
+@media (max-width:480px){.crono li{grid-template-columns:1fr;gap:0}}
+.sugestoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.sug{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:16px 18px;display:grid;gap:10px;align-content:start;border-left:4px solid var(--ciano)}
+.sug h3{margin:0;font-size:19px;line-height:1.3;text-wrap:pretty}
+.sug .ideia{margin:0;white-space:pre-wrap}
+.sug .porque{margin:0;font-size:14.5px;color:var(--muted)}
+.agito{border-radius:2px;padding:10px 14px;font-size:15px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;margin-bottom:12px}
+.agito.sim{background:var(--verm);color:var(--giz)}
+.agito.nao{background:var(--surface);border:1px solid var(--line);color:var(--muted)}
+.agito b{font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.agito a{color:inherit}
+.abas{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-top:-8px;overflow-x:auto;scrollbar-width:none}
+.abas::-webkit-scrollbar{display:none}
+.abas button{border:0;border-bottom:3px solid transparent;border-radius:0;background:none;padding:10px 14px;font:900 14px var(--display);color:var(--muted)}
+.abas button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ciano)}
+.abas .n{font:500 12px var(--mono);color:var(--muted);margin-left:4px}
+.vista{display:grid;gap:28px}
+.kanban{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:820px){.kanban{grid-template-columns:minmax(0,1fr)}}
+.col{display:grid;gap:10px}
+.rcard{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:14px 16px;display:grid;gap:8px;border-left:4px solid var(--ciano)}
+.rcard h3{margin:0;font-size:17px;line-height:1.3;text-wrap:pretty}
+.rcard p{margin:0;font-size:14.5px}
+.rcard .porque{color:var(--muted);font-size:13.5px;border-left:2px solid var(--verm);padding-left:8px}
+.rcard details summary{cursor:pointer;font-size:13.5px;color:var(--accent);font-weight:600}
+.rcard details[open] summary{margin-bottom:8px}
+.acoes{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.acoes button{padding:5px 11px;font-size:13px;border-radius:2px}
+.acoes .estado{font-size:12.5px;color:var(--muted)}
+.cat h3.cat-t{font:700 13px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px}
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px}
+.filtro button{padding:5px 11px;font-size:13px;border-radius:2px}
+.filtro button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.guardar[data-feito="1"]{border-color:transparent;background:var(--good-bg);color:var(--good)}
+/* aba Números */
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{padding:6px 12px;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--ciano);color:var(--noite);border-color:var(--ciano)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,165px),1fr));gap:10px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:12px 14px;display:grid;gap:2px;text-align:left;cursor:pointer;font:inherit;color:inherit}
+.tile[aria-pressed="true"]{border-color:var(--ciano);box-shadow:inset 0 -3px 0 var(--ciano)}
+.tile .rot{font-size:12px}
+.tile .val{font:900 22px/1.2 var(--display);color:var(--ink)}
+.tile .dl{font-size:12.5px}
+.dl.sobe{color:var(--good)} .dl.desce{color:var(--bad)} .dl.igual{color:var(--muted)}
+.grafico{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:12px 12px 6px;position:relative}
+.grafico svg{display:block;width:100%;height:auto;overflow:visible}
+.grafico .eixo{fill:var(--muted);font:11px var(--mono)}
+.grafico .grade{stroke:var(--line);stroke-width:1}
+.grafico .barra{fill:var(--ciano)}
+.grafico .barra.antes{fill:var(--ciano);opacity:.55}
+.grafico .alvo{fill:transparent;cursor:default}
+.grafico .val{fill:var(--ink);font:700 11px var(--mono)}
+.dica{position:absolute;pointer-events:none;background:var(--noite);color:var(--giz);border:1px solid var(--ciano);padding:6px 8px;font-size:12px;border-radius:2px;white-space:nowrap;transform:translate(-50%,-110%)}
+.videos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.video{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--ciano);border-radius:2px;padding:12px 14px;display:grid;gap:8px;align-content:start}
+.video.melhor{border-left-color:var(--verm)}
+.video h3{margin:0;font-size:15.5px;line-height:1.35}
+.video table{min-width:0;font-size:13px}
+.video th,.video td{padding:4px 6px}
+.video td.n,.video th.n{text-align:right;font-variant-numeric:tabular-nums}
+.curva{height:60px}
+
+/* aba Identidade */
+.id-grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.id-logo{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:22px 18px;display:grid;gap:10px;justify-items:center;align-content:center;text-align:center}
+.id-logo .logo{font-size:clamp(30px,6vw,46px);justify-content:center}
+.id-rot{font:700 12px var(--mono);letter-spacing:.06em;color:var(--ciano)}
+.id-oculos{display:flex;gap:8px}
+.id-oculos i{width:62px;height:40px;background:#EEF6FF;clip-path:polygon(0 0,100% 0,90% 100%,12% 100%);display:grid}
+.id-oculos i b{margin:4px;clip-path:inherit;background:var(--verm)}
+.id-oculos i+i{clip-path:polygon(0 0,100% 0,88% 100%,10% 100%)} .id-oculos i+i b{background:var(--ciano)}
+.id-avatar{width:150px;height:150px;border-radius:50%;border:5px solid var(--ciano);object-fit:cover}
+.cor{background:var(--surface);border:1px solid var(--line);border-radius:2px;overflow:hidden;display:grid}
+.cor .amostra{height:96px;border-bottom:1px solid var(--line)}
+.cor div{padding:10px 12px;display:grid;gap:2px}
+.cor b{font:900 16px var(--display);color:var(--ink)}
+.cor .hex{font:700 15px var(--mono);color:var(--ciano)}
+.cor .rgb{font:400 13px var(--mono);color:var(--ink)}
+.cor .uso{font-size:12.5px;color:var(--muted)}
+.fonte{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:14px 16px;display:grid;gap:4px}
+.fonte .nome{font:700 13px var(--mono);color:var(--ciano)}
+.fonte .amostra{color:var(--ink);line-height:1.1;overflow-wrap:anywhere}
+.fonte .uso{font-size:12.5px;color:var(--muted)}
+.id-img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:2px;background:#000}
+figure.id-fig{margin:0;display:grid;gap:6px}
+figure.id-fig figcaption{font-size:13px;color:var(--muted)}
+figure.id-fig figcaption b{color:var(--ink);font:900 14px var(--display);margin-right:6px}
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(46%,150px),1fr));gap:10px}
+.figs img{width:100%;height:auto;background:#1E2430;border-radius:2px;padding:6px}
+.regras{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.regras li{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--verm);border-radius:2px;padding:10px 14px;font-size:14.5px}
+.regras li:nth-child(even){border-left-color:var(--ciano)}
+
+/* nada estica a página pra fora da tela: texto comprido quebra */
+.wrap>*,.vista>*,section,article,li,dd,p,h2,h3,figure{min-width:0}
+p,dd,li,h2,h3,a,span,b,pre,code,td{overflow-wrap:anywhere}
+.wrap{overflow-x:clip}
+
+/* versão celular */
+@media (max-width:600px){
+  body{font-size:14px}
+  .wrap{padding-block:14px 40px;gap:22px}
+  .vista{gap:22px}
+  header{gap:10px}
+  .controles{width:100%}
+  .controles select{flex:1;min-width:0}
+  .abas{position:sticky;top:0;z-index:5;background:var(--ground);margin-inline:-16px;padding-inline:8px;margin-top:0}
+  .abas button{flex:1 0 auto;padding:12px 10px;font-size:12.5px}
+  h2{font-size:18px}
+  h2 small{display:block;margin:4px 0 0}
+  .pauta,.rcard,.sug,.tema,.classico,.conta{padding:12px 14px}
+  .pauta .log,.sug h3{font-size:16.5px}
+  .provas{grid-template-columns:1fr;gap:0}
+  .provas dt{margin-top:8px}
+  .conta .valor{font-size:24px}
+  .faixa,.aviso,.agito{padding:10px 12px;font-size:14px}
+  .votos,.acoes{gap:6px}
+  .votos button,.acoes button{flex:1 1 auto}
+  .roteiro{font-size:14px;max-height:360px}
+  .lista li{padding:10px 12px}
+  /* a tabela de posts vira um cartão por post */
+  .tabela{background:none;border:0}
+  .tabela table{min-width:0;font-size:14px}
+  .tabela thead{display:none}
+  .tabela tbody,.tabela tr,.tabela td{display:block}
+  .tabela tr{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--ciano);border-radius:2px;padding:10px 12px;margin-bottom:8px}
+  .tabela td{border:0;padding:2px 0;text-align:left}
+  .tabela td.n{display:inline-block;width:50%;text-align:left}
+  .tabela td[data-rotulo]::before{content:attr(data-rotulo) " ";color:var(--muted);font-size:12px}
+}
+.esq{background:linear-gradient(90deg,var(--line),var(--surface),var(--line));background-size:200% 100%;border-radius:2px;height:88px;animation:brilho 1.4s linear infinite}
+@keyframes brilho{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.esq{animation:none}}
+
+/* site: a parte fechada só aparece com o login do dono */
+body.trancado .protegido{display:none!important}
+body.site #salvar-drive{display:none!important}
+.login{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--verm);border-radius:2px;padding:14px 16px;display:grid;gap:10px}
+.login b{font:900 17px var(--display)}
+.login form{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.login input[type=email]{font:400 16px var(--mono);width:22em;max-width:100%;padding:8px 12px;background:var(--ground);color:var(--ink);border:1px solid var(--line);border-radius:2px}
+.login .msg{font-size:13.5px;color:var(--muted)}
+body:not(.trancado) .login{display:none}
+#sair{display:none} body.site:not(.trancado) #sair{display:inline-block}
+
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="hero" aria-hidden="true"></div>
+    <div>
+      <h1 class="logo" aria-label="GEEKTAVO diário">G<i class="lente v"><b>E</b></i><i class="lente c"><b>E</b></i>KTAVO<small>DIÁRIO</small></h1>
+      <p class="bordao">VOCÊ SABIA QUE EU SABIA <b>QUE VOCÊ IA SE INSCREVER NO CANAL!</b></p>
+      <p class="sub" id="sub">@geektavodalmoro · Instagram, TikTok e YouTube · atualiza todo dia às 12h</p>
+    </div>
+    <div class="controles">
+      <label for="dia" class="sub" style="margin:0">Dia</label>
+      <select id="dia" disabled><option>carregando…</option></select>
+      <button id="recarregar" type="button">Atualizar</button>
+    </div>
+  </header>
+
+  <nav class="abas" role="tablist" aria-label="Painel">
+    <button type="button" role="tab" id="aba-diario" aria-selected="true" aria-controls="v-diario">Diário</button>
+    <button type="button" role="tab" id="aba-numeros" aria-selected="false" aria-controls="v-numeros">Números</button>
+    <button type="button" role="tab" id="aba-roteiros" aria-selected="false" aria-controls="v-roteiros">Roteiros<span class="n" id="aba-n"></span></button>
+    <button type="button" role="tab" id="aba-identidade" aria-selected="false" aria-controls="v-identidade">Identidade</button>
+  </nav>
+
+  <div id="v-numeros" class="vista" role="tabpanel" aria-labelledby="aba-numeros" hidden>
+    <section aria-labelledby="t-num">
+      <h2 id="t-num">Seus números <small id="num-sub">período atual contra o anterior</small></h2>
+      <div style="display:grid;gap:10px">
+        <div class="seg" id="num-rede" aria-label="Rede"></div>
+        <div class="seg" id="num-periodo" aria-label="Período"></div>
+      </div>
+    </section>
+    <p class="vazio" id="num-vazio" hidden></p>
+    <div class="tiles" id="num-tiles"></div>
+    <section aria-labelledby="t-graf" id="num-s-graf">
+      <h2 id="t-graf">Gráfico</h2>
+      <div class="grafico" id="num-graf"></div>
+      <details style="margin-top:8px"><summary style="cursor:pointer;color:var(--accent);font-size:13.5px">ver em tabela</summary><div class="tabela" id="num-tabela" style="margin-top:8px"></div></details>
+    </section>
+    <section aria-labelledby="t-ult">
+      <h2 id="t-ult">Últimos 3 vídeos <small>os primeiros 3 dias de cada um, lado a lado</small></h2>
+      <div id="num-ultimos" style="display:grid;gap:16px"></div>
+    </section>
+  </div>
+
+  <div id="v-identidade" class="vista" role="tabpanel" aria-labelledby="aba-identidade" hidden>
+    <section aria-labelledby="t-id-logo">
+      <h2 id="t-id-logo">Logo <small>a Lente 3D: vermelho é o espelho, ciano é o herói</small></h2>
+      <div class="id-grade">
+        <div class="id-logo"><div class="logo" aria-label="GEEKTAVO">G<i class="lente v"><b>E</b></i><i class="lente c"><b>E</b></i>KTAVO</div>
+          <span class="id-rot">A · banner, abertura, tela final</span></div>
+        <div class="id-logo"><div class="id-oculos" aria-hidden="true"><i><b></b></i><i><b></b></i></div>
+          <span class="id-rot">B · canto da thumb, marca d'água, figurinha</span></div>
+        <div class="id-logo"><img class="id-avatar" src="identidade/avatar.jpg" alt="avatar com os óculos 3D" loading="lazy">
+          <span class="id-rot">D · foto de perfil nas três redes</span></div>
+      </div>
+    </section>
+    <section aria-labelledby="t-id-cores">
+      <h2 id="t-id-cores">Cores <small>sem amarelo e sem dourado · o vermelho nunca ocupa mais que o ciano</small></h2>
+      <div class="id-grade" id="id-cores"></div>
+    </section>
+    <section aria-labelledby="t-id-fontes">
+      <h2 id="t-id-fontes">Fontes <small>todas gratuitas no Google Fonts</small></h2>
+      <div style="display:grid;gap:10px">
+        <div class="fonte"><span class="nome">Unbounded Black (900)</span><span class="amostra" style="font:900 clamp(34px,8vw,64px) var(--display)">CORINGA</span><span class="uso">a palavra grande da thumb, o logo, os títulos</span></div>
+        <div class="fonte"><span class="nome">Unbounded Medium (500)</span><span class="amostra" style="font:500 clamp(17px,3.4vw,26px) var(--display)">VOCÊ SABIA QUE EU SABIA</span><span class="uso">frase do banner, texto animado mais longo</span></div>
+        <div class="fonte"><span class="nome">Space Mono Bold</span><span class="amostra" style="font:700 clamp(18px,3.6vw,28px) var(--mono)">ESPELHO #01 · DIAGNÓSTICO:</span><span class="uso">rótulo da série, número, data, legenda de tela</span></div>
+        <div class="fonte"><span class="nome">Space Mono Regular</span><span class="amostra" style="font:400 clamp(15px,3vw,22px) var(--mono)">curto de cultura pop, 1 a 2 por dia</span><span class="uso">texto de apoio, anotação</span></div>
+      </div>
+    </section>
+    <section aria-labelledby="t-id-banner">
+      <h2 id="t-id-banner">Banner do YouTube <small>quadrinho nas cores da marca</small></h2>
+      <img class="id-img" src="identidade/banner.jpg" alt="banner do canal em quadrinho" loading="lazy">
+    </section>
+    <section aria-labelledby="t-id-moldes">
+      <h2 id="t-id-moldes">Moldes das séries <small>você grande à direita, o personagem colado atrás, a cor do tema no fundo</small></h2>
+      <div class="id-grade">
+        <figure class="id-fig"><img class="id-img" src="identidade/molde-espelho.jpg" alt="molde ESPELHO" loading="lazy"><figcaption><b>A · ESPELHO</b>o herói e quem escolheu o contrário</figcaption></figure>
+        <figure class="id-fig"><img class="id-img" src="identidade/molde-diagnostico.jpg" alt="molde DIAGNÓSTICO" loading="lazy"><figcaption><b>B · DIAGNÓSTICO</b>um personagem, um laudo, uma palavra carimbada</figcaption></figure>
+        <figure class="id-fig"><img class="id-img" src="identidade/molde-plantao.jpg" alt="molde PLANTÃO GEEK" loading="lazy"><figcaption><b>C · PLANTÃO GEEK</b>notícia, trailer, vazamento</figcaption></figure>
+        <figure class="id-fig"><img class="id-img" src="identidade/molde-dossie.jpg" alt="molde DOSSIÊ" loading="lazy"><figcaption><b>D · DOSSIÊ</b>o longo: todas as versões do personagem</figcaption></figure>
+      </div>
+    </section>
+    <section aria-labelledby="t-id-figs">
+      <h2 id="t-id-figs">Figurinhas <small>512x512, fundo transparente, pro WhatsApp</small></h2>
+      <div class="figs" id="id-figs"></div>
+    </section>
+    <section aria-labelledby="t-id-sting">
+      <h2 id="t-id-sting">Sting do logo <small>2,6 segundos, entra depois do gancho</small></h2>
+      <video class="id-img" src="identidade/sting.mp4" controls muted loop playsinline preload="metadata"></video>
+    </section>
+    <section aria-labelledby="t-id-arquivos">
+      <h2 id="t-id-arquivos">Arquivos <small>prontos pra subir, na pasta "ID Visual - Geektavo" do seu Drive</small></h2>
+      <div style="display:grid;gap:10px">
+        <div class="acoes"><button type="button" id="salvar-drive">Salvar tudo no meu Drive</button>
+          <a href="https://drive.google.com/drive/folders/1rIkCE0gse9jlqeWQ2-bvnxDPiWgDurIA" target="_blank" rel="noopener">abrir a pasta</a>
+          <span class="estado" id="salvar-estado"></span></div>
+        <ul class="lista" id="id-arquivos"></ul>
+      </div>
+    </section>
+    <section aria-labelledby="t-id-regras">
+      <h2 id="t-id-regras">Regras <small>valem em toda peça</small></h2>
+      <ul class="regras">
+        <li>Texto sempre nas fontes da marca: Unbounded e Space Mono.</li>
+        <li>Na thumb, sempre a foto real, grande, com o personagem colado atrás.</li>
+        <li>A cor da luz muda por tema (Coringa é verde). A fonte, a posição do texto e das pessoas nunca mudam.</li>
+        <li>Título: palavra branca em Unbounded Black num pincel preto justo nas letras, levemente inclinado; rótulo da série em Space Mono em cima.</li>
+        <li>Sujeito destacado do fundo: pele em tom de pele, mais brilho e contraste que o cenário.</li>
+        <li>Lente vermelha à esquerda, ciano à direita.</li>
+        <li>Banner: VOCÊ SABIA QUE EU SABIA QUE VOCÊ IA SE INSCREVER NO CANAL!</li>
+      </ul>
+    </section>
+  </div>
+
+  <div id="v-roteiros" class="vista" role="tabpanel" aria-labelledby="aba-roteiros" hidden>
+    <p class="sub" id="rot-aviso" style="margin:0">Carregando os roteiros…</p>
+    <div class="kanban">
+      <section aria-labelledby="t-agu">
+        <h2 id="t-agu">Aguardando roteiro <small id="n-agu"></small></h2>
+        <div class="col" id="col-aguardando"></div>
+      </section>
+      <section aria-labelledby="t-prod">
+        <h2 id="t-prod">Em produção <small id="n-prod"></small></h2>
+        <div class="col" id="col-producao"></div>
+      </section>
+    </div>
+    <section aria-labelledby="t-prontos">
+      <h2 id="t-prontos">Roteiros prontos <small id="n-pronto">por categoria</small></h2>
+      <div class="chips filtro" id="cat-filtro"></div>
+      <div id="col-pronto"></div>
+    </section>
+  </div>
+
+  <div id="v-diario" class="vista" role="tabpanel" aria-labelledby="aba-diario">
+  <div id="avisos" style="display:grid;gap:8px"></div>
+  <section class="login" id="login" aria-labelledby="t-login">
+    <b id="t-login">Pautas, ideias e roteiros estão fechados</b>
+    <form id="login-form">
+      <input type="email" id="login-email" placeholder="seu e-mail" aria-label="e-mail" autocomplete="email" required>
+      <button type="submit">Receber link de acesso</button>
+    </form>
+    <span class="msg" id="login-msg">O resto do site está aberto. O link de acesso chega no seu e-mail.</span>
+  </section>
+
+  <section id="estado" class="faixa" aria-label="Estado do sistema" hidden></section>
+
+  <section class="contas" id="contas" aria-label="Contas">
+    <div class="esq"></div><div class="esq"></div><div class="esq"></div>
+  </section>
+
+  <section class="leitura" aria-labelledby="t-leitura">
+    <h2 id="t-leitura">O que os números dizem</h2>
+    <div id="leitura"><div class="esq" style="height:60px"></div></div>
+  </section>
+
+  <section aria-labelledby="t-pautas">
+    <h2 id="t-pautas">Pautas de hoje <small>as que sobreviveram ao advogado do diabo</small></h2>
+    <div class="pautas" id="pautas"><div class="esq"></div><div class="esq"></div></div>
+    <details class="mortas" id="mortas" hidden><summary id="mortas-t">Pautas que o advogado do diabo matou</summary><ul id="mortas-l"></ul></details>
+  </section>
+
+  <section aria-labelledby="t-gravar" id="s-gravar" hidden>
+    <h2 id="t-gravar">Pra gravar <small>o esqueleto da pauta que você votou "vou gravar"</small></h2>
+    <div class="gravar" id="gravar"></div>
+  </section>
+
+  <div class="grade" id="s-conversa" hidden>
+    <section aria-labelledby="t-disparou">
+      <h2 id="t-disparou">Disparou <small>2x a média dos 7 dias (evidência, não "em alta")</small></h2>
+      <ul class="lista" id="disparou"></ul>
+    </section>
+    <section aria-labelledby="t-historias">
+      <h2 id="t-historias">Histórias do dia <small>por veículos que deram</small></h2>
+      <ul class="lista" id="historias"></ul>
+    </section>
+  </div>
+
+  <section aria-labelledby="t-anime" id="s-anime" hidden>
+    <h2 id="t-anime">Anime acelerando <small>aposta antecipada: cresce no AniList antes de estourar aqui</small></h2>
+    <ul class="lista" id="anime"></ul>
+  </section>
+
+  <section aria-labelledby="t-longo" id="s-longo" hidden>
+    <h2 id="t-longo">Longo da semana <small>a rotina propõe, você escolhe</small></h2>
+    <div class="longo" id="longo-temas"></div>
+    <div id="longo-pesquisa"></div>
+  </section>
+
+  <section aria-labelledby="t-nicho">
+    <h2 id="t-nicho">Rendendo no nicho <small>últimos 7 dias no YouTube, por views/dia (medido, não é "em alta")</small></h2>
+    <div class="nicho"><div><h3>Brasil</h3><ol id="nicho-pt"><li class="vazio">carregando…</li></ol></div>
+    <div><h3>Gringo, chega aqui depois</h3><ol id="nicho-en"><li class="vazio">carregando…</li></ol></div></div>
+  </section>
+
+  <section aria-labelledby="t-classicos">
+    <h2 id="t-classicos">Funcionou antes <small>a mesma estrutura num assunto de agora</small></h2>
+    <div class="classicos" id="classicos"><div class="esq"></div></div>
+  </section>
+
+  <div class="grade">
+    <section aria-labelledby="t-dest">
+      <h2 id="t-dest">Seus posts recentes <small>últimos 30 dias</small></h2>
+      <div class="tabela"><table>
+        <thead><tr><th>Rede</th><th>Post</th><th class="n">Views</th><th class="n">Desde ontem</th><th class="n">Share</th><th class="n">Salvo</th></tr></thead>
+        <tbody id="destaques"><tr><td colspan="6" class="vazio">carregando…</td></tr></tbody>
+      </table></div>
+    </section>
+    <section aria-labelledby="t-radar">
+      <h2 id="t-radar">Radar <small>fatos com data, sem hype</small></h2>
+      <ul class="radar" id="radar"><li class="vazio">carregando…</li></ul>
+    </section>
+  </div>
+
+  <section aria-labelledby="t-sug" id="s-sug">
+    <h2 id="t-sug">Sugestões do Claude <small>2 por dia, 4 quando o dia ou a semana está agitado</small></h2>
+    <div id="agito"></div>
+    <div class="sugestoes" id="sugestoes"></div>
+  </section>
+
+  </div>
+
+  <footer>
+    <div><b>O que está em alta é você quem diz.</b> Numa conversa com o Claude, escreva <code>em alta: nome do tema</code> e ele anota no <code>GEEKTAVO/EM-ALTA.md</code>. A rotina usa essa lista primeiro; o resto sai como "a confirmar".</div>
+    <div id="rodape">Lido do seu Google Drive, pasta "GEEKTAVO painel".</div>
+  </footer>
+</div>
+
+<script>
+const DRIVE = "Google Drive";
+const PASTA = "15rUhy9p8ldHqsMhZmtDTeMtXiCtsT39D";
+const $ = id => document.getElementById(id);
+const fmt = n => n == null ? "–" : Number(n).toLocaleString("pt-BR");
+const pct = n => n == null ? "–" : Number(n).toLocaleString("pt-BR", {minimumFractionDigits:1, maximumFractionDigits:1}) + "%";
+const dataBR = s => { if (!s) return ""; const [a,m,d] = s.split("-"); return `${d}/${m}/${a}`; };
+const el = (tag, attrs = {}, ...filhos) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") e.className = v; else if (k === "text") e.textContent = v; else e.setAttribute(k, v);
+  }
+  for (const f of filhos) if (f != null) e.append(f);
+  return e;
+};
+
+let mcp = null, arquivos = [];
+// a ligação com o Drive leva alguns segundos (e pede permissão na 1ª vez): tudo que usa o Drive espera por ela
+const mcpPronto = (async () => { try { mcp = null; } catch (e) { mcp = null; } return mcp; })();
+async function usarMcp() {
+  const m = mcp || await mcpPronto;
+  if (!m) throw {code: "not_granted"};
+  return m;
+}
+
+function aviso(tipo, titulo, detalhe, codigo) {
+  const box = el("div", {class: "aviso " + tipo}, el("b", {text: titulo}));
+  if (detalhe) box.append(el("span", {text: detalhe}));
+  if (codigo) box.append(el("code", {text: codigo}));
+  $("avisos").append(box);
+}
+
+function mensagemDoErro(e) {
+  switch (e && e.code) {
+    case "needs_reauth": return ["O Google Drive desconectou.", "Reconecte em claude.ai → Configurações → Conectores → Google Drive, e clique em Atualizar."];
+    case "server_not_connected": return ["O Google Drive não está conectado a esta conta do Claude.", "Adicione em claude.ai → Configurações → Conectores → Google Drive."];
+    case "selection_required": return ["Há mais de um Google Drive conectado.", "Escolha qual usar no aviso do Claude e clique em Atualizar."];
+    case "not_in_manifest": return ["O acesso ao Google Drive foi recusado nesta página.", "Recarregue a página e permita o Google Drive quando o Claude perguntar."];
+    case "blocked_by_policy": case "approval_required": return ["A sua organização bloqueia o Google Drive aqui.", ""];
+    case "server_unavailable": return ["O Google Drive não respondeu agora.", "Tente de novo em alguns segundos com Atualizar."];
+    case "tool_error": return ["O Google Drive recusou a leitura.", e.message || ""];
+    case "not_granted": case "capability_disabled": case "capability_removed": return ["Esta visualização não consegue ler o Drive.", "Abra o painel em claude.ai logado na sua conta."];
+    default: return ["Não deu pra ler o Drive.", (e && e.message) || ""];
+  }
+}
+
+async function chamar(tool, input, retry = true) {
+  try {
+    const r = await (await usarMcp()).callTool(DRIVE, tool, input, {cache: false});
+    return r.payload;
+  } catch (e) {
+    if (retry && e && e.retryable) {
+      await new Promise(ok => setTimeout(ok, Math.min(e.retryAfterMs || 1500, 8000) + Math.random() * 600));
+      return chamar(tool, input, false);
+    }
+    throw e;
+  }
+}
+
+function decodificar(b64) {
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return JSON.parse(new TextDecoder("utf-8").decode(bytes));
+}
+
+async function listar() {
+  const p = await chamar("search_files", {
+    query: `parentId = '${PASTA}' and title contains 'geektavo-dia-'`,
+    excludeContentSnippets: true, pageSize: 100,
+  });
+  const fs = (p && p.files) || [];
+  // um arquivo por dia; se a rotina rodou duas vezes, vale o mais novo
+  const porDia = new Map();
+  for (const f of fs) {
+    const m = /geektavo-dia-(\d{4}-\d{2}-\d{2})\.json/.exec(f.title || "");
+    if (!m) continue;
+    const atual = porDia.get(m[1]);
+    if (!atual || (f.createdTime || "") > (atual.createdTime || "")) porDia.set(m[1], f);
+  }
+  return [...porDia.entries()].sort((a, b) => b[0].localeCompare(a[0])).map(([dia, f]) => ({dia, id: f.id}));
+}
+
+// números subidos à parte (quando o dia saiu antes da aba Números existir)
+async function numerosAvulsos(dia) {
+  try {
+    const p = await chamar("search_files", {query: `parentId = '${PASTA}' and title contains 'geektavo-numeros-${dia}'`, excludeContentSnippets: true, pageSize: 10});
+    const fs = ((p && p.files) || []).sort((x, y) => (y.createdTime || "").localeCompare(x.createdTime || ""));
+    return fs.length ? decodificar((await chamar("download_file_content", {fileId: fs[0].id})).content) : null;
+  } catch (e) { return null; }
+}
+
+async function carregarDia(item) {
+  const p = await chamar("download_file_content", {fileId: item.id});
+  return decodificar(p.content);
+}
+
+function renderContas(d) {
+  const c = d.contas || {};
+  const tile = (nome, cor, info, rotulo, extra) => {
+    const t = el("div", {class: "conta"});
+    const i = el("i"); i.style.background = `var(${cor})`;
+    t.append(el("div", {class: "rede"}, i, nome));
+    if (!info) { t.append(el("div", {class: "valor", text: "–"}), el("div", {class: "det", text: "sem dados hoje"})); return t; }
+    t.append(el("div", {class: "valor num", text: info.seguidores == null ? fmt(info.posts) : fmt(info.seguidores)}));
+    const det = el("div", {class: "det"});
+    if (info.seguidores == null) det.append(rotulo);
+    else {
+      det.append("seguidores");
+      if (info.delta_seguidores != null) {
+        const s = info.delta_seguidores;
+        det.append(" · ", el("span", {class: "delta num " + (s > 0 ? "up" : s < 0 ? "down" : ""), text: (s > 0 ? "+" : "") + fmt(s) + " desde ontem"}));
+      }
+      det.append(` · ${fmt(info.posts)} posts`);
+    }
+    if (extra) det.append(el("br"), extra);
+    t.append(det);
+    return t;
+  };
+  $("contas").replaceChildren(
+    tile("Instagram", "--ig", c.instagram),
+    tile("TikTok", "--tt", c.tiktok, "vídeos no perfil", "seguidores não são públicos no TikTok"),
+    tile("YouTube", "--yt", c.youtube),
+  );
+}
+
+function renderLeitura(d) {
+  const ls = d.leitura || [];
+  $("leitura").replaceChildren(...(ls.length ? ls.map(t => el("p", {text: t})) : [el("p", {class: "vazio", text: "A leitura de hoje não veio. Veja o log em GEEKTAVO/dia/rotina.log."})]));
+}
+
+const VEREDITOS = [["manjada", "Manjada"], ["fraca", "Fraca"], ["boa", "Boa"], ["gravar", "Vou gravar"]];
+let votos = {}, diaAtual = null;
+const mil = n => n == null ? "–" : n >= 1e6 ? (n / 1e6).toLocaleString("pt-BR", {maximumFractionDigits: 1}) + " mi" : n >= 1e3 ? Math.round(n / 1e3).toLocaleString("pt-BR") + " mil" : String(n);
+
+async function lerVotos(dia) {
+  votos = {};
+  try {
+    const p = await chamar("search_files", {query: `parentId = '${PASTA}' and title contains 'geektavo-voto-${dia}-'`, excludeContentSnippets: true, pageSize: 100});
+    const fs = ((p && p.files) || []).sort((x, y) => (x.createdTime || "").localeCompare(y.createdTime || ""));
+    for (const f of fs) {
+      const m = /geektavo-voto-\d{4}-\d{2}-\d{2}-p(\d+)-(\w+)/.exec(f.title || "");
+      if (m) votos[m[1]] = m[2];
+    }
+  } catch (e) { /* sem votos lidos: os botões aparecem soltos */ }
+}
+
+async function votar(n, veredito, pauta, caixa) {
+  const estado = caixa.querySelector(".estado");
+  for (const b of caixa.querySelectorAll("button")) b.disabled = true;
+  estado.textContent = "gravando no Drive…";
+  try {
+    await (await usarMcp()).callTool(DRIVE, "create_file", {
+      title: `geektavo-voto-${diaAtual}-p${n}-${veredito}`, parentId: PASTA,
+      contentMimeType: "application/json", disableConversionToGoogleType: true,
+      textContent: JSON.stringify({dia: diaAtual, pauta: n, veredito, logline: pauta.logline, em: new Date().toISOString()}),
+    }, {cache: false});
+    votos[n] = veredito;
+    for (const b of caixa.querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.v === veredito));
+    estado.textContent = "a rotina de amanhã já usa isso";
+    // "Vou gravar" já manda a pauta pra aba Roteiros
+    if (veredito === "gravar") guardarRoteiro(`p-${diaAtual}-${n}`, itemDaPauta(pauta, diaAtual, n), null);
+  } catch (e) {
+    estado.textContent = mensagemDoErro(e)[0] + " O voto não foi gravado.";
+  } finally {
+    for (const b of caixa.querySelectorAll("button")) b.disabled = false;
+  }
+}
+
+function linhaMedida(rotulo, m) {
+  if (!m) return null;
+  return el("span", {}, rotulo + " ", el("b", {text: `${fmt(m.videos_30d)} vídeos no mês`}), ` · ${mil(m.views_dia_mediana)} views/dia`);
+}
+
+function renderPautas(d) {
+  const ps = d.pautas || [];
+  if (!ps.length) { $("pautas").replaceChildren(el("p", {class: "vazio", text: "Nenhuma pauta sobreviveu hoje. Melhor nada do que pauta fraca."})); }
+  else $("pautas").replaceChildren(...ps.map((p, i) => {
+    const n = String(i + 1);
+    const alta = /^você disse/i.test(p.em_alta || "");
+    const bom = /gringo na frente|pouca oferta/.test(p.sinal || ""), ruim = /saturado/.test(p.sinal || "");
+    const chips = el("div", {class: "chips"},
+      el("span", {class: "chip modo", text: p.modo === "noticia" ? "notícia" : (p.modo || "tese")}),
+      p.sinal ? el("span", {class: "chip " + (bom ? "sinal-bom" : ruim ? "sinal-ruim" : ""), text: p.sinal}) : null,
+      p.familia ? el("span", {class: "chip", text: p.familia}) : null,
+      el("span", {class: "chip " + (alta ? "alta" : "confirmar"), text: alta ? "em alta: " + p.em_alta : "em alta? você decide"}),
+      p.precisa_ver ? el("span", {class: "chip confirmar", text: "precisa ver antes"}) : null,
+      p.aposta_antecipada ? el("span", {class: "chip sinal-bom", text: "aposta antecipada"}) : null,
+    );
+    const provas = el("dl", {class: "provas"});
+    for (const [k, r] of [["tese", "tese"], ["gancho", "gancho"], ["espelho", "espelho"], ["comportamento", "gente real"], ["origem", "veio de"]])
+      if (p[k]) provas.append(el("dt", {text: r, class: k === "espelho" ? "espelho" : ""}), el("dd", {text: p[k]}));
+    if (!provas.children.length && p.gancho) provas.append(el("dt", {text: "gancho"}), el("dd", {text: p.gancho}));
+    const med = p.medida ? el("div", {class: "medida"}, linhaMedida("Brasil:", p.medida.pt), linhaMedida("Gringo:", p.medida.en)) : null;
+    const existe = (p.ja_existe || []).length ? el("ul", {class: "existe"}, ...p.ja_existe.map(x => el("li", {text: "já existe: " + x}))) : null;
+    const caixa = el("div", {class: "votos"}, el("span", {text: "Sua nota:"}));
+    for (const [v, r] of VEREDITOS) {
+      const b = el("button", {type: "button", "data-v": v, "aria-pressed": String(votos[n] === v), text: r});
+      b.addEventListener("click", () => votar(n, v, p, caixa));
+      caixa.append(b);
+    }
+    caixa.append(botaoGuardar(`p-${diaAtual}-${n}`, () => itemDaPauta(p, diaAtual, n)));
+    caixa.append(el("span", {class: "estado", text: votos[n] ? "" : ""}));
+    return el("article", {class: "pauta"},
+      el("p", {class: "log", text: p.logline}), chips, provas, med, existe,
+      p.por_que_sobreviveu ? el("p", {class: "porque", text: "Sobreviveu porque: " + p.por_que_sobreviveu}) : (p.por_que ? el("p", {class: "porque", text: p.por_que}) : null),
+      caixa);
+  }));
+  const ms = d.mortas || [];
+  $("mortas").hidden = !ms.length;
+  $("mortas-t").textContent = `${ms.length} pautas que o advogado do diabo matou`;
+  $("mortas-l").replaceChildren(...ms.map(m => el("li", {}, el("b", {text: m.tema}), el("span", {text: " · " + m.motivo}))));
+}
+
+function renderDestaques(d) {
+  const ds = d.recentes || d.destaques || [];
+  if (!ds.length) { $("destaques").replaceChildren(el("tr", {}, el("td", {colspan: "6", class: "vazio", text: "Nenhum post nos últimos 30 dias."}))); return; }
+  const maxS = Math.max(...ds.map(p => p.share_pct || 0), 0.01);
+  $("destaques").replaceChildren(...ds.map(p => {
+    const titulo = p.link ? el("a", {href: p.link, target: "_blank", rel: "noopener", text: p.titulo || "(sem título)"}) : (p.titulo || "");
+    const share = el("td", {class: "n num", "data-rotulo": "share"}, pct(p.share_pct));
+    if (p.share_pct) { const b = el("span", {class: "bar"}); b.style.width = Math.round(28 * p.share_pct / maxS) + "px"; share.append(b); }
+    return el("tr", {},
+      el("td", {}, el("span", {class: "pl " + p.plataforma, text: p.plataforma})),
+      el("td", {}, titulo, p.data ? el("div", {class: "sub", style: "margin:2px 0 0;font-size:13px", text: "postado " + dataBR(p.data)}) : null),
+      el("td", {class: "n num", "data-rotulo": "views", text: fmt(p.views)}),
+      el("td", {class: "n num", "data-rotulo": "desde ontem", text: p.views_desde_ontem == null ? "–" : "+" + fmt(p.views_desde_ontem)}),
+      share,
+      el("td", {class: "n num", "data-rotulo": "salvo", text: pct(p.salvo_pct)}));
+  }));
+}
+
+function renderNicho(d) {
+  const n = d.nicho || {};
+  for (const l of ["pt", "en"]) {
+    const vs = n[l] || [];
+    $("nicho-" + l).replaceChildren(...(vs.length ? vs.map(v => el("li", {},
+      el("a", {href: v.link, target: "_blank", rel: "noopener", text: v.titulo}),
+      el("span", {class: "meta num", text: `${mil(v.views_dia)} views/dia · ${v.canal} · ${dataBR(v.publicado)}${v.curto ? " · curto" : ""}`})))
+      : [el("li", {class: "vazio", text: "sem medição neste dia"})]));
+  }
+}
+
+function renderClassicos(d) {
+  const cs = d.classicos || [];
+  $("classicos").replaceChildren(...(cs.length ? cs.map(c => el("article", {class: "classico"},
+    el("div", {class: "antes"}, el("span", {class: "pl " + c.plataforma, text: c.plataforma}), ` ${dataBR(c.data)} · ${pct(c.share_pct)} de share em ${fmt(c.views)} views`),
+    el("a", {href: c.link, target: "_blank", rel: "noopener", text: c.titulo}),
+    c.adaptar ? el("p", {class: "ideia", text: c.adaptar}) : null))
+    : [el("p", {class: "vazio", text: "Nada antigo com share alto o bastante neste dia."})]));
+}
+
+function renderRadar(d) {
+  const rs = d.radar || [];
+  if (!rs.length) { $("radar").replaceChildren(el("li", {class: "vazio", text: "Nenhum fato com data e fonte hoje."})); return; }
+  $("radar").replaceChildren(...rs.map(r => el("li", {},
+    el("span", {class: "quando", text: dataBR(r.data)}),
+    el("div", {}, el("div", {text: r.fato}), r.fonte ? el("a", {href: r.fonte, target: "_blank", rel: "noopener", text: r.fonte.replace(/^https?:\/\/(www\.)?/, "").slice(0, 60)}) : null))));
+}
+
+function renderEstado(d) {
+  const box = $("estado"), e = d.estado;
+  if (!e) { box.hidden = true; return; }   // dia de antes de 23/09: sem estado
+  const ps = e.problemas || [];
+  const nivel = ps.some(p => p.nivel === "erro") ? "erro" : ps.length ? "aviso" : "ok";
+  box.className = "faixa " + nivel;
+  const toks = (e.tokens || []).filter(t => t.dias_restantes != null)
+    .map(t => `${t.nome} ${t.dias_restantes > 0 ? "vence em " + t.dias_restantes + (t.dias_restantes === 1 ? " dia" : " dias") : "venceu"}`).join(" · ");
+  const topo = el("div", {class: "topo"}, el("b", {text: "Estado do sistema"}),
+    el("span", {text: nivel === "ok" ? "tudo verde: a coleta rodou inteira e os tokens valem" : `${ps.length} ${ps.length === 1 ? "coisa precisa" : "coisas precisam"} de você`}),
+    toks ? el("span", {class: "tok", text: toks}) : null);
+  box.replaceChildren(topo);
+  if (ps.length) box.append(el("ul", {}, ...ps.map(p => el("li", {},
+    el("b", {text: p.o_que}), p.detalhe ? el("span", {class: "det", text: p.detalhe}) : null,
+    p.comando ? el("code", {text: p.comando}) : null))));
+  box.hidden = false;
+}
+
+function renderConversa(d) {
+  const ds = d.disparou, hs = d.historias;
+  $("s-conversa").hidden = !ds && !hs;
+  if (!ds && !hs) return;
+  $("disparou").replaceChildren(...((ds || []).length ? ds.map(x => el("li", {},
+    el("div", {class: "topo"}, el("b", {text: x.termo}), el("span", {class: "vezes", text: x.vezes.toLocaleString("pt-BR") + "x"})),
+    el("span", {class: "meta", text: (x.sinais || []).map(s => `${s.onde}: ${fmt(s.hoje)} contra ${fmt(Math.round(s.media))} de média${s.estimado ? " (estimado)" : ""}`).join(" · ")}),
+    x.manchete && x.manchete.titulo ? (x.manchete.link ? el("a", {href: x.manchete.link, target: "_blank", rel: "noopener", text: x.manchete.titulo}) : el("span", {text: x.manchete.titulo})) : null))
+    : [el("li", {class: "vazio", text: "Nada disparou. A aceleração compara com os 7 dias anteriores: nos primeiros dias ainda não tem base."})]));
+  $("historias").replaceChildren(...((hs || []).length ? hs.map(h => el("li", {},
+    el("div", {class: "topo"}, h.link ? el("a", {href: h.link, target: "_blank", rel: "noopener", text: h.titulo}) : el("b", {text: h.titulo}),
+      el("span", {class: "vezes", text: h.veiculos + " veículos"})),
+    // fontes: nomes (formato enxuto) ou objetos com link (formato antigo)
+    el("div", {class: "fontes"}, ...(h.fontes || []).map(f => typeof f === "string" ? el("span", {text: f})
+      : f.link ? el("a", {href: f.link, target: "_blank", rel: "noopener", text: f.fonte || "fonte"}) : el("span", {text: f.fonte}))),
+    (h.termos || []).length ? el("span", {class: "meta", text: "puxado por: " + h.termos.join(", ")}) : null))
+    : [el("li", {class: "vazio", text: "Nenhuma história com dois veículos ou mais."})]));
+}
+
+function renderAnime(d) {
+  const a = d.anime;
+  const ms = a && a.acelerando || [];
+  $("s-anime").hidden = !a;
+  if (!a) return;
+  $("anime").replaceChildren(...(ms.length ? ms.map(m => el("li", {},
+    el("div", {class: "topo"}, m.link ? el("a", {href: m.link, target: "_blank", rel: "noopener", text: m.titulo}) : el("b", {text: m.titulo}),
+      el("span", {class: "vezes", text: "+" + Number(m.cresceu_pct).toLocaleString("pt-BR") + "%"})),
+    el("span", {class: "meta", text: [(m.generos || []).slice(0, 3).join(", "), m.status === "NOT_YET_RELEASED" ? "estreia " + (m.estreia || "sem data") : m.status === "RELEASING" ? "no ar" : m.status, fmt(m.popularidade) + " na lista"].filter(Boolean).join(" · ")})))
+    : [el("li", {class: "vazio", text: `A aceleração aparece a partir da segunda foto do AniList${a.comparado_com ? "" : " (hoje é a primeira)"}.`})]));
+}
+
+function renderGravar(d) {
+  const gs = d.gravar || [];
+  $("s-gravar").hidden = !gs.length;
+  $("gravar").replaceChildren(...gs.map(g => {
+    const pac = g.pacote || {};
+    const rede = (nome, cls, x) => x ? el("div", {},
+      el("span", {class: "pl " + cls, text: nome}),
+      x.titulo ? el("b", {text: x.titulo}) : null,
+      x.legenda ? el("span", {text: x.legenda, style: "white-space:pre-wrap"}) : null,
+      x.descricao ? el("span", {text: x.descricao, style: "white-space:pre-wrap"}) : null,
+      (x.hashtags || []).length ? el("span", {class: "tags", text: x.hashtags.join(" ")}) : null) : null;
+    return el("article", {class: "pauta"},
+      el("div", {class: "chips"}, el("span", {class: "chip modo", text: "vou gravar"}), el("span", {class: "chip", text: `pauta ${g.n} de ${dataBR(g.dia)}`})),
+      el("p", {class: "log", text: g.logline}),
+      g.esqueleto ? el("div", {}, el("div", {class: "rot", text: "esqueleto"}), el("pre", {class: "roteiro", text: g.esqueleto})) : null,
+      (g.perguntas || []).length ? el("div", {}, el("div", {class: "rot", text: "perguntas pra você"}), el("ol", {class: "perguntas"}, ...g.perguntas.map(q => el("li", {text: q})))) : null,
+      (pac.instagram || pac.tiktok || pac.youtube) ? el("div", {}, el("div", {class: "rot", text: "pacote por rede"}),
+        el("div", {class: "pacote"}, rede("Instagram", "instagram", pac.instagram), rede("TikTok", "tiktok", pac.tiktok), rede("YouTube Shorts", "youtube", pac.youtube))) : null);
+  }));
+}
+
+let votosLongo = {};
+async function lerVotosLongo(dia) {
+  votosLongo = {};
+  try {
+    const p = await chamar("search_files", {query: `parentId = '${PASTA}' and title contains 'geektavo-voto-longo-${dia}-'`, excludeContentSnippets: true, pageSize: 50});
+    for (const f of (p && p.files) || []) {
+      const m = /geektavo-voto-longo-\d{4}-\d{2}-\d{2}-t(\d+)/.exec(f.title || "");
+      if (m) votosLongo[m[1]] = true;
+    }
+  } catch (e) { /* sem votos lidos */ }
+}
+
+async function votarLongo(n, tema, b) {
+  const estado = b.nextElementSibling;
+  b.disabled = true; estado.textContent = "gravando no Drive…";
+  try {
+    await (await usarMcp()).callTool(DRIVE, "create_file", {
+      title: `geektavo-voto-longo-${diaAtual}-t${n}`, parentId: PASTA,
+      contentMimeType: "application/json", disableConversionToGoogleType: true,
+      textContent: JSON.stringify({dia: diaAtual, tema: n, titulo: tema.titulo, em: new Date().toISOString()}),
+    }, {cache: false});
+    votosLongo[n] = true; b.setAttribute("aria-pressed", "true");
+    estado.textContent = "a rotina de amanhã começa a pesquisa (cronologia e fontes)";
+  } catch (e) {
+    estado.textContent = mensagemDoErro(e)[0] + " O voto não foi gravado.";
+  } finally { b.disabled = false; }
+}
+
+function renderLongo(d) {
+  const l = d.longo;
+  $("s-longo").hidden = !l;
+  if (!l) return;
+  $("longo-temas").replaceChildren(...(l.temas || []).map((t, i) => {
+    const n = String(i + 1);
+    const b = el("button", {type: "button", "aria-pressed": String(!!votosLongo[n]), text: votosLongo[n] ? "Escolhido" : "Quero esse"});
+    b.addEventListener("click", () => votarLongo(n, t, b));
+    return el("article", {class: "tema"},
+      el("h3", {text: t.titulo}), t.promessa ? el("p", {text: t.promessa}) : null,
+      t.por_que_agora ? el("p", {}, el("span", {class: "rot", text: "por que agora "}), t.por_que_agora) : null,
+      t.adjacencia ? el("p", {}, el("span", {class: "rot", text: "ao lado de "}), t.adjacencia) : null,
+      (t.colchetes || []).length ? el("ul", {}, ...t.colchetes.map(c => el("li", {text: c}))) : null,
+      el("div", {class: "votos"}, b, el("span", {class: "estado"})));
+  }));
+  const pq = l.pesquisa;
+  $("longo-pesquisa").replaceChildren(...(pq ? [el("article", {class: "pauta"},
+    el("div", {class: "chips"}, el("span", {class: "chip modo", text: "pesquisa começada"}), pq.dia_do_voto ? el("span", {class: "chip", text: "você escolheu em " + dataBR(pq.dia_do_voto)}) : null),
+    el("p", {class: "log", text: pq.tema}),
+    (pq.cronologia || []).length ? el("div", {}, el("div", {class: "rot", text: "cronologia"}), el("ul", {class: "crono"}, ...pq.cronologia.map(c => el("li", {},
+      el("span", {class: "quando", text: /^\d{4}-\d{2}-\d{2}$/.test(c.data || "") ? dataBR(c.data) : (c.data || "")}),
+      el("span", {}, c.fato + " ", c.fonte ? el("a", {href: c.fonte, target: "_blank", rel: "noopener", text: "fonte"}) : null))))) : null,
+    (pq.fontes || []).length ? el("div", {}, el("div", {class: "rot", text: "fontes"}), el("ul", {class: "existe"}, ...pq.fontes.map(f => el("li", {}, el("a", {href: f.link, target: "_blank", rel: "noopener", text: f.titulo || f.link}), f.tipo ? " · " + f.tipo : null)))) : null,
+    (pq.buracos || []).length ? el("div", {}, el("div", {class: "rot", text: "falta confirmar"}), el("ul", {class: "existe"}, ...pq.buracos.map(x => el("li", {text: x})))) : null)] : []));
+}
+
+function renderSugestoes(d) {
+  const sg = d.sugestoes;
+  const its = (sg && sg.itens) || [];
+  $("s-sug").hidden = false;   // sempre à vista no fim, mesmo vazia
+  if (!its.length) {
+    $("agito").replaceChildren();
+    $("sugestoes").replaceChildren(el("p", {class: "vazio", text: d.data && d.data < "2026-09-23"
+      ? "As sugestões começaram em 23/09/2026; este dia é de antes."
+      : "Este dia ainda não tem sugestões. Elas chegam com a rotina das 12h (a de 23/09 é a primeira)."}));
+    return;
+  }
+  // "agitado" é volume de notícia medido, não "em alta" (isso é só ele quem diz)
+  $("agito").replaceChildren(sg.agitado
+    ? el("div", {class: "agito sim"}, el("b", {text: "Dia agitado"}), el("span", {text: sg.por_que || ""}),
+        sg.fonte ? el("a", {href: sg.fonte, target: "_blank", rel: "noopener", text: "fonte"}) : null)
+    : el("div", {class: "agito nao"}, el("b", {text: "Dia normal"}), el("span", {text: "nada fora do comum no volume de notícia: 2 sugestões"})));
+  $("sugestoes").replaceChildren(...its.map((x, i) => el("article", {class: "sug"},
+    el("div", {class: "chips"}, el("span", {class: "chip modo", text: `sugestão ${i + 1}`}),
+      x.tipo ? el("span", {class: "chip", text: x.tipo}) : null, x.quando ? el("span", {class: "chip", text: x.quando}) : null),
+    el("h3", {text: x.titulo}),
+    x.ideia ? el("p", {class: "ideia", text: x.ideia}) : null,
+    x.por_que ? el("p", {class: "porque", text: "Por quê: " + x.por_que}) : null,
+    el("div", {class: "acoes"}, botaoGuardar(`s-${diaAtual}-${i + 1}`, () => ({titulo: x.titulo, logline: x.ideia || "", categoria: adivinhaCat(x.titulo + " " + (x.ideia || "")),
+      origem: `sugestão ${i + 1} de ${dataBR(diaAtual)}`, dia: diaAtual, pauta: {}}))))));
+  marcarGuardados();
+}
+
+// ---------- Roteiros (db do painel; coleção "roteiros") ----------
+// status: aguardando | producao | pronto. As sessões do Claude escrevem aqui
+// pelo ArtifactData quando ele dá o ok num roteiro (regra no CLAUDE.md).
+let db = null, roteiros = new Map(), filtroCat = "todas";
+const STATUS = {aguardando: "Aguardando", producao: "Em produção", pronto: "Pronto"};
+const CATS = [["DC", /batman|superman|lanterna|green lantern|coringa|joker|arlequina|harley|dc |dcu|knightfall|knightquest|azrael|bane|lobo|guy gardner|hal jordan|mulher-maravilha|wonder woman|aquaman|flash|supergirl|pacificador|peacemaker|charada|pinguim|duas caras|alfred|robin|asa noturna|darkseid|lex luthor|liga da justiça/i],
+  ["Marvel", /marvel|homem-aranha|spider|vingadores|avengers|x-men|wolverine|deadpool|thor|hulk|loki|homem de ferro|iron man|capitão américa|demolidor|daredevil|justiceiro|venom|thanos|doutor destino|quarteto/i],
+  ["The Boys", /the boys|homelander|capitão pátria|antony starr|gen v/i], ["Invencível", /invenc|invincible|omni-man/i],
+  ["Naruto", /naruto|boruto|rock lee|kakashi|itachi|sasuke/i], ["Attack on Titan", /attack on titan|shingeki|levi|eren|titã/i],
+  ["Demon Slayer", /demon slayer|kimetsu|tengen|hashira|tanjiro/i], ["Jogos", /gta|dead by daylight|resident evil|silent hill|the last of us|game|jogo/i]];
+const adivinhaCat = t => (CATS.find(([, re]) => re.test(" " + (t || "") + " ")) || ["Outros"])[0];
+const agora = () => new Date().toISOString();
+
+async function guardarRoteiro(id, item, botao) {
+  if (!db) return;
+  if (roteiros.has(id)) { mostrarAba("roteiros"); return; }
+  if (botao) { botao.disabled = true; botao.textContent = "guardando…"; }
+  try {
+    await db.collection("roteiros").doc(id).set({...item, status: "aguardando", criado_em: agora(), atualizado_em: agora()});
+  } catch (e) {
+    if (botao) { botao.textContent = e && e.code === "quota_exceeded" ? "sem espaço no banco" : "não deu pra guardar"; }
+  } finally { if (botao) botao.disabled = false; }
+}
+
+function itemDaPauta(p, dia, n) {
+  const txt = [p.logline, p.tese, JSON.stringify(p.busca || "")].join(" ");
+  return {titulo: (p.busca && p.busca.pt) || p.logline.slice(0, 80), logline: p.logline, categoria: adivinhaCat(txt),
+          origem: `pauta ${n} de ${dataBR(dia)}`, dia, pauta: {tese: p.tese || "", gancho: p.gancho || "", espelho: p.espelho || "", modo: p.modo || ""}};
+}
+
+function botaoGuardar(id, fazItem) {
+  const b = el("button", {type: "button", class: "guardar", "data-rot": id, text: "Guardar pra roteiro"});
+  b.addEventListener("click", () => guardarRoteiro(id, fazItem(), b));
+  b.hidden = !db;
+  return b;
+}
+
+function marcarGuardados() {
+  for (const b of document.querySelectorAll("[data-rot]")) {
+    const r = roteiros.get(b.dataset.rot);
+    b.hidden = !db;
+    b.dataset.feito = r ? "1" : "0";
+    b.textContent = r ? `Em roteiros: ${STATUS[r.status] || r.status}` : "Guardar pra roteiro";
+  }
+}
+
+async function mover(id, status, caixa) {
+  const st = caixa.querySelector(".estado");
+  for (const b of caixa.querySelectorAll("button")) b.disabled = true;
+  try { await db.collection("roteiros").doc(id).update({status, atualizado_em: agora()}); }
+  catch (e) { st.textContent = "não deu pra mover agora"; }
+  finally { for (const b of caixa.querySelectorAll("button")) b.disabled = false; }
+}
+
+async function tirar(id, b) {
+  if (b.dataset.certeza !== "1") { b.dataset.certeza = "1"; b.textContent = "Tirar mesmo?"; setTimeout(() => { b.dataset.certeza = ""; b.textContent = "Tirar"; }, 4000); return; }
+  try { await db.collection("roteiros").doc(id).delete(); } catch (e) { b.textContent = "não deu"; }
+}
+
+function cartao(id, r) {
+  const acoes = el("div", {class: "acoes"});
+  const bt = (txt, fn) => { const b = el("button", {type: "button", text: txt}); b.addEventListener("click", () => fn(b)); acoes.append(b); };
+  if (r.status === "aguardando") bt("Começar o roteiro", () => mover(id, "producao", acoes));
+  if (r.status === "producao") { bt("Voltar pra aguardando", () => mover(id, "aguardando", acoes)); bt("Marcar pronto", () => mover(id, "pronto", acoes)); }
+  if (r.status === "pronto") bt("Voltar pra produção", () => mover(id, "producao", acoes));
+  bt("Tirar", b => tirar(id, b));
+  acoes.append(el("span", {class: "estado"}));
+  const pa = r.pauta || {};
+  const temPauta = pa.tese || pa.gancho || pa.espelho;
+  const provas = el("dl", {class: "provas"});
+  for (const [k, rot] of [["tese", "tese"], ["gancho", "gancho"], ["espelho", "espelho"]]) if (pa[k]) provas.append(el("dt", {text: rot}), el("dd", {text: pa[k]}));
+  return el("article", {class: "rcard"},
+    el("div", {class: "chips"}, el("span", {class: "chip modo", text: r.categoria || "Outros"}), r.origem ? el("span", {class: "chip", text: r.origem}) : null,
+      r.atualizado_em ? el("span", {class: "chip", text: "mexido em " + dataBR(r.atualizado_em.slice(0, 10))}) : null),
+    el("h3", {text: r.titulo || "(sem título)"}),
+    r.logline ? el("p", {text: r.logline}) : null,
+    r.nota ? el("p", {class: "porque", text: "Nota: " + r.nota}) : null,
+    temPauta ? el("details", {}, el("summary", {text: "ver a pauta"}), provas) : null,
+    r.texto ? el("details", {}, el("summary", {text: "ver o roteiro"}), el("pre", {class: "roteiro", text: r.texto})) : null,
+    r.arquivo ? el("p", {class: "sub", style: "margin:0;font-size:13px", text: "arquivo: " + r.arquivo}) : null,
+    acoes);
+}
+
+function renderRoteiros() {
+  const todos = [...roteiros.entries()];
+  const de = st => todos.filter(([, r]) => r.status === st).sort((a, b) => (a[1].criado_em || "").localeCompare(b[1].criado_em || ""));
+  const agu = de("aguardando"), prod = de("producao"), pr = de("pronto");
+  $("aba-n").textContent = agu.length + prod.length ? String(agu.length + prod.length) : "";
+  $("n-agu").textContent = String(agu.length); $("n-prod").textContent = String(prod.length);
+  $("rot-aviso").textContent = todos.length ? "Os botões mudam o roteiro de coluna. Quando você der o ok num roteiro de cultura pop, o Claude marca pronto e guarda o texto aqui."
+    : "Nenhum roteiro ainda. Use \"Guardar pra roteiro\" numa pauta ou sugestão do Diário.";
+  const vazio = t => el("p", {class: "vazio", text: t});
+  $("col-aguardando").replaceChildren(...(agu.length ? agu.map(([id, r]) => cartao(id, r)) : [vazio("Nada esperando.")]));
+  $("col-producao").replaceChildren(...(prod.length ? prod.map(([id, r]) => cartao(id, r)) : [vazio("Nada em produção.")]));
+  const cats = [...new Set(pr.map(([, r]) => r.categoria || "Outros"))].sort((a, b) => a.localeCompare(b, "pt-BR"));
+  if (filtroCat !== "todas" && !cats.includes(filtroCat)) filtroCat = "todas";
+  $("cat-filtro").replaceChildren(...(cats.length > 1 ? ["todas", ...cats].map(c => {
+    const b = el("button", {type: "button", "aria-pressed": String(c === filtroCat), text: c === "todas" ? `Todas (${pr.length})` : `${c} (${pr.filter(([, r]) => (r.categoria || "Outros") === c).length})`});
+    b.addEventListener("click", () => { filtroCat = c; renderRoteiros(); });
+    return b; }) : []));
+  $("n-pronto").textContent = `${pr.length} · por categoria`;
+  $("col-pronto").replaceChildren(...(pr.length ? cats.filter(c => filtroCat === "todas" || c === filtroCat).map(c => el("div", {class: "cat"},
+    el("h3", {class: "cat-t", text: c}),
+    el("div", {class: "cats"}, ...pr.filter(([, r]) => (r.categoria || "Outros") === c).map(([id, r]) => cartao(id, r))))) : [vazio("Nenhum roteiro pronto ainda.")]));
+  marcarGuardados();
+}
+
+function mostrarAba(qual) {
+  for (const a of ["diario", "numeros", "roteiros", "identidade"]) {
+    $("v-" + a).hidden = a !== qual; $("aba-" + a).setAttribute("aria-selected", String(a === qual));
+  }
+  // o gráfico mede a largura da caixa: desenha de novo quando a aba aparece
+  if (qual === "numeros" && numDados) renderNumeros({numeros: numDados});
+  try { localStorage.setItem("geektavo-aba", qual); } catch (e) { /* sem storage: tudo bem */ }
+}
+
+async function iniciarRoteiros() {
+  db = null;
+  if (!db) { $("rot-aviso").textContent = "Esta visualização não consegue abrir os roteiros. Abra o painel em claude.ai logado na sua conta."; marcarGuardados(); return; }
+  db.collection("roteiros").onSnapshot(snap => {
+    roteiros = new Map(snap.docs.filter(d => d.exists).map(d => [d.id, d.data()]));
+    renderRoteiros();
+  }, e => { $("rot-aviso").textContent = "Os roteiros pararam de atualizar. Recarregue a página."; });
+}
+
+// ---------- Números (numeros.py; um retrato por dia, dentro do JSON do dia) ----------
+const NUM_PERIODOS = [["diario", "Diário", "dia anterior"], ["semanal", "Semanal", "semana anterior"], ["quinzenal", "Quinzenal", "quinzena anterior"],
+  ["mensal", "Mensal", "30 dias anteriores"], ["trimestral", "Trimestral", "trimestre anterior"], ["semestral", "Semestral", "semestre anterior"], ["anual", "Anual", "ano anterior"]];
+const NUM_MET = {
+  instagram: [["views", "Views"], ["reach", "Alcance"], ["shares", "Compartilhamentos"], ["saves", "Salvos"], ["likes", "Curtidas"],
+              ["comments", "Comentários"], ["seguidores_novos", "Seguidores novos"], ["profile_views", "Visitas ao perfil"]],
+  youtube: [["views", "Views"], ["minutos", "Minutos assistidos"], ["inscritos", "Inscritos (saldo)"], ["likes", "Curtidas"], ["shares", "Compartilhamentos"],
+            ["comentarios", "Comentários"], ["duracao_media_s", "Duração média"], ["pct_assistido", "% assistido"]]};
+let numDados = null, numRede = "instagram", numPer = "semanal", numMet = "views";
+const compacto = n => n == null ? "–" : Math.abs(n) >= 1e6 ? (n / 1e6).toLocaleString("pt-BR", {maximumFractionDigits: 1}) + " mi"
+  : Math.abs(n) >= 1e4 ? (n / 1e3).toLocaleString("pt-BR", {maximumFractionDigits: 1}) + " mil" : Number(n).toLocaleString("pt-BR", {maximumFractionDigits: 1});
+const fmtMet = (k, v) => v == null ? "–" : k === "duracao_media_s" ? Math.round(v) + "s" : k === "pct_assistido" ? pct(v) : compacto(v);
+const somaDias = (iso, n) => { const d = new Date(iso + "T12:00:00"); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
+const curtaBR = (iso, ano) => { const [a, m, d] = iso.split("-"); return ano ? `${d}/${m}/${a.slice(2)}` : `${d}/${m}`; };
+
+function faixaDe(per, i, n) {   // datas do período i (0 = mais antigo)
+  const fim = somaDias(per.fim, -(n - 1 - i) * per.dias), ini = somaDias(fim, -(per.dias - 1));
+  const ano = per.dias >= 90;
+  return per.dias === 1 ? curtaBR(fim) : `${curtaBR(ini, ano)} a ${curtaBR(fim, ano)}`;
+}
+
+function delta(atual, antes) {
+  if (atual == null || antes == null) return ["sem comparação", "igual"];
+  if (antes === 0) return atual === 0 ? ["igual", "igual"] : ["novo (antes era 0)", "sobe"];
+  if (antes > 0 && atual / antes >= 10) return [`${Math.round(atual / antes).toLocaleString("pt-BR")}x o anterior`, "sobe"];
+  const x = (atual - antes) / Math.abs(antes) * 100;
+  const t = (x > 0 ? "+" : "") + x.toLocaleString("pt-BR", {maximumFractionDigits: Math.abs(x) < 10 ? 1 : 0}) + "%";
+  return [t, x > 0.05 ? "sobe" : x < -0.05 ? "desce" : "igual"];
+}
+
+function botoesSeg(id, itens, atual, fn) {
+  $(id).replaceChildren(...itens.map(([k, r]) => { const b = el("button", {type: "button", "aria-pressed": String(k === atual), text: r});
+    b.addEventListener("click", () => fn(k)); return b; }));
+}
+
+function svg(tag, attrs = {}) { const e = document.createElementNS("http://www.w3.org/2000/svg", tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); return e; }
+
+function graficoBarras(caixa, rotulos, valores, fmtV, dicas) {
+  // uma série só, em ciano (sem legenda: o título diz o que é); o período atual cheio, os anteriores mais fracos
+  const W = Math.max(280, Math.round(caixa.clientWidth || 600) - 24), H = 190, E = 40, B = 22, T = 16;
+  const max = Math.max(...valores.map(v => v || 0), 0);
+  const passo = (() => { if (!max) return 1; const bruto = max / 3, pot = Math.pow(10, Math.floor(Math.log10(bruto))); return [1, 2, 2.5, 5, 10].map(m => m * pot).find(m => m >= bruto); })();
+  const topo = passo * 3 || 1;
+  const g = svg("svg", {viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "gráfico de barras"});
+  for (let i = 0; i <= 3; i++) {
+    const y = T + (H - T - B) * (1 - i / 3);
+    g.append(svg("line", {x1: E, x2: W, y1: y, y2: y, class: "grade"}));
+    const t = svg("text", {x: E - 6, y: y + 4, "text-anchor": "end", class: "eixo"}); t.textContent = compacto(passo * i); g.append(t);
+  }
+  const n = valores.length, fatia = (W - E) / n, larg = Math.min(24, fatia - 2);
+  const dica = el("div", {class: "dica", hidden: ""});
+  valores.forEach((v, i) => {
+    const cx = E + fatia * i + fatia / 2;
+    if (v != null && v > 0) {
+      const h = (H - T - B) * v / topo, x = cx - larg / 2, y = H - B - h, r = Math.min(4, h, larg / 2);
+      // canto arredondado só na ponta, reto na base
+      g.append(svg("path", {class: "barra" + (i < n - 1 ? " antes" : ""),
+        d: `M${x},${H - B} V${y + r} Q${x},${y} ${x + r},${y} H${x + larg - r} Q${x + larg},${y} ${x + larg},${y + r} V${H - B} Z`}));
+    }
+    if (i === n - 1 || n <= 8 || i % Math.ceil(n / 6) === (n - 1) % Math.ceil(n / 6)) {
+      const t = svg("text", {x: cx, y: H - 6, "text-anchor": "middle", class: "eixo"}); t.textContent = rotulos[i]; g.append(t);
+    }
+    if (i === n - 1 && v != null) { const t = svg("text", {x: cx, y: H - B - (H - T - B) * (v || 0) / topo - 5, "text-anchor": "middle", class: "val"}); t.textContent = fmtV(v); g.append(t); }
+    const alvo = svg("rect", {x: E + fatia * i, y: T, width: fatia, height: H - T - B, class: "alvo"});
+    const mostra = () => { dica.hidden = false; dica.textContent = `${dicas[i]}: ${fmtV(v)}`;
+      dica.style.left = (12 + (cx / W) * (caixa.clientWidth - 24)) + "px"; dica.style.top = (12 + (H - B - (H - T - B) * (v || 0) / topo) * ((caixa.clientWidth - 24) / W)) + "px"; };
+    alvo.addEventListener("mouseenter", mostra); alvo.addEventListener("click", mostra);
+    alvo.addEventListener("mouseleave", () => { dica.hidden = true; });
+    g.append(alvo);
+  });
+  caixa.replaceChildren(g, dica);
+}
+
+function renderNumeros(d) {
+  numDados = d.numeros || null;
+  const temRede = r => numDados && numDados[r] && !numDados[r].sem_dados && numDados[r].periodos;
+  botoesSeg("num-rede", [["instagram", "Instagram"], ["youtube", "YouTube"]], numRede, k => { numRede = k; if (!NUM_MET[k].some(([m]) => m === numMet)) numMet = "views"; renderNumeros(d); });
+  botoesSeg("num-periodo", NUM_PERIODOS.map(([k, r]) => [k, r]), numPer, k => { numPer = k; renderNumeros(d); });
+  const vazio = $("num-vazio");
+  if (!temRede(numRede)) {
+    vazio.hidden = false;
+    vazio.textContent = !numDados ? "Este dia é de antes da aba Números (começou em 23/09/2026)."
+      : numRede === "youtube" && numDados.youtube && numDados.youtube.sem_dados ? "O canal do YouTube ainda não tem vídeo. Os números aparecem sozinhos depois do primeiro post."
+      : "Sem números desta rede neste dia.";
+    $("num-tiles").replaceChildren(); $("num-graf").replaceChildren(); $("num-tabela").replaceChildren(); $("num-s-graf").hidden = true;
+  } else {
+    vazio.hidden = true; $("num-s-graf").hidden = false;
+    const per = numDados[numRede].periodos[numPer], n = per.v.views.length;
+    const [, , contra] = NUM_PERIODOS.find(([k]) => k === numPer);
+    $("num-sub").textContent = `${faixaDe(per, n - 1, n)} contra o ${contra}`;
+    $("num-tiles").replaceChildren(...NUM_MET[numRede].map(([k, r]) => {
+      const vs = per.v[k] || [], at = vs[n - 1], an = vs[n - 2];
+      const [txt, dir] = delta(at, an);
+      const b = el("button", {type: "button", class: "tile", "aria-pressed": String(k === numMet)},
+        el("span", {class: "rot sub", style: "margin:0", text: r}), el("span", {class: "val", text: fmtMet(k, at)}),
+        el("span", {class: "dl " + dir, text: (dir === "sobe" ? "↑ " : dir === "desce" ? "↓ " : "") + txt}));
+      b.addEventListener("click", () => { numMet = k; renderNumeros(d); });
+      return b;
+    }));
+    const nomeMet = (NUM_MET[numRede].find(([k]) => k === numMet) || ["", numMet])[1];
+    $("t-graf").replaceChildren(el("span", {class: "pincel", text: `${nomeMet}, ${NUM_PERIODOS.find(([k]) => k === numPer)[1].toLowerCase()}`}));
+    const vals = per.v[numMet] || [], rot = vals.map((_, i) => per.dias === 1 ? curtaBR(somaDias(per.fim, -(n - 1 - i))) : curtaBR(somaDias(per.fim, -(n - 1 - i) * per.dias - (per.dias - 1))));
+    const dicas = vals.map((_, i) => faixaDe(per, i, n));
+    const mostrar = () => graficoBarras($("num-graf"), rot, vals, v => fmtMet(numMet, v), dicas);
+    mostrar();
+    $("num-tabela").replaceChildren(el("table", {}, el("thead", {}, el("tr", {}, el("th", {text: "período"}), el("th", {class: "n", text: nomeMet}))),
+      el("tbody", {}, ...vals.map((v, i) => el("tr", {}, el("td", {text: dicas[i]}), el("td", {class: "n num", text: fmtMet(numMet, v)}))).reverse())));
+  }
+  renderUltimos();
+}
+
+const IG_LINHAS = [["views", "views"], ["alcance", "alcance"], ["shares", "shares"], ["salvos", "salvos"], ["share_pct", "share %"], ["salvo_pct", "salvo %"],
+  ["curtidas", "curtidas"], ["comentarios", "comentários"], ["tempo_medio_s", "tempo médio"], ["taxa_pulo_pct", "taxa de pulo"]];
+const YT_LINHAS = [["views", "views"], ["likes", "curtidas"], ["shares", "shares"], ["inscritos", "inscritos"]];
+const fmtLinha = (k, v) => v == null ? "–" : /pct/.test(k) ? pct(v) : k === "tempo_medio_s" || k === "duracao_media_s" ? v.toLocaleString("pt-BR") + "s" : compacto(v);
+
+function cartaoVideo(v, melhor) {
+  const ig = v.plataforma === "instagram", linhas = ig ? IG_LINHAS : YT_LINHAS;
+  const cab = el("tr", {}, el("th", {text: ""}), ...v.marcos.map(m => el("th", {class: "n", text: ig ? (m.idade_h != null ? `${m.idade_h}h` : `até ${m.alvo_h}h`) : `dia ${m.dia}`})),
+    el("th", {class: "n", text: "agora"}));
+  const corpo = linhas.map(([k, r]) => el("tr", {}, el("td", {text: r}),
+    ...v.marcos.map(m => el("td", {class: "n num", text: m.v ? fmtLinha(k, m.v[k]) : "–"})), el("td", {class: "n num", text: fmtLinha(k, (v.atual || {})[k])})));
+  const extra = [];
+  if (!ig && v.atual) extra.push(el("p", {class: "sub", style: "margin:0", text: `assistido: ${pct(v.atual.pct_assistido)} · duração média ${fmtLinha("duracao_media_s", v.atual.duracao_media_s)}`}));
+  if (!ig && (v.curva_retencao || []).length > 1) {
+    const cv = el("div", {class: "grafico curva"}); const pts = v.curva_retencao, W = 300, H = 60;
+    const g = svg("svg", {viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "curva de retenção"});
+    const path = pts.map(([x, y], i) => `${i ? "L" : "M"}${(x * W).toFixed(1)},${(H - Math.min(y, 120) / 120 * H).toFixed(1)}`).join(" ");
+    g.append(svg("path", {d: path + ` L${W},${H} L0,${H} Z`, fill: "var(--ciano)", opacity: ".1"}), svg("path", {d: path, fill: "none", stroke: "var(--ciano)", "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round"}));
+    cv.append(g); extra.push(el("span", {class: "rot sub", style: "margin:0", text: "retenção ao longo do vídeo"}), cv);
+  }
+  if (ig && v.marcos.every(m => !m.v)) extra.push(el("p", {class: "sub", style: "margin:0", text: "Postado antes das fotos diárias (22/09): só o número de agora."}));
+  return el("article", {class: "video" + (melhor ? " melhor" : "")},
+    el("div", {class: "chips"}, el("span", {class: "pl " + v.plataforma, text: v.plataforma}), el("span", {class: "chip", text: v.publicado}),
+      melhor ? el("span", {class: "chip modo", text: "melhor começo"}) : null),
+    v.link ? el("h3", {}, el("a", {href: v.link, target: "_blank", rel: "noopener", text: v.titulo || "(sem título)"})) : el("h3", {text: v.titulo}),
+    el("div", {class: "tabela"}, el("table", {}, el("thead", {}, cab), el("tbody", {}, ...corpo))), ...extra);
+}
+
+function renderUltimos() {
+  const blocos = [];
+  for (const [chave, nome] of [["ultimos_instagram", "Instagram"], ["ultimos_youtube", "YouTube"]]) {
+    const vs = (numDados && numDados[chave]) || [];
+    if (!vs.length) { blocos.push(el("p", {class: "vazio", text: `${nome}: ${chave === "ultimos_youtube" ? "o canal ainda não tem vídeo." : "sem vídeos neste dia."}`})); continue; }
+    // "melhor começo": mais views no último marco dos 3 primeiros dias que cada um tem
+    const inicio = v => { const ms = v.marcos.filter(m => m.v); return ms.length ? ms[ms.length - 1].v.views || 0 : -1; };
+    const top = Math.max(...vs.map(inicio));
+    blocos.push(el("div", {class: "videos"}, ...vs.map(v => cartaoVideo(v, top > 0 && inicio(v) === top))));
+  }
+  $("num-ultimos").replaceChildren(...blocos);
+}
+
+function render(d) {
+  $("avisos").replaceChildren();
+  for (const e of d.erros || []) {
+    const cmd = (e.match(/Pra reconectar: (.*)$/) || [])[1];
+    aviso("erro", "Coleta: " + e.split(":")[0], e.replace(/Pra reconectar: .*$/, "").split(":").slice(1).join(":").trim(), cmd);
+  }
+  if (d.data && d.data < new Date(Date.now() - 36e5 * 36).toISOString().slice(0, 10) && $("dia").selectedIndex === 0) {
+    aviso("info", "O dia mais recente é " + dataBR(d.data) + ".", "A rotina não rodou depois disso. O Mac precisa estar ligado ao meio-dia; se estava dormindo, ela roda quando ele acorda.");
+  }
+  $("sub").textContent = `@geektavodalmoro · coletado em ${dataBR(d.data)}${d.coletado_em ? " às " + d.coletado_em.slice(11, 16) : ""}`;
+  renderEstado(d); renderContas(d); renderLeitura(d); renderPautas(d); renderGravar(d); renderConversa(d); renderAnime(d); renderLongo(d);
+  renderNicho(d); renderClassicos(d); renderDestaques(d); renderRadar(d); renderSugestoes(d); marcarGuardados(); renderNumeros(d);
+}
+
+function falhou(e) {
+  const [t, det] = mensagemDoErro(e);
+  $("avisos").replaceChildren();
+  aviso("erro", t, det);
+  for (const id of ["leitura", "pautas"]) $(id).replaceChildren(el("p", {class: "vazio", text: "Sem dados enquanto o Drive não responder."}));
+  $("contas").replaceChildren();
+  $("destaques").replaceChildren(el("tr", {}, el("td", {colspan: "6", class: "vazio", text: "–"})));
+  $("radar").replaceChildren();
+  for (const id of ["nicho-pt", "nicho-en", "classicos"]) $(id).replaceChildren();
+  for (const id of ["estado", "s-gravar", "s-conversa", "s-anime", "s-longo", "s-sug"]) $(id).hidden = true;
+}
+
+async function abrir(i) {
+  diaAtual = arquivos[i].dia;
+  try {
+    const [d] = await Promise.all([carregarDia(arquivos[i]), lerVotos(diaAtual), lerVotosLongo(diaAtual)]);
+    if (!d.numeros) d.numeros = await numerosAvulsos(diaAtual);
+    render(d);
+  }
+  catch (e) { falhou(e); }
+}
+
+async function iniciar() {
+  $("avisos").replaceChildren();
+  try {
+    arquivos = await listar();
+  } catch (e) { falhou(e); return; }
+  const sel = $("dia");
+  if (!arquivos.length) {
+    sel.replaceChildren(el("option", {text: "nenhum dia ainda"}));
+    aviso("info", "Ainda não há nenhum dia na pasta \"GEEKTAVO painel\".", "A primeira rotina roda ao meio-dia com o Mac ligado.");
+    return;
+  }
+  sel.replaceChildren(...arquivos.map((a, i) => el("option", {value: String(i), text: dataBR(a.dia) + (i === 0 ? " (mais recente)" : "")})));
+  sel.disabled = false;
+  await abrir(0);
+}
+
+// o texto de cada título de seção ganha o bloco preto inclinado (o pincel das thumbs)
+function pinceis() {
+  for (const h of document.querySelectorAll("h2")) {
+    const t = h.firstChild;
+    if (t && t.nodeType === 3 && t.textContent.trim()) {
+      const s = el("span", {class: "pincel", text: t.textContent.trim()}); h.replaceChild(s, t); h.insertBefore(document.createTextNode(" "), s.nextSibling);
+    }
+  }
+}
+// aba Identidade: as cores (com os códigos) e as figurinhas
+const CORES_ID = [["AZUL NOITE", "#07122B", "7, 18, 43", "fundo de tudo · 60% da peça"], ["LENTE CIANO", "#00C8FF", "0, 200, 255", "o herói, a leitura, o destaque · 25%"],
+  ["LENTE VERMELHA", "#FF2A4D", "255, 42, 77", "o espelho, o vilão, o erro · 10%"], ["BRANCO GIZ", "#EEF6FF", "238, 246, 255", "texto · 5%"],
+  ["AZUL FUNDO 2", "#16305F", "22, 48, 95", "faixa, cartão, segundo plano"], ["CINZA LEGENDA", "#5A6B8C", "90, 107, 140", "texto de apoio"]];
+$("id-cores").replaceChildren(...CORES_ID.map(([n, hex, rgb, uso]) => { const a = el("span", {class: "amostra"}); a.style.background = hex;
+  return el("article", {class: "cor"}, a, el("div", {}, el("b", {text: n}), el("span", {class: "hex", text: "HEX " + hex}), el("span", {class: "rgb", text: "RGB " + rgb}), el("span", {class: "uso", text: uso}))); }));
+$("id-figs").replaceChildren(...["01-ta-aprovado", "02-morreu-no-cap-1", "03-cancelaram", "04-filler", "05-absolute-cinema", "06-tem-cena-pos-credito"]
+  .map(f => el("img", {src: `identidade/${f}.webp`, alt: f.slice(3).replace(/-/g, " "), loading: "lazy"})));
+// arquivos da identidade: baixar um a um, ou gravar todos na pasta do Drive
+const PASTA_ID = "1rIkCE0gse9jlqeWQ2-bvnxDPiWgDurIA";
+const ARQUIVOS = ["banner-youtube-2560x1440.jpg", "thumb-dossie-coringa-1280x720.jpg", "thumb-espelho-1280x720.jpg", "thumb-diagnostico-1280x720.jpg",
+  "thumb-plantao-1280x720.jpg", "figurinha-01-ta-aprovado.webp", "figurinha-02-morreu-no-cap-1.webp", "figurinha-03-cancelaram.webp",
+  "figurinha-04-filler.webp", "figurinha-05-absolute-cinema.webp", "figurinha-06-tem-cena-pos-credito.webp", "sting-geektavo-1920x1080.mp4",
+  "GEEKTAVO-identidade-v2.pdf", "logo-geektavo-transparente.png", "logo-geektavo-fundo-azul-noite.png", "logo-oculos-transparente.png",
+  "foto-perfil-avatar.png", "foto-perfil-avatar-circulo.png"];
+const TIPO = {jpg: "image/jpeg", png: "image/png", webp: "image/webp", mp4: "video/mp4", pdf: "application/pdf"};
+const marcas = {};
+$("id-arquivos").replaceChildren(...ARQUIVOS.map(f => { const m = el("span", {class: "meta"}); marcas[f] = m;
+  return el("li", {}, el("div", {class: "topo"}, el("a", {href: "baixar/" + f, download: f, text: f}), m)); }));
+function base64De(buf) {
+  const b = new Uint8Array(buf); let s = "";
+  for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000));
+  return btoa(s);
+}
+$("salvar-drive").addEventListener("click", async () => {
+  const bt = $("salvar-drive"), st = $("salvar-estado");
+  if (!(mcp || await mcpPronto)) { st.textContent = "Esta visualização não acessa o seu Drive. Abra o painel em claude.ai."; return; }
+  bt.disabled = true;
+  let ja = new Set();
+  try {
+    const p = await chamar("search_files", {query: `parentId = '${PASTA_ID}'`, excludeContentSnippets: true, pageSize: 100});
+    ja = new Set(((p && p.files) || []).map(f => f.title));
+  } catch (e) { /* segue e tenta gravar todos */ }
+  let ok = 0, falhas = 0;
+  for (const [i, f] of ARQUIVOS.entries()) {
+    st.textContent = `${i + 1} de ${ARQUIVOS.length}…`;
+    if (ja.has(f)) { marcas[f].textContent = "já estava no Drive"; ok++; continue; }
+    marcas[f].textContent = "enviando…";
+    try {
+      const buf = await (await fetch("baixar/" + f)).arrayBuffer();
+      await (await usarMcp()).callTool(DRIVE, "create_file", {title: f, parentId: PASTA_ID, base64Content: base64De(buf),
+        contentMimeType: TIPO[f.split(".").pop()], disableConversionToGoogleType: true}, {cache: false});
+      marcas[f].textContent = "salvo ✓"; ok++;
+    } catch (e) { marcas[f].textContent = "não foi: " + mensagemDoErro(e)[0]; falhas++; }
+  }
+  st.textContent = falhas ? `${ok} salvos, ${falhas} não foram. Toque de novo pra tentar só os que faltam.` : `Pronto: os ${ok} arquivos estão na pasta.`;
+  bt.disabled = false;
+});
+pinceis();
+$("dia").addEventListener("change", e => abrir(Number(e.target.value)));
+$("aba-diario").addEventListener("click", () => mostrarAba("diario"));
+$("aba-roteiros").addEventListener("click", () => mostrarAba("roteiros"));
+$("aba-numeros").addEventListener("click", () => mostrarAba("numeros"));
+$("aba-identidade").addEventListener("click", () => mostrarAba("identidade"));
+try { const a = localStorage.getItem("geektavo-aba"); if (["roteiros", "numeros", "identidade"].includes(a)) mostrarAba(a); } catch (e) { /* sem storage */ }
+window.addEventListener("resize", () => { if (!$("v-numeros").hidden && numDados) renderNumeros({numeros: numDados}); });
+$("recarregar").addEventListener("click", () => iniciar());
+
+
+
+// ---------- site: dados do Supabase no lugar do Drive e do banco do claude.ai ----------
+const sb = supabase.createClient("https://uxhaxbukmoimvdbgqliz.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4aGF4YnVrbW9pbXZkYmdxbGl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxODU1NjcsImV4cCI6MjEwNTc2MTU2N30.DPxTuSs8sNMzsNrwfMaR57JOozQOts_nmULlbUXV6v8");
+const DONO = "contato.onlydal@gmail.com";
+let souDono = false, recarregarRoteiros = null;
+const ok = r => { if (r.error) throw {message: r.error.message}; return r.data; };
+
+async function listar() {
+  const linhas = ok(await sb.from("dia_publico").select("data").order("data", {ascending: false}).limit(90));
+  return linhas.map(l => ({dia: l.data, id: l.data}));
+}
+async function carregarDia(item) {
+  const pub = ok(await sb.from("dia_publico").select("dados").eq("data", item.dia).single());
+  let d = pub.dados;
+  if (souDono) {
+    const f = await sb.from("dia_fechado").select("dados").eq("data", item.dia).maybeSingle();
+    if (f.data) d = {...d, ...f.data.dados};
+  }
+  return d;
+}
+async function numerosAvulsos() { return null; }
+async function lerVotos(dia) {
+  votos = {};
+  if (!souDono) return;
+  for (const v of ok(await sb.from("votos").select("n,veredito").eq("dia", dia).eq("tipo", "pauta"))) votos[String(v.n)] = v.veredito;
+}
+async function lerVotosLongo(dia) {
+  votosLongo = {};
+  if (!souDono) return;
+  for (const v of ok(await sb.from("votos").select("n").eq("dia", dia).eq("tipo", "longo"))) votosLongo[String(v.n)] = true;
+}
+async function votar(n, veredito, pauta, caixa) {
+  const estado = caixa.querySelector(".estado");
+  for (const b of caixa.querySelectorAll("button")) b.disabled = true;
+  estado.textContent = "gravando…";
+  try {
+    ok(await sb.from("votos").upsert({id: `${diaAtual}-p${n}`, dia: diaAtual, tipo: "pauta", n: Number(n), veredito, logline: pauta.logline, em: new Date().toISOString()}));
+    votos[n] = veredito;
+    for (const b of caixa.querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.v === veredito));
+    estado.textContent = "a rotina de amanhã já usa isso";
+    if (veredito === "gravar") guardarRoteiro(`p-${diaAtual}-${n}`, itemDaPauta(pauta, diaAtual, n), null);
+  } catch (e) { estado.textContent = "não gravou: " + (e.message || e); }
+  finally { for (const b of caixa.querySelectorAll("button")) b.disabled = false; }
+}
+async function votarLongo(n, tema, b) {
+  const estado = b.nextElementSibling;
+  b.disabled = true; estado.textContent = "gravando…";
+  try {
+    ok(await sb.from("votos").upsert({id: `longo-${diaAtual}-t${n}`, dia: diaAtual, tipo: "longo", n: Number(n), veredito: "quero", logline: tema.titulo, em: new Date().toISOString()}));
+    votosLongo[n] = true; b.setAttribute("aria-pressed", "true");
+    estado.textContent = "a rotina de amanhã começa a pesquisa (cronologia e fontes)";
+  } catch (e) { estado.textContent = "não gravou: " + (e.message || e); }
+  finally { b.disabled = false; }
+}
+// os roteiros: a mesma interface que o painel usava (doc.set/update/delete, onSnapshot), agora no Supabase
+function bancoRoteiros() {
+  const recarregar = () => recarregarRoteiros && recarregarRoteiros();
+  return {collection: () => ({
+    doc: id => ({
+      set: async d => { ok(await sb.from("roteiros").upsert({id, dados: d})); recarregar(); },
+      update: async patch => {
+        const atual = ok(await sb.from("roteiros").select("dados").eq("id", id).single());
+        ok(await sb.from("roteiros").upsert({id, dados: {...atual.dados, ...patch}})); recarregar();
+      },
+      delete: async () => { ok(await sb.from("roteiros").delete().eq("id", id)); recarregar(); },
+    }),
+    onSnapshot: (fn, erro) => {
+      recarregarRoteiros = async () => {
+        try { const ls = ok(await sb.from("roteiros").select("id,dados")); fn({docs: ls.map(r => ({id: r.id, exists: true, data: () => r.dados}))}); }
+        catch (e) { erro && erro(e); }
+      };
+      recarregarRoteiros();
+      return () => {};
+    },
+  })};
+}
+async function iniciarRoteiros() {
+  if (!souDono) { db = null; roteiros = new Map(); renderRoteiros(); return; }
+  db = bancoRoteiros();
+  db.collection("roteiros").onSnapshot(snap => { roteiros = new Map(snap.docs.map(d => [d.id, d.data()])); renderRoteiros(); },
+    () => { $("rot-aviso").textContent = "Os roteiros não carregaram. Recarregue a página."; });
+}
+function marcarProtegidos() {
+  for (const id of ["pautas", "classicos", "s-gravar", "s-longo", "s-sug", "estado"]) {
+    const e = $(id); if (e) (e.closest("section") || e).classList.add("protegido");
+  }
+  $("estado").classList.add("protegido");
+  $("aba-roteiros").classList.add("protegido");
+  const bt = $("salvar-drive"); if (bt) bt.parentElement.style.display = "none";
+}
+async function atualizarSessao() {
+  const {data: {session}} = await sb.auth.getSession();
+  souDono = !!session && (session.user.email || "").toLowerCase() === DONO;
+  document.body.classList.toggle("trancado", !souDono);
+}
+async function iniciarSite() {
+  document.body.classList.add("site");
+  marcarProtegidos();
+  // botão de sair, ao lado do "Atualizar"
+  const sair = el("button", {type: "button", id: "sair", text: "Sair"});
+  sair.addEventListener("click", async () => { await sb.auth.signOut(); location.reload(); });
+  $("recarregar").after(sair);
+  $("login-form").addEventListener("submit", async ev => {
+    ev.preventDefault();
+    const email = $("login-email").value.trim().toLowerCase(), msg = $("login-msg");
+    msg.textContent = "mandando…";
+    const r = await sb.auth.signInWithOtp({email, options: {emailRedirectTo: location.origin + location.pathname, shouldCreateUser: true}});
+    msg.textContent = r.error ? "Não mandou: " + r.error.message : "Pronto: abra o link que chegou no seu e-mail (neste aparelho).";
+  });
+  await atualizarSessao();
+  sb.auth.onAuthStateChange(async evento => {
+    if (evento === "SIGNED_IN" || evento === "SIGNED_OUT") { await atualizarSessao(); iniciar(); iniciarRoteiros(); }
+  });
+  iniciarRoteiros();
+  iniciar();
+}
+
+iniciarSite();
+</script>
+
+</body>
+</html>
