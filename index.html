@@ -1094,9 +1094,9 @@ async function iniciarRoteiros() {
 const NUM_PERIODOS = [["diario", "Diário", "dia anterior"], ["semanal", "Semanal", "semana anterior"], ["quinzenal", "Quinzenal", "quinzena anterior"],
   ["mensal", "Mensal", "30 dias anteriores"], ["trimestral", "Trimestral", "trimestre anterior"], ["semestral", "Semestral", "semestre anterior"], ["anual", "Anual", "ano anterior"]];
 const NUM_MET = {
-  instagram: [["views", "Views"], ["reach", "Alcance"], ["shares", "Compartilhamentos"], ["saves", "Salvos"], ["likes", "Curtidas"],
+  instagram: [["views", "Views"], ["reach", "Alcance"], ["shares", "Compartilhados"], ["saves", "Salvos"], ["likes", "Curtidas"],
               ["comments", "Comentários"], ["seguidores_novos", "Seguidores novos"], ["profile_views", "Visitas ao perfil"]],
-  youtube: [["views", "Views"], ["minutos", "Minutos assistidos"], ["inscritos", "Inscritos (saldo)"], ["likes", "Curtidas"], ["shares", "Compartilhamentos"],
+  youtube: [["views", "Views"], ["minutos", "Minutos assistidos"], ["inscritos", "Inscritos (saldo)"], ["likes", "Curtidas"], ["shares", "Compartilhados"],
             ["comentarios", "Comentários"], ["duracao_media_s", "Duração média"], ["pct_assistido", "% assistido"]]};
 let numDados = null, numRede = "instagram", numPer = "semanal", numMet = "views";
 const compacto = n => n == null ? "–" : Math.abs(n) >= 1e6 ? (n / 1e6).toLocaleString("pt-BR", {maximumFractionDigits: 1}) + " mi"
@@ -1114,7 +1114,8 @@ function faixaDe(per, i, n) {   // datas do período i (0 = mais antigo)
 function delta(atual, antes) {
   if (atual == null || antes == null) return ["sem comparação", "igual"];
   if (antes === 0) return atual === 0 ? ["igual", "igual"] : ["novo (antes era 0)", "sobe"];
-  if (antes > 0 && atual / antes >= 10) return [`${Math.round(atual / antes).toLocaleString("pt-BR")}x o anterior`, "sobe"];
+  // subida de 10x ou mais: a porcentagem vira número sem sentido (+211.000%), então mostra o valor de antes
+  if (antes > 0 && atual / antes >= 10) return [`antes: ${antes.toLocaleString("pt-BR")}`, "sobe"];
   const x = (atual - antes) / Math.abs(antes) * 100;
   const t = (x > 0 ? "+" : "") + x.toLocaleString("pt-BR", {maximumFractionDigits: Math.abs(x) < 10 ? 1 : 0}) + "%";
   return [t, x > 0.05 ? "sobe" : x < -0.05 ? "desce" : "igual"];
