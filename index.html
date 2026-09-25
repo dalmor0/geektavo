@@ -314,8 +314,14 @@ p,dd,li,h2,h3,a,span,b,pre,code,td{overflow-wrap:anywhere}
 @keyframes brilho{to{background-position:-200% 0}}
 @media (prefers-reduced-motion:reduce){.esq{animation:none}}
 
-/* site: a parte fechada só aparece com o login do dono */
+/* site: a parte fechada abre com o PIN (só leitura) ou com o login do dono (vota e mexe nos roteiros) */
 body.trancado .protegido{display:none!important}
+body.so-leitura .votos, body.so-leitura .guardar, body.so-leitura .rcard .acoes, body.so-leitura #rot-aviso{display:none!important}
+.login{margin:0 0 18px}
+.login input[type=password]{font:700 18px var(--mono);letter-spacing:.3em;width:11em;max-width:100%;padding:8px 12px;background:var(--ground);color:var(--ink);border:1px solid var(--line);border-radius:2px}
+.login label{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.login details summary{cursor:pointer;font-size:13.5px;color:var(--muted)}
+.login details form{margin-top:8px}
 body.site #salvar-drive{display:none!important}
 .login{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--verm);border-radius:2px;padding:14px 16px;display:grid;gap:10px}
 .login b{font:900 17px var(--display)}
@@ -323,6 +329,7 @@ body.site #salvar-drive{display:none!important}
 .login input[type=email]{font:400 16px var(--mono);width:22em;max-width:100%;padding:8px 12px;background:var(--ground);color:var(--ink);border:1px solid var(--line);border-radius:2px}
 .login .msg{font-size:13.5px;color:var(--muted)}
 body:not(.trancado) .login{display:none}
+body.pin-ok:not(.dono) .login{display:grid} body:not(.dono) .so-dono{display:none!important} body.pin-ok .login .so-pin{display:none}
 #sair{display:none} body.site:not(.trancado) #sair{display:inline-block}
 
 </style>
@@ -350,6 +357,25 @@ body:not(.trancado) .login{display:none}
     <button type="button" role="tab" id="aba-roteiros" aria-selected="false" aria-controls="v-roteiros">Roteiros<span class="n" id="aba-n"></span></button>
     <button type="button" role="tab" id="aba-identidade" aria-selected="false" aria-controls="v-identidade">Identidade</button>
   </nav>
+  <section class="login" id="login" aria-labelledby="t-login">
+    <div class="so-pin" style="display:grid;gap:10px">
+      <b id="t-login">Pautas, ideias e roteiros estão fechados</b>
+      <form id="pin-form" autocomplete="off">
+        <input type="password" id="pin" inputmode="numeric" placeholder="PIN" aria-label="PIN" required>
+        <button type="submit">Abrir</button>
+        <label><input type="checkbox" id="pin-lembrar" checked> lembrar neste aparelho</label>
+      </form>
+      <span class="msg" id="pin-msg">O resto do site está aberto.</span>
+    </div>
+    <details>
+      <summary>Sou o Gustavo: entrar por e-mail pra votar e mexer nos roteiros</summary>
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="seu e-mail" aria-label="e-mail" autocomplete="email" required>
+        <button type="submit">Receber link de acesso</button>
+      </form>
+      <span class="msg" id="login-msg">O link chega no e-mail. Abra ele neste mesmo aparelho.</span>
+    </details>
+  </section>
 
   <div id="v-numeros" class="vista" role="tabpanel" aria-labelledby="aba-numeros" hidden>
     <section aria-labelledby="t-num">
@@ -462,14 +488,6 @@ body:not(.trancado) .login{display:none}
 
   <div id="v-diario" class="vista" role="tabpanel" aria-labelledby="aba-diario">
   <div id="avisos" style="display:grid;gap:8px"></div>
-  <section class="login" id="login" aria-labelledby="t-login">
-    <b id="t-login">Pautas, ideias e roteiros estão fechados</b>
-    <form id="login-form">
-      <input type="email" id="login-email" placeholder="seu e-mail" aria-label="e-mail" autocomplete="email" required>
-      <button type="submit">Receber link de acesso</button>
-    </form>
-    <span class="msg" id="login-msg">O resto do site está aberto. O link de acesso chega no seu e-mail.</span>
-  </section>
 
   <section id="estado" class="faixa" aria-label="Estado do sistema" hidden></section>
 
@@ -1368,6 +1386,23 @@ $("recarregar").addEventListener("click", () => iniciar());
 const sb = supabase.createClient("https://uxhaxbukmoimvdbgqliz.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4aGF4YnVrbW9pbXZkYmdxbGl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxODU1NjcsImV4cCI6MjEwNTc2MTU2N30.DPxTuSs8sNMzsNrwfMaR57JOozQOts_nmULlbUXV6v8");
 const DONO = "contato.onlydal@gmail.com";
 let souDono = false, recarregarRoteiros = null;
+let pinAtual = null, cofreAtual = null, roteirosPin = [];
+try { pinAtual = localStorage.getItem("geektavo-pin"); } catch (e) {}
+function b64(s) { const b = atob(s), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
+async function abrirCofre(c, pinTxt) {
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pinTxt), "PBKDF2", false, ["deriveKey"]);
+  const chave = await crypto.subtle.deriveKey({name: "PBKDF2", salt: b64(c.sal), iterations: c.rodadas, hash: "SHA-256"},
+    base, {name: "AES-GCM", length: 256}, false, ["decrypt"]);
+  const claro = await crypto.subtle.decrypt({name: "AES-GCM", iv: b64(c.iv)}, chave, b64(c.dados));   // PIN errado: rejeita
+  return JSON.parse(new TextDecoder().decode(claro));
+}
+function atualizarTrava() {
+  const pinOk = !souDono && !!pinAtual && !!cofreAtual;
+  document.body.classList.toggle("dono", souDono);
+  document.body.classList.toggle("pin-ok", pinOk);
+  document.body.classList.toggle("so-leitura", !souDono);
+  document.body.classList.toggle("trancado", !souDono && !pinOk);
+}
 const ok = r => { if (r.error) throw {message: r.error.message}; return r.data; };
 
 async function listar() {
@@ -1376,11 +1411,18 @@ async function listar() {
 }
 async function carregarDia(item) {
   const pub = ok(await sb.from("dia_publico").select("dados").eq("data", item.dia).single());
-  let d = pub.dados;
+  let {cofre, ...d} = pub.dados;
+  cofreAtual = null;
   if (souDono) {
     const f = await sb.from("dia_fechado").select("dados").eq("data", item.dia).maybeSingle();
     if (f.data) d = {...d, ...f.data.dados};
+  } else if (pinAtual && cofre) {
+    try {
+      const {roteiros: rs, ...extra} = await abrirCofre(cofre, pinAtual);
+      d = {...d, ...extra}; cofreAtual = cofre; roteirosPin = rs || [];
+    } catch (e) { pinAtual = null; try { localStorage.removeItem("geektavo-pin"); } catch (x) {} }
   }
+  atualizarTrava();
   return d;
 }
 async function numerosAvulsos() { return null; }
@@ -1440,7 +1482,7 @@ function bancoRoteiros() {
   })};
 }
 async function iniciarRoteiros() {
-  if (!souDono) { db = null; roteiros = new Map(); renderRoteiros(); return; }
+  if (!souDono) { db = null; roteiros = new Map(cofreAtual ? roteirosPin : []); renderRoteiros(); return; }
   db = bancoRoteiros();
   db.collection("roteiros").onSnapshot(snap => { roteiros = new Map(snap.docs.map(d => [d.id, d.data()])); renderRoteiros(); },
     () => { $("rot-aviso").textContent = "Os roteiros não carregaram. Recarregue a página."; });
@@ -1451,12 +1493,13 @@ function marcarProtegidos() {
   }
   $("estado").classList.add("protegido");
   $("aba-roteiros").classList.add("protegido");
+  $("estado").classList.add("so-dono");
   const bt = $("salvar-drive"); if (bt) bt.parentElement.style.display = "none";
 }
 async function atualizarSessao() {
   const {data: {session}} = await sb.auth.getSession();
   souDono = !!session && (session.user.email || "").toLowerCase() === DONO;
-  document.body.classList.toggle("trancado", !souDono);
+  atualizarTrava();
 }
 async function iniciarSite() {
   document.body.classList.add("site");
@@ -1472,12 +1515,30 @@ async function iniciarSite() {
     const r = await sb.auth.signInWithOtp({email, options: {emailRedirectTo: location.origin + location.pathname, shouldCreateUser: true}});
     msg.textContent = r.error ? "Não mandou: " + r.error.message : "Pronto: abra o link que chegou no seu e-mail (neste aparelho).";
   });
+  let tentativas = 0;
+  $("pin-form").addEventListener("submit", async ev => {
+    ev.preventDefault();
+    const tentativa = $("pin").value.trim(), msg = $("pin-msg"), bt = $("pin-form").querySelector("button");
+    $("pin").value = ""; msg.textContent = "abrindo…";
+    const pub = ok(await sb.from("dia_publico").select("dados").eq("data", diaAtual).single());
+    if (!pub.dados.cofre) { msg.textContent = "Este dia ainda não tem a parte fechada no site."; return; }
+    try {
+      await abrirCofre(pub.dados.cofre, tentativa);
+      pinAtual = tentativa;
+      if ($("pin-lembrar").checked) { try { localStorage.setItem("geektavo-pin", tentativa); } catch (e) {} }
+      msg.textContent = "";
+      await abrir($("dia").selectedIndex || 0); iniciarRoteiros();
+    } catch (e) {
+      tentativas++; msg.textContent = "PIN errado.";
+      bt.disabled = true; setTimeout(() => { bt.disabled = false; }, Math.min(1000 * 2 ** tentativas, 30000));
+    }
+  });
   await atualizarSessao();
   sb.auth.onAuthStateChange(async evento => {
-    if (evento === "SIGNED_IN" || evento === "SIGNED_OUT") { await atualizarSessao(); iniciar(); iniciarRoteiros(); }
+    if (evento === "SIGNED_IN" || evento === "SIGNED_OUT") { await atualizarSessao(); await iniciar(); iniciarRoteiros(); }
   });
+  await iniciar();
   iniciarRoteiros();
-  iniciar();
 }
 
 iniciarSite();
