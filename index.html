@@ -777,7 +777,9 @@ function linhaMedida(rotulo, m) {
 
 function renderPautas(d) {
   const ps = d.pautas || [];
-  if (!ps.length) { $("pautas").replaceChildren(el("p", {class: "vazio", text: "Nenhuma pauta sobreviveu hoje. Melhor nada do que pauta fraca."})); }
+  if (!ps.length) { $("pautas").replaceChildren(el("p", {class: "vazio", text: d.previa
+    ? "As pautas de hoje ainda estão sendo feitas. Os números e as notícias já são de hoje."
+    : "Nenhuma pauta sobreviveu hoje. Melhor nada do que pauta fraca."})); }
   else $("pautas").replaceChildren(...ps.map((p, i) => {
     const n = String(i + 1);
     const alta = /^você disse/i.test(p.em_alta || "");
