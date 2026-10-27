@@ -89,6 +89,10 @@ h2 .pincel::before{content:"";position:absolute;left:0;top:14%;bottom:14%;width:
 .pauta .gancho{margin:0;color:var(--ink)}
 .pauta .gancho b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:6px}
 .pauta .porque{margin:0;color:var(--muted);font-size:15px}
+/* a chance honesta da pauta, tirada do placar.py (27/10/2026) */
+.pauta .chance{margin:0;font-size:14px;line-height:1.7;color:var(--ink)}
+.pauta .chance .chip{display:inline-block;margin-right:8px;line-height:1.3;color:var(--ciano);border-color:var(--ciano);letter-spacing:.04em;text-transform:uppercase;font-size:11.5px}
+:root[data-theme="light"] .pauta .chance .chip{color:var(--accent);border-color:var(--accent)}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{font-size:12.5px;font-weight:700;padding:3px 9px;border-radius:2px;border:1px solid var(--line);color:var(--muted)}
 .chip.alta{background:var(--good-bg);color:var(--good);border-color:transparent}
@@ -361,17 +365,21 @@ body.pin-ok:not(.dono) .login{display:grid} body:not(.dono) .so-dono{display:non
 .dk-slot b{font-family:var(--mono);margin-right:6px}
 .dk-slot.livre{border-style:dashed;color:var(--muted)}
 .dk-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
-.dk-card{border:1px solid var(--line);border-radius:2px;background:var(--ground);display:grid;gap:8px;padding:8px}
+.dk-card{border:1px solid var(--line);border-radius:2px;background:var(--ground);display:grid;gap:8px;padding:8px;align-content:start}
 .dk-card video{width:100%;aspect-ratio:9/16;background:#000;border-radius:2px;object-fit:cover}
 .dk-card .t{font-weight:700;font-size:14px;line-height:1.3}
 .dk-card .m{font:400 12px var(--mono);color:var(--muted)}
-.dk-card .acoes{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.dk-card .acoes input[type=date]{font:400 13px var(--mono);padding:4px 6px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:2px}
+.dk-card .acoes{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.dk-card .acoes input[type=date]{font:400 16px var(--mono);padding:4px 6px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:2px}
 .dk-card .estado{font-size:12.5px;color:var(--muted);min-height:1em}
 .dk-card.pedido{outline:2px solid var(--ciano)}
 .dk-card.erro .estado{color:var(--verm)}
 .dk-decididos{font-size:13.5px;display:grid;gap:4px}
 .dk-regra{font-size:13.5px;color:var(--muted);margin:0}
+.dk-alarme{color:var(--verm);font-weight:700}
+.dk-ajuste{display:grid;gap:6px}
+.dk-ajuste textarea{font:400 16px var(--body,inherit);min-height:4.5em;padding:6px 8px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:2px;resize:vertical}
+.dk-ajuste[hidden]{display:none}
 
 </style>
 
@@ -531,7 +539,8 @@ body.pin-ok:not(.dono) .login{display:grid} body:not(.dono) .so-dono{display:non
   <div id="v-dark" class="vista" role="tabpanel" aria-labelledby="aba-dark" hidden>
     <p class="dk-regra">Cada canal faz 6 Shorts por dia e posta 3. O das 12h eu escolho. Os das 15h e 17h50
       são os que você aprovar aqui; se nada for aprovado até 1 h antes, eu escolho o melhor que sobrou.
-      O que não for usado fica na reserva por 14 dias. Um pedido leva até 15 minutos pra ser confirmado.</p>
+      O que não for usado fica na reserva por 14 dias. Um pedido leva até 15 minutos pra ser confirmado.
+      Quer mudar algo num Short? "Pedir ajuste", escreva o que muda, e ele volta pra cá pronto.</p>
     <p><button type="button" id="dk-atualizar">Atualizar</button> <span class="dk-regra" id="dk-msg"></span></p>
     <div id="dk-lista" style="display:grid;gap:28px"></div>
   </div>
@@ -827,7 +836,9 @@ function renderPautas(d) {
     caixa.append(botaoGuardar(`p-${diaAtual}-${n}`, () => itemDaPauta(p, diaAtual, n)));
     caixa.append(el("span", {class: "estado", text: votos[n] ? "" : ""}));
     return el("article", {class: "pauta"},
-      el("p", {class: "log", text: p.logline}), chips, provas, med, existe,
+      el("p", {class: "log", text: p.logline}), chips,
+      p.chance ? el("p", {class: "chance"}, el("span", {class: "chip", text: "chance"}), el("span", {text: p.chance})) : null,
+      provas, med, existe,
       p.por_que_sobreviveu ? el("p", {class: "porque", text: "Sobreviveu porque: " + p.por_que_sobreviveu}) : (p.por_que ? el("p", {class: "porque", text: p.por_que}) : null),
       caixa);
   }));
@@ -1564,10 +1575,13 @@ async function dkPedir(l, pedido, dia, card) {
   for (const b of card.querySelectorAll("button")) b.disabled = true;
   est.textContent = "gravando…";
   try {
-    ok(await sb.from("dark_aprovacao").update({pedido, pedido_dia: dia || null, pedido_em: new Date().toISOString()}).eq("id", l.id).select("id"));
+    const muda = {pedido, pedido_dia: pedido === "outro_dia" ? dia : null, pedido_em: new Date().toISOString()};
+    if (pedido === "ajustar") muda.erro = "AJUSTE PEDIDO: " + dia;   // o texto do pedido vai no campo erro
+    ok(await sb.from("dark_aprovacao").update(muda).eq("id", l.id).select("id"));
     card.classList.add("pedido");
     est.textContent = pedido === "aprovar" ? "aprovado: entra no próximo horário livre (confirma em até 15 min)"
-      : pedido === "outro_dia" ? `programado pra ${dkDia(dia)} (confirma em até 15 min)` : "descartado";
+      : pedido === "outro_dia" ? `programado pra ${dkDia(dia)} (confirma em até 15 min)`
+      : pedido === "ajustar" ? "ajuste pedido: sai da fila e volta pra cá quando a Edição terminar" : "descartado";
   } catch (e) { est.textContent = "não gravou: " + (e.message || e); }
   finally { for (const b of card.querySelectorAll("button")) b.disabled = false; }
 }
@@ -1582,13 +1596,27 @@ function dkCartao(l) {
   const aprovar = el("button", {type: "button", text: "Aprovar"});
   const outro = el("button", {type: "button", text: "Outro dia"});
   const descartar = el("button", {type: "button", text: "Descartar"});
+  const ajustar = el("button", {type: "button", text: "Pedir ajuste", "aria-expanded": "false"});
+  const pedidoTxt = el("textarea", {"aria-label": "o que mudar neste Short", maxlength: "280",
+    placeholder: "O que mudar? Ex.: tira a música do começo"});
+  const mandar = el("button", {type: "button", text: "Mandar ajuste"});
+  const caixa = el("div", {class: "dk-ajuste", hidden: ""}, pedidoTxt, mandar);
+  ajustar.addEventListener("click", () => {
+    caixa.hidden = !caixa.hidden; ajustar.setAttribute("aria-expanded", String(!caixa.hidden));
+    if (!caixa.hidden) pedidoTxt.focus();
+  });
+  mandar.addEventListener("click", () => {
+    const t = pedidoTxt.value.trim();
+    if (!t) { card.querySelector(".estado").textContent = "escreva o que mudar"; pedidoTxt.focus(); return; }
+    dkPedir(l, "ajustar", t, card);
+  });
   aprovar.addEventListener("click", () => dkPedir(l, "aprovar", null, card));
   outro.addEventListener("click", () => {
     if (!data.value) { card.querySelector(".estado").textContent = "escolha o dia no campo ao lado"; data.focus(); return; }
     dkPedir(l, "outro_dia", data.value, card);
   });
   descartar.addEventListener("click", () => dkPedir(l, "descartar", null, card));
-  card.append(el("div", {class: "acoes"}, aprovar, data, outro, descartar),
+  card.append(el("div", {class: "acoes"}, aprovar, data, outro, descartar, ajustar), caixa,
     el("div", {class: "estado", text: l.erro || (l.pedido ? "pedido anotado, esperando o sistema confirmar" : "")}));
   return card;
 }
@@ -1617,9 +1645,16 @@ async function carregarDark() {
           el("div", {class: "dk-cards"}, ...cands.map(dkCartao)));
       });
       const reserva = doCanal.filter(l => l.estado === "reserva" || l.estado === "erro");
+      const emAjuste = doCanal.filter(l => l.estado === "ajuste");
+      const alarmes = decididos.filter(l => (l.erro || "").startsWith("ALARME"));
       return el("section", {class: "dk-canal"}, el("h2", {text: nome}),
+        alarmes.length ? el("p", {class: "dk-alarme", role: "alert",
+          text: `A postagem do ${nome} parou: ${alarmes.length === 1 ? "1 Short perto do horário" : alarmes.length + " Shorts perto do horário"} sem subir. Abra a sessão da esteira.`}) : null,
         decididos.length ? el("div", {class: "dk-decididos"}, el("b", {text: "Já decididos"}),
-          ...decididos.map(l => el("span", {text: `${dkDia(l.dia)} ${l.hora}: ${l.titulo || l.pasta} · ${l.por === "gustavo" ? "você" : "Claude"} · ${l.estado === "programado" ? "programado no YouTube" : "subindo"}`}))) : null,
+          ...decididos.map(l => el("span", {class: (l.erro || "").startsWith("ALARME") ? "dk-alarme" : null,
+            text: `${dkDia(l.dia)} ${l.hora}: ${l.titulo || l.pasta} · ${l.por === "gustavo" ? "você" : "Claude"} · ${l.estado === "programado" ? "programado no YouTube" : "subindo"}${(l.erro || "").startsWith("ALARME") ? " · " + l.erro.slice(8) : ""}`}))) : null,
+        emAjuste.length ? el("div", {class: "dk-decididos"}, el("b", {text: "Em ajuste"}),
+          ...emAjuste.map(l => el("span", {text: `${l.titulo || l.pasta}: ${(l.erro || "").replace("AJUSTE PEDIDO: ", "")}`}))) : null,
         ...(blocos.length ? blocos : [el("p", {class: "dk-regra", text: "Nenhum Short esperando aprovação."})]),
         reserva.length ? el("section", {class: "dk-dia"}, el("h3", {text: "Reserva"}), el("div", {class: "dk-cards"}, ...reserva.map(dkCartao))) : null);
     }));
