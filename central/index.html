@@ -1,0 +1,1397 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#07122B">
+<title>Central DAL MORO</title>
+<link rel="icon" href="../identidade/avatar.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;900&family=Space+Mono:wght@400;700&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+/* Central DAL MORO (Farol, 27/10/2026). Identidade do Geektavo: azul noite, lente ciano
+   (o que anda), lente vermelha (o que espera ele). GEEKTAVO/identidade-visual/05-CORES-E-FONTES.md */
+:root{
+  --noite:#07122B; --fundo2:#0E2148; --fundo3:#16305F; --ciano:#00C8FF; --verm:#FF2A4D; --giz:#EEF6FF; --cinza:#8FA0C2;
+  --ground:var(--noite); --surface:var(--fundo2); --raised:#12295A; --ink:var(--giz); --muted:var(--cinza); --line:var(--fundo3);
+  --accent:var(--ciano); --espera:var(--verm); --ok:#3BE3A0; --ok-bg:#0B3A3A; --bad:#FF5F7B; --bad-bg:#3A0F22;
+  --display:"Unbounded","Arial Black",sans-serif; --body:"Space Mono",ui-monospace,Menlo,monospace;
+  --barra:64px; color-scheme:dark;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ color-scheme:dark; } }
+:root[data-theme="dark"]{ color-scheme:dark; }
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--ground);color:var(--ink);font:14.5px/1.55 var(--body);margin:0;min-height:100svh;display:flex;flex-direction:column}
+main{flex:1;width:100%}
+a{color:var(--accent)}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+/* topo */
+.topo{position:sticky;top:0;z-index:20;background:rgba(7,18,43,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topo-in{max-width:1240px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;min-height:56px}
+.marca{font:900 19px/1 var(--display);letter-spacing:-.01em;margin:0;display:flex;align-items:center;gap:.06em;white-space:nowrap}
+.marca .lente{display:inline-grid;place-items:center;width:1.05em;height:1em;background:var(--giz);clip-path:polygon(0 0,100% 0,88% 100%,10% 100%)}
+.marca .lente b{display:grid;place-items:center;width:calc(100% - .16em);height:calc(100% - .16em);background:var(--ciano);color:var(--noite);clip-path:inherit;font-size:.8em}
+.marca small{font:700 11px var(--body);letter-spacing:.12em;color:var(--muted);margin-left:10px;align-self:center}
+.pc{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.pc i{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none}
+.pc.vivo i{background:var(--ok);box-shadow:0 0 0 0 rgba(59,227,160,.6);animation:pulso 2s infinite}
+.pc.morto i{background:var(--bad)}
+.pc.morto{color:var(--bad)}
+@keyframes pulso{70%{box-shadow:0 0 0 8px rgba(59,227,160,0)}100%{box-shadow:0 0 0 0 rgba(59,227,160,0)}}
+
+/* abas: em cima no computador, embaixo no celular */
+.abas{display:flex;gap:4px}
+.abas button{background:none;border:0;border-bottom:3px solid transparent;padding:8px 10px;font:700 12.5px var(--body);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:6px;min-height:44px}
+.abas button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.abas .n{font:700 11px var(--body);background:var(--espera);color:var(--noite);border-radius:9px;min-width:18px;height:18px;padding:0 5px;display:inline-grid;place-items:center}
+.abas .n:empty{display:none}
+.abas svg{width:18px;height:18px;flex:none}
+.topo .abas{margin-left:18px}
+.abas-baixo{display:none}
+@media (max-width:820px){
+  .topo .abas{display:none}
+  .abas-baixo{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(14,33,72,.97);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:0 4px env(safe-area-inset-bottom)}
+  .abas-baixo button{flex:1;flex-direction:column;gap:2px;border-bottom:0;border-top:3px solid transparent;padding:6px 2px 8px;font-size:11px;letter-spacing:.02em;position:relative;min-height:var(--barra)}
+  .abas-baixo button[aria-selected="true"]{border-top-color:var(--accent)}
+  .abas-baixo .n{position:absolute;top:4px;left:calc(50% + 6px)}
+  body{padding-bottom:calc(var(--barra) + env(safe-area-inset-bottom))}
+  .marca small{display:none}
+}
+@media (max-width:1180px){ .pc .det{display:none} }
+
+main{max-width:1240px;margin:0 auto;padding:20px 16px 48px}
+.vista{display:grid;gap:22px}
+h2{font:900 clamp(17px,2.6vw,22px)/1.2 var(--display);margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+h2 small{font:400 12.5px var(--body);color:var(--muted)}
+.bloco{display:grid;gap:12px;align-content:start}
+.vazio{color:var(--muted);font-size:13.5px;border:1px dashed var(--line);border-radius:2px;padding:14px}
+
+/* placar do topo da vista Agora */
+.placar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:820px){.placar{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:2px;padding:12px 14px;display:grid;gap:2px;text-align:left;cursor:pointer}
+.tile.espera{border-left-color:var(--espera)}
+.tile.falha{border-left-color:var(--bad)}
+.tile .v{font:900 30px/1.1 var(--display)}
+.tile .r{font-size:12px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+
+.duas{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:1000px){.duas{grid-template-columns:minmax(0,1fr)}}
+
+/* trabalhos com % */
+.trab{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:12px 14px;display:grid;gap:8px}
+.trab.parado{opacity:.62}
+.trab .l1{display:flex;align-items:baseline;gap:10px}
+.trab .nome{font:500 15px/1.3 var(--display);flex:1;min-width:0;overflow-wrap:anywhere}
+.trab .pct{font:900 20px/1 var(--display);color:var(--accent)}
+.trab.fim .pct{color:var(--ok)}
+.trab.parado .pct{color:var(--muted)}
+.trab .pct[data-v="0"]{color:#7C8DB0;font-size:15px}
+.barra{height:10px;background:var(--noite);border:1px solid var(--line);position:relative;overflow:hidden}
+.barra b{position:absolute;inset:0 auto 0 0;background:repeating-linear-gradient(90deg,var(--accent) 0 8px,#00A6D6 8px 10px);transition:width .6s ease}
+.trab.fim .barra b{background:var(--ok)}
+.trab.parado .barra b{background:var(--muted)}
+.trab .l2{font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 14px}
+.trab .l2 b{color:var(--ink);font-weight:700}
+.trab details summary{cursor:pointer;font-size:12.5px;color:var(--muted)}
+.trab ol{margin:6px 0 0;padding-left:20px;font-size:13px}
+.trab li.f{color:var(--muted);text-decoration:line-through}
+
+/* terminais */
+.term{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.term:last-child{border-bottom:0}
+.st{grid-row:span 3;width:10px;height:10px;margin-top:6px;border-radius:50%;background:var(--muted)}
+.st.busy{background:var(--accent);box-shadow:0 0 10px var(--accent)}
+.st.waiting{background:var(--espera);box-shadow:0 0 10px var(--espera)}
+.term .t1{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.term .t1 b{font:500 14px var(--display)}
+.term .t1 span{font-size:11.5px;color:var(--muted)}
+.term .tt{font-size:13px}
+.term .ul{font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
+.filtro{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:6px 10px;font-size:12.5px;cursor:pointer;min-height:36px}
+.chip[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+
+/* fila */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--espera);border-radius:2px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.card > .acoes{margin-top:auto}
+.card > .pe{margin-top:auto;display:grid;grid-template-rows:auto 34px;gap:2px}
+.pe .lnk-ex{margin:0;min-height:34px}
+.pe-vazio{display:block}
+.lnk-ex{align-self:flex-start;background:none;border:0;color:var(--muted);text-decoration:underline;font:400 12.5px var(--body);cursor:pointer;min-height:44px;padding:0 4px;margin:-6px 0 -10px}
+.lnk-ex.armado{color:var(--bad)}
+.acoes .sim.armado{background:var(--espera);border-color:var(--espera);color:var(--noite)}
+.card.ok{border-top-color:var(--ok)}
+.card.dec{border-top-color:var(--muted);opacity:.8}
+.card .tipo{font:700 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:#FF7A90}
+.card.ok .tipo,.card.dec .tipo{color:var(--muted)}
+.card h3{font:500 16px/1.3 var(--display);margin:0;overflow-wrap:anywhere}
+.card p{margin:0;font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.card video{width:100%;aspect-ratio:9/16;max-height:380px;background:#000;object-fit:contain;border-radius:2px}
+.acoes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.acoes button{white-space:nowrap;border:1px solid var(--line);background:var(--raised);border-radius:2px;padding:10px 6px;font:700 12.5px var(--body);cursor:pointer;min-height:44px}
+.acoes .sim{background:var(--accent);color:var(--noite);border-color:var(--accent)}
+.acoes button:disabled{opacity:.5;cursor:wait}
+.ajuste{display:grid;gap:6px}
+textarea{width:100%;min-height:84px;resize:vertical;background:var(--noite);border:1px solid var(--line);border-radius:2px;padding:10px;font-size:16px}
+textarea:focus{border-color:var(--accent);outline:0}
+.estado{font-size:12.5px;color:var(--accent);min-height:1em}
+.estado:empty{display:none}
+.alertas{display:grid;gap:6px}
+.alerta{display:flex;gap:10px;align-items:baseline;font-size:13px;padding:8px 10px;background:var(--surface);border-left:3px solid var(--fundo3)}
+.alerta.forte{border-left-color:var(--espera)}
+.alerta .x{font:900 13px var(--display);color:var(--accent);min-width:3.2em}
+.alerta a{color:var(--ink);text-decoration:none;overflow-wrap:anywhere}
+
+.acoes.q4{grid-template-columns:1fr 1fr}
+.acoes.q2{grid-template-columns:1fr 1fr}
+.acoes.q1{grid-template-columns:auto;justify-content:start}
+.acoes.q1 button{padding-inline:22px}
+.acoes .ex.armado{border-color:var(--bad);color:var(--bad)}
+.card.pend{border-top-color:var(--fundo3)}
+.card.pend .tipo{color:var(--muted)}
+.card .perg{font:400 14px/1.5 var(--body);color:#C9D4EA;margin:0}
+.card .ed{font-size:11.5px;color:var(--accent)}
+.card .ver{font-size:12px;color:var(--muted)}
+/* resultados */
+.res .card{border-top:0;border-left:4px solid var(--fundo3);gap:8px}
+.res .card[data-fase="concluido"]{border-left-color:var(--giz)}
+.res .card[data-fase="rodando"]{border-left-color:var(--accent)}
+.res .card[data-fase="parado"]{border-left-color:var(--muted)}
+.res .card[data-fase="descartado"]{border-left-color:var(--bad)}
+.res .cab{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fase{font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:2px;background:var(--raised);color:var(--muted)}
+.fase.concluido{background:#1C3260;color:var(--giz)}
+.fase.rodando{background:#0A3350;color:var(--accent)}
+.fase.descartado{background:var(--bad-bg);color:var(--bad)}
+.res .quem{font-size:11.5px;color:var(--muted);margin-left:auto}
+.res .veredito{font-size:14px;color:var(--ink);margin:0}
+.res .card .ver{margin-top:auto;padding-top:4px}
+.res .oque{font-size:12.5px;color:var(--muted);margin:0}
+.mais{justify-self:start}
+
+/* pedir */
+.pedir{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:2px;padding:14px;display:grid;gap:10px}
+.pedir .lin{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{background:var(--accent);color:var(--noite);border:0;border-radius:2px;padding:11px 16px;font:700 13.5px var(--body);cursor:pointer;min-height:44px;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn.sec{background:var(--raised);color:var(--ink);border:1px solid var(--line)}
+.ped{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:12px 14px;display:grid;gap:8px}
+.ped .tx{font-size:14px}
+.passos{display:flex;gap:0;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+.passos span{flex:1;padding:4px 6px;border-top:3px solid var(--line);color:var(--muted)}
+.passos span.on{border-top-color:var(--accent);color:var(--ink)}
+.ped .hist{font-size:12.5px;color:var(--muted);margin:0;padding-left:16px}
+
+/* escritório: a porta de entrada, cheia, sem margem */
+body.no-escr main{max-width:none;padding:0}
+.escr-vista{gap:0}
+.hud{display:flex;align-items:center;gap:14px 22px;flex-wrap:wrap;padding:14px max(16px,calc((100% - 1208px)/2));background:linear-gradient(180deg,#0A1636,#07122B);border-bottom:1px solid var(--line)}
+.hud-txt{min-width:0;flex:1 1 220px}
+.hud h1{font:900 clamp(20px,2.4vw,28px)/1.1 var(--display);margin:0}
+.hud p{margin:2px 0 0;color:var(--muted);font-size:12.5px}
+.hud-n{display:flex;gap:8px;flex-wrap:wrap}
+.hud-c{display:grid;justify-items:start;gap:0;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:2px;padding:6px 12px;cursor:pointer;min-height:48px;min-width:118px;text-align:left}
+.hud-c b{font:900 22px/1.1 var(--display)}
+.hud-c span{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.hud-c.espera{border-left-color:var(--espera)}
+.hud-c.espera b{color:#FF7A90}
+.hud-c.espera.zero b{color:var(--ink)}
+.btn.qg{font-size:14px;padding:12px 20px}
+.btn.qg::after{content:"";width:7px;height:7px;border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);margin-left:2px}
+.escr{background:#050C1E;position:relative;overflow:hidden;max-width:1600px;margin:0 auto;width:100%}
+.escr-vista{background:#050C1E}
+.escr canvas{display:block;width:100%;image-rendering:pixelated}
+.ficha{position:absolute;top:14px;right:14px;width:min(360px,calc(100% - 28px));max-height:calc(100% - 28px);overflow:auto;background:rgba(14,33,72,.97);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:2px;padding:14px 16px 16px;display:grid;gap:8px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.ficha h3{font:900 20px/1.15 var(--display);margin:0}
+.f-tipo{font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.f-tit{margin:0;font-size:14px}
+.f-mut{margin:0;color:var(--muted);font-size:12.5px;overflow-wrap:anywhere}
+.f-ok{margin:0;color:var(--ok)} .f-mal{margin:0;color:var(--bad)}
+.f-cab{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin:-6px -10px -4px 0}
+.f-cab .f-tipo{padding:12px 0 0}
+.f-x{flex:none;width:44px;height:44px;background:none;border:0;color:var(--muted);font-size:24px;line-height:1;cursor:pointer}
+.f-trab{display:grid;gap:4px;padding-top:8px;border-top:1px solid var(--line)}
+.f-trab .l1{display:flex;gap:8px;justify-content:space-between;font-size:13px}
+.f-trab .l1 b{font:900 16px var(--display);color:var(--accent)}
+.f-pend{display:grid;gap:8px;padding:10px;background:var(--bad-bg);border-left:3px solid var(--espera);font-size:13px}
+@media (max-width:820px){
+  .ficha{position:fixed;top:auto;left:0;right:0;bottom:calc(var(--barra) + env(safe-area-inset-bottom));width:auto;max-height:38vh;border-radius:0;z-index:25}
+  .hud-c{min-width:0;flex:1}
+  .hud-c span{white-space:normal;line-height:1.2}
+  .hud-n{flex:1 1 100%}
+  .btn.qg{flex:1 1 100%;justify-content:center}
+}
+@media (max-width:380px){
+  .hud-c{padding:6px 8px}
+  .hud-c span{white-space:normal;font-size:11px;letter-spacing:0;line-height:1.2}
+  .abas-baixo button{min-width:0;font-size:10.5px;letter-spacing:-.02em;padding-inline:0}
+  .abas-baixo .n{left:calc(50% + 4px)}
+}
+.legenda{display:flex;gap:8px 18px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding:12px max(16px,calc((100% - 1208px)/2))}
+.legenda i{display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:-1px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sr:focus-within{position:static;width:auto;height:auto;clip:auto;display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px}
+.sr button{font-size:12px;background:var(--surface);border:1px solid var(--line);padding:6px 8px;min-height:36px;color:var(--ink)}
+
+.escr-baixo{display:grid;gap:28px;padding:20px 16px 40px;max-width:1240px;margin:0 auto;width:100%}
+#eb-seu{display:grid;gap:8px}
+.dobra > summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;min-height:44px}
+.dobra > summary::-webkit-details-marker{display:none}
+.dobra > summary::before{content:"";flex:none;border-left:7px solid var(--accent);border-top:6px solid transparent;border-bottom:6px solid transparent;transition:transform .15s}
+.dobra[open] > summary::before{transform:rotate(90deg)}
+.dobra[open] > summary{margin-bottom:12px}
+.eb-fila summary{cursor:pointer;color:var(--ink);font:700 13px var(--body);min-height:44px;display:inline-flex;align-items:center;gap:8px;padding:0 14px;background:var(--surface);border:1px solid var(--line);border-radius:2px;list-style:none}
+.eb-fila summary::-webkit-details-marker{display:none}
+.eb-fila summary::before{content:"";width:0;height:0;border-left:6px solid var(--accent);border-top:5px solid transparent;border-bottom:5px solid transparent;transition:transform .15s}
+.eb-fila[open] summary::before{transform:rotate(90deg)}
+.eb-fila[open] summary{margin-bottom:8px}
+.fila0{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:6px}
+@media (min-width:1024px){ .fila0{grid-template-columns:repeat(3,1fr)} }
+.f0{display:grid;gap:2px;align-content:start;padding:8px 12px;background:var(--surface);border-left:3px solid var(--fundo3);font-size:12.5px}
+.f0 b{font:500 13.5px var(--display)}
+.f0 span{color:var(--muted)}
+.seu{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px;align-items:center;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--espera);border-radius:2px;padding:10px 12px 10px 14px}
+.seu-tx{display:grid;gap:2px;min-width:0}
+.seu-tx b{font:500 15px/1.3 var(--display)}
+.seu-tx span{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.seu-ac{display:flex;gap:6px}
+.seu-ac button{min-width:76px}
+.seu .estado{grid-column:1/-1}
+.seu.feito{border-left-color:var(--ok);opacity:.8}
+@media (max-width:620px){ .seu{grid-template-columns:1fr} .seu-ac button{flex:1} }
+.trabs{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:12px}
+@media (min-width:700px){ .trabs{grid-template-columns:repeat(3,minmax(0,1fr))} .trabs.n4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (min-width:1200px){ .trabs.n4{grid-template-columns:repeat(4,minmax(0,1fr))} }
+.duas .fila0{grid-template-columns:repeat(2,minmax(0,1fr))}
+.novidade{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:40;background:var(--accent);color:var(--noite);border:0;border-radius:2px;padding:12px 16px;font:700 13px var(--body);min-height:44px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.45)}
+@media (max-width:820px){ .novidade{left:16px;right:16px;bottom:calc(var(--barra) + 12px + env(safe-area-inset-bottom))} }
+.velho{background:var(--bad-bg);color:#FFB3C0;border-left:4px solid var(--espera);padding:10px 16px;font-size:13px}
+@media (hover:hover){
+.abas button:hover{color:var(--ink)}
+.tile:hover{border-color:var(--accent)}
+.acoes .sim:hover{filter:brightness(1.12)}
+.acoes .nao:hover{border-color:var(--bad);color:var(--bad)}
+.acoes .aj:hover{border-color:var(--accent);color:var(--accent)}
+.alerta a:hover{color:var(--accent)}
+.btn:hover{filter:brightness(1.1)}
+.hud-c:hover{border-color:var(--accent)}
+.f-x:hover{color:var(--ink)}
+}
+/* rotinas */
+.rot{width:100%;border-collapse:collapse;font-size:13px}
+.rot th{text-align:left;font-weight:700;color:var(--muted);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:6px 8px;border-bottom:1px solid var(--line)}
+.rot td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+.rot tr.mal td:first-child{box-shadow:inset 3px 0 0 var(--bad)}
+.rot .r-ok{color:var(--ok)} .rot .r-mal{color:var(--bad)} .rot .r-off{color:var(--muted)} .rot tr.off td{color:var(--muted)}
+@media (max-width:620px){
+  .rot thead{display:none}
+  .rot tr{display:grid;grid-template-columns:1fr auto;padding:8px 0;border-bottom:1px solid var(--line)}
+  .rot td{border:0;padding:2px 8px}
+  .rot td:nth-child(1){grid-column:1/-1;font-weight:700}
+  .rot td[data-r]::before{content:attr(data-r) " ";color:var(--muted)}
+}
+
+/* login */
+.porta{max-width:440px;margin:8vh auto 0;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--espera);border-radius:2px;padding:22px;display:grid;gap:12px}
+.porta h1{font:900 22px/1.2 var(--display);margin:0}
+.porta p{margin:0;color:var(--muted);font-size:13.5px}
+.porta input{width:100%;background:var(--noite);border:1px solid var(--line);border-radius:2px;padding:12px;font-size:16px}
+.porta input:focus{border-color:var(--accent);outline:0}
+.msg{font-size:13px;color:var(--accent)}
+.msg.erro{color:var(--bad)}
+.rodape{max-width:1240px;margin:0 auto;padding:0 16px 24px;color:var(--muted);font-size:12px;display:flex;gap:14px;flex-wrap:wrap}
+.rodape{align-items:center}
+.rodape button{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;padding:12px 8px;margin:-12px 0;font-size:12px;min-height:44px;min-width:44px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="topo">
+  <div class="topo-in">
+    <p class="marca">C<span class="lente"><b>E</b></span>NTRAL<small>DAL MORO</small></p>
+    <nav class="abas" role="tablist" aria-label="Vistas" id="abas-cima"></nav>
+    <div class="pc" id="pc" title="Sinal do PC"><i></i><span id="pc-t">conectando…</span></div>
+  </div>
+</header>
+
+<section class="porta" id="porta" hidden>
+  <h1>Central</h1>
+  <p>Só você entra. Digite o seu e-mail e abra o link que chegar (vale pro celular e pro computador; depois ele lembra).</p>
+  <form id="f-login" class="ajuste">
+    <label for="email" class="msg" style="color:var(--muted)">e-mail</label>
+    <input id="email" type="email" autocomplete="email" inputmode="email" required>
+    <button class="btn" type="submit">Mandar o link</button>
+  </form>
+  <div class="msg" id="login-msg" role="status"></div>
+</section>
+
+<main id="app" hidden>
+  <div class="velho" id="velho" role="status" hidden></div>
+  <!-- AGORA -->
+  <section class="vista" id="v-agora" role="tabpanel" aria-labelledby="t-agora">
+    <div class="placar" id="placar"></div>
+    <div class="bloco">
+      <h2>Resultados <small id="res-sub">o que cada trabalho virou, em uma linha</small></h2>
+      <div class="filtro" id="res-filtro">
+        <button class="chip" type="button" data-f="todos" aria-pressed="true">Todos</button>
+        <button class="chip" type="button" data-f="concluido" aria-pressed="false">Concluídos</button>
+        <button class="chip" type="button" data-f="rodando" aria-pressed="false">Rodando</button>
+        <button class="chip" type="button" data-f="parado" aria-pressed="false">Parados</button>
+        <button class="chip" type="button" data-f="descartado" aria-pressed="false">Descartados</button>
+      </div>
+      <div class="cards res" id="res-lista"></div>
+    </div>
+    <div class="duas">
+      <div class="bloco">
+        <h2>Trabalhos <small id="trab-sub"></small></h2>
+        <div class="filtro" id="trab-filtro">
+          <button class="chip" type="button" data-f="ativos" aria-pressed="true">Andando</button>
+          <button class="chip" type="button" data-f="feitos" aria-pressed="false">Terminados hoje</button>
+          <button class="chip" type="button" data-f="parados" aria-pressed="false">Parados</button>
+        </div>
+        <div class="bloco" id="trab-lista"></div>
+      </div>
+      <div class="bloco">
+        <h2>Terminais <small id="term-sub"></small></h2>
+        <div class="filtro" id="term-filtro">
+          <button class="chip" type="button" data-f="busy" aria-pressed="true">Trabalhando</button>
+          <button class="chip" type="button" data-f="todos" aria-pressed="false">Todos</button>
+        </div>
+        <div id="term-lista"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILA -->
+  <section class="vista" id="v-fila" role="tabpanel" aria-labelledby="t-fila" hidden>
+    <div class="bloco">
+      <h2>Só você resolve <small id="fila-sub"></small></h2>
+      <div class="cards" id="fila-lista"></div>
+    </div>
+    <details class="bloco dobra" id="nossas" open>
+      <summary><h2>Com a gente <small id="nossas-sub">o que falta a gente fazer · Editar se a gente entendeu errado</small></h2></summary>
+      <div class="cards" id="nossas-lista"></div>
+    </details>
+    <div class="bloco">
+      <h2>Shorts dos canais dark <small>opcional: se você não escolher, o Claude escolhe o melhor 1 h antes</small></h2>
+      <div class="cards" id="dark-lista"></div>
+    </div>
+    <div class="bloco">
+      <h2>Alertas de disparo <small id="alerta-sub"></small></h2>
+      <div class="alertas" id="alerta-lista"></div>
+    </div>
+  </section>
+
+  <!-- PEDIR -->
+  <section class="vista" id="v-pedir" role="tabpanel" aria-labelledby="t-pedir" hidden>
+    <div class="duas">
+      <div class="bloco">
+        <h2>Pedir</h2>
+        <form class="pedir" id="f-pedido">
+          <label for="pedido" class="msg" style="color:var(--muted)">O pedido vai pro terminal central, que distribui. Você vê aqui pra quem foi.</label>
+          <textarea id="pedido" required placeholder="ex.: faz a capa do longo do Chucky com 5 versões"></textarea>
+          <div class="lin"><button class="btn" type="submit">Mandar</button><span class="msg" id="pedido-msg" role="status"></span></div>
+        </form>
+        <h2>Conversar com o Claude</h2>
+        <div class="lin" style="display:flex;gap:8px;flex-wrap:wrap">
+          <a class="btn sec" href="https://claude.ai/code" target="_blank" rel="noopener">Sessões do PC (Remote Control)</a>
+          <a class="btn sec" href="https://claude.ai/new" target="_blank" rel="noopener">Conversa nova</a>
+        </div>
+      </div>
+      <div class="bloco">
+        <h2>Seus pedidos <small>do mais novo pro mais velho</small></h2>
+        <div class="bloco" id="ped-lista"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESCRITÓRIO: a porta de entrada -->
+  <section class="vista escr-vista" id="v-escritorio" role="tabpanel" aria-labelledby="t-escritorio" hidden>
+    <div class="hud">
+      <div class="hud-txt"><h1>Escritório</h1><p id="hud-sub"></p></div>
+      <div class="hud-n">
+        <button class="hud-c" type="button" data-ir="agora"><b class="num" id="hud-trab">0</b><span>trabalhando</span></button>
+        <button class="hud-c espera" type="button" data-ir="fila"><b class="num" id="hud-esp">0</b><span>só você resolve</span></button>
+        <button class="hud-c" type="button" data-ir="agora"><b class="num" id="hud-and">0</b><span>barras andando</span></button>
+      </div>
+      <button class="btn qg" type="button" data-ir="agora">Abrir o QG</button>
+    </div>
+    <div class="escr" id="escr">
+      <canvas id="cv" aria-label="Escritório em pixel art: cada boneco é um terminal, cada robô uma rotina do PC"><div id="escr-lista"></div></canvas>
+      <aside class="ficha" id="ficha" aria-live="polite" hidden></aside>
+    </div>
+    <div class="legenda"><span><i style="background:var(--ciano)"></i>trabalhando (tela acesa)</span><span><i style="background:var(--verm)"></i>esperando você (mão levantada)</span><span><i style="background:#5B6B8C"></i>parado (cochilando)</span><span><i style="background:#3BE3A0"></i>rotina ok</span></div>
+    <div class="escr-baixo">
+      <section class="bloco">
+        <h2>Andando agora <small id="eb-trab-sub"></small></h2>
+        <div class="trabs" id="eb-trab"></div>
+        <details class="eb-fila" id="eb-fila" hidden></details>
+      </section>
+      <section class="bloco">
+        <h2>Só você resolve <small id="eb-seu-sub"></small></h2>
+        <div id="eb-seu"></div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ROTINAS -->
+  <section class="vista" id="v-rotinas" role="tabpanel" aria-labelledby="t-rotinas" hidden>
+    <h2>Rotinas do PC <small id="rot-sub">Agendador do Windows</small></h2>
+    <table class="rot"><thead><tr><th>Rotina</th><th>Última vez</th><th>Resultado</th><th>Próxima</th></tr></thead><tbody id="rot-lista"></tbody></table>
+    <details class="eb-fila" id="rot-win" hidden><summary></summary><table class="rot"><tbody></tbody></table></details>
+  </section>
+</main>
+<nav class="abas abas-baixo" role="tablist" aria-label="Vistas" id="abas-baixo" hidden></nav>
+<button class="novidade" id="novidade" type="button" hidden>Chegou novidade · toque pra atualizar</button>
+<footer class="rodape" id="rodape" hidden><span id="atualizado"></span><button type="button" id="sair">sair</button></footer>
+
+<script>
+const URL_SB = "https://uxhaxbukmoimvdbgqliz.supabase.co";
+const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4aGF4YnVrbW9pbXZkYmdxbGl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxODU1NjcsImV4cCI6MjEwNTc2MTU2N30.DPxTuSs8sNMzsNrwfMaR57JOozQOts_nmULlbUXV6v8";
+const DONO = "contato.onlydal@gmail.com";
+const LOCAL = new URLSearchParams(location.search).get("local");   // teste da conferência: ?local=estado.json (não grava nada)
+// três jeitos de abrir: no PC (servidor.py em 127.0.0.1:4848, sem login), no celular (Supabase, login do dono) e o teste
+const MODO = LOCAL ? "teste" : ["127.0.0.1", "localhost"].includes(location.hostname) ? "pc" : "nuvem";
+const sb = MODO === "nuvem" && window.supabase ? supabase.createClient(URL_SB, ANON) : null;
+// guardados: toques que não chegaram no servidor do PC (fora do ar). Ficam no navegador e saem sozinhos.
+const GUARDA = "central-guardados";
+function lerGuardados() { try { return JSON.parse(localStorage.getItem(GUARDA) || "[]"); } catch (e) { return []; } }
+function gravarGuardados(ls) { try { localStorage.setItem(GUARDA, JSON.stringify(ls)); } catch (e) {} }
+const chaveGuarda = d => d.tipo + ":" + d.id;
+const guardado = id => lerGuardados().some(d => (d.tipo === "dark" ? "dark:" : "") + d.id === id);
+async function postarCaixa(d) {
+  const r = await fetch("/api/caixa", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(d), signal: comPrazo()});
+  if (!r.ok) throw new Error("o PC não aceitou (" + r.status + ")");
+}
+async function caixaPC(d) {
+  try { await postarCaixa(d); return false; }
+  catch (e) {
+    if (/não aceitou/.test(e.message || "")) throw e;      // o servidor respondeu e recusou: aí é erro de verdade
+    gravarGuardados([...lerGuardados().filter(x => chaveGuarda(x) !== chaveGuarda(d)), {...d, guardado_ts: agoraS()}]);
+    return true;                                           // não respondeu: guardado, sai quando ele voltar
+  }
+}
+let mandandoGuardados = false;
+async function mandarGuardados() {
+  if (MODO !== "pc" || mandandoGuardados) return;
+  const ls = lerGuardados();
+  if (!ls.length) return;
+  mandandoGuardados = true;
+  try {
+    for (const d of ls) {
+      try { const {guardado_ts, ...corpo} = d; await postarCaixa(corpo); }
+      catch (e) { if (!/não aceitou/.test(e.message || "")) break; }   // ainda fora: tenta na próxima
+      gravarGuardados(lerGuardados().filter(x => chaveGuarda(x) !== chaveGuarda(d)));
+      const id = (d.tipo === "dark" ? "dark:" : "") + d.id;
+      if (decididos.has(id)) decididosEm.set(id, Date.now());   // agora conta o prazo da ponte
+    }
+  } finally { mandandoGuardados = false; }
+}
+const $ = id => document.getElementById(id);
+function el(tag, at = {}, ...filhos) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(at)) {
+    if (v == null || v === false) continue;
+    if (k === "text") e.textContent = v; else if (k === "class") e.className = v; else e.setAttribute(k, v === true ? "" : v);
+  }
+  for (const f of filhos.flat()) if (f != null && f !== false) e.append(f);
+  return e;
+}
+const agoraS = () => Date.now() / 1000;
+const nomeTela = n => (n || "").replace(/TERMMINAL/g, "TERMINAL");
+function haQuanto(s) {
+  if (!s) return "";
+  const t = typeof s === "number" ? s : Date.parse(s) / 1000;
+  const d = Math.max(0, agoraS() - t);
+  if (d < 60) return "agora";
+  if (d < 3600) return `há ${Math.round(d / 60)} min`;
+  if (d < 86400) return `há ${Math.floor(d / 3600)} h`;
+  return `há ${Math.floor(d / 86400)} d`;
+}
+function hora(s) {
+  if (!s) return "";
+  const d = typeof s === "number" ? new Date(s * 1000) : new Date(s);
+  const hoje = new Date().toDateString() === d.toDateString();
+  return (hoje ? "" : d.toLocaleDateString("pt-BR", {day: "2-digit", month: "2-digit"}) + " ") + d.toLocaleTimeString("pt-BR", {hour: "2-digit", minute: "2-digit"});
+}
+const hojeISO = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+
+/* ---------- abas ---------- */
+const ICONES = {
+  agora: '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10h3l2-6 4 10 2-4h3"/></svg>',
+  fila: '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l4 4 8-9"/></svg>',
+  pedir: '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h14v9H8l-4 3v-3H2z"/></svg>',
+  escritorio: '<svg viewBox="0 0 18 18" fill="currentColor"><rect x="2" y="9" width="14" height="2"/><rect x="5" y="4" width="8" height="5"/><rect x="4" y="11" width="2" height="5"/><rect x="12" y="11" width="2" height="5"/></svg>',
+  rotinas: '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="7"/><path d="M9 5v4l3 2"/></svg>',
+};
+const ABAS = [["escritorio", "Escritório"], ["agora", "Andamento"], ["fila", "Pendências"], ["pedir", "Pedir"], ["rotinas", "Rotinas"]];
+let aba = "escritorio";
+function montarAbas() {
+  for (const [nav, sufixo] of [[$("abas-cima"), ""], [$("abas-baixo"), "-b"]]) {
+    nav.replaceChildren(...ABAS.map(([id, nome]) => {
+      const b = el("button", {type: "button", role: "tab", id: "t-" + id + sufixo, "aria-controls": "v-" + id, "aria-selected": String(id === aba)});
+      b.innerHTML = ICONES[id];
+      b.append(el("span", {text: nome}), el("span", {class: "n", "data-n": id}));
+      b.addEventListener("click", () => irPara(id));
+      return b;
+    }));
+  }
+}
+function irPara(id) {
+  aba = id;
+  try { sessionStorage.setItem("central-aba", id); } catch (e) {}
+  for (const [a] of ABAS) {
+    $("v-" + a).hidden = a !== id;
+    for (const b of document.querySelectorAll(`#t-${a},#t-${a}-b`)) b.setAttribute("aria-selected", String(a === id));
+  }
+  document.body.classList.toggle("no-escr", id === "escritorio");
+  if (id === "escritorio") desenharEscritorio();
+  scrollTo({top: 0});
+}
+function contador(id, n) { for (const e of document.querySelectorAll(`[data-n="${id}"]`)) e.textContent = n ? String(n) : ""; }
+
+/* ---------- dados ---------- */
+let E = {};          // estado vindo da ponte: terminais, trabalhos, rotinas, alertas, fila, pedidos, maquina
+let DARK = [];
+let enviados = [];   // pedidos que saíram daqui e a ponte ainda não pegou
+const decididos = new Map();  // decisões já mandadas daqui (id -> decisão), até a ponte confirmar
+const decididosEm = new Map(); // quando foi mandada: sem confirmação em 90 s, o botão volta
+let carregou = false, falhas = 0;
+const comPrazo = () => (AbortSignal.timeout ? AbortSignal.timeout(8000) : undefined);
+const comTempo = q => Promise.race([q, new Promise((_, nao) => setTimeout(() => nao(new Error("o servidor demorou; tente de novo")), 8000))]);
+let carregando = false;
+function expirarDecididos() {
+  const F = (E.fila || {}).lista || [];
+  for (const [id, t] of decididosEm) {
+    const item = F.find(i => i.id === id);
+    if (item && item.estado !== "esperando") { decididos.delete(id); decididosEm.delete(id); continue; }   // a ponte confirmou
+    if (Date.now() - t > 90000 && !guardado(id)) { decididos.delete(id); decididosEm.delete(id); }
+  }
+}
+
+async function carregar() {
+  if (carregando) return;
+  carregando = true;
+  try {
+    if (MODO !== "nuvem") {
+      const r = await fetch(LOCAL || "estado.json", {cache: "no-store", signal: comPrazo()});
+      if (!r.ok) throw new Error("sem estado");
+      E = await r.json();
+      DARK = E.dark || E._dark || [];
+    } else {
+      const {data, error} = await comTempo(sb.from("dark_dados").select("canal,dados,atualizado_em").eq("data", "2000-01-01").like("canal", "central-%"));
+      if (error) { if (error.status === 401 || /JWT/i.test(error.message || "")) { porta("A sessão venceu. Entre de novo."); return; } throw error; }
+      E = {};
+      for (const l of data) E[l.canal.replace("central-", "")] = l.dados;
+      const hoje = hojeISO();
+      const r = await comTempo(sb.from("dark_aprovacao").select("id,canal,pasta,titulo,nota,duracao,capa_url,previa_url,estado,alvo_dia,pedido,erro")
+        .in("estado", ["candidato", "escolhido"]).gte("alvo_dia", hoje).order("alvo_dia").limit(24));
+      DARK = r.error ? [] : r.data;
+    }
+    carregou = true;
+    await mandarGuardados();
+    expirarDecididos();
+    desenhar();
+    falhas = 0;
+  } catch (e) {
+    if (++falhas >= 3) { $("pc-t").textContent = "sem dados agora"; $("pc").className = "pc morto"; }
+    avisoVelho();
+    if (MODO === "pc" && falhas >= 3) { const a = $("velho"); a.hidden = false; a.textContent = "A tela do PC saiu do ar. O que você tocar fica guardado aqui e sai sozinho quando ela voltar."; }
+  } finally { carregando = false; }
+}
+function avisoVelho() {
+  const m = E.maquina || {}, idade = m.batida ? agoraS() - m.batida : null;
+  const a = $("velho");
+  if (!carregou) { a.hidden = false; a.textContent = falhas ? "Não consegui ler o PC agora. Tentando de novo sozinho…" : "Carregando o estado do PC…"; return; }
+  if (idade != null && idade > 120) { a.hidden = false; a.textContent = `Os dados são de ${haQuanto(m.batida)}: a ponte do PC parou. Os botões ficam guardados e saem quando ela voltar.`; }
+  else a.hidden = true;
+}
+
+/* ---------- desenhar ---------- */
+let filtroTrab = "ativos", filtroTerm = "busy";
+function desenhar() {
+  const m = E.maquina || {};
+  const idade = m.batida ? agoraS() - m.batida : 1e9;
+  $("pc").className = "pc " + (idade < 120 ? "vivo" : "morto");
+  $("pc-t").replaceChildren(idade < 120 ? "PC no ar" : "PC sem sinal", m.batida ? el("span", {class: "det", text: " · " + haQuanto(m.batida)}) : "");
+  $("atualizado").textContent = m.batida ? `Atualizado ${hora(m.batida)} · ${MODO === "nuvem" ? "a página relê a cada 15 s" : "tela do PC, relê sozinha"}` : "";
+
+  const T = E.terminais || {lista: []}, W = E.trabalhos || {lista: []}, R = E.rotinas || {lista: []}, F = E.fila || {lista: []};
+  const esperandoFila = (F.lista || []).filter(i => precisaDeVoce(i) && !decididos.has(i.id)).length;
+  const nossas = (F.lista || []).filter(i => comAGente(i) && !decididos.has(i.id)).length;
+  const esperando = esperandoFila;
+  contador("fila", esperando);
+  contador("rotinas", (R.lista || []).filter(r => DA_CASA.test(r.nome || "") && !r.ok && r.estado !== "rodando").length);
+
+  $("placar").replaceChildren(
+    tile(T.trabalhando ?? 0, "terminais trabalhando", "", () => { filtroTerm = "busy"; desenharTerminais(); $("term-lista").scrollIntoView({behavior: "smooth"}); }),
+    tile((W.lista || []).filter(t => !t.fim && !t.parado && t.pct > 0).length, "trabalhos andando", "", () => { filtroTrab = "ativos"; desenharTrabalhos(); $("trab-lista").scrollIntoView({behavior: "smooth"}); }),
+    tile(esperando, "só você resolve", esperando ? "espera" : "", () => irPara("fila")),
+    tile(nossas, "pendências nossas", "", () => irPara("fila")));
+  avisoVelho();
+  const chave = JSON.stringify([Math.floor(agoraS() / 60), E.fila, E.trabalhos, E.terminais, E.rotinas, E.pedidos, E.alertas, DARK, [...decididos], enviados.length, filtroTrab, filtroTerm, filtroRes, resTodos]);
+  if (chave === listasChave) return;
+  if (ocupado()) { listasPendentes = true; $("novidade").hidden = false; return; }
+  listasChave = chave; listasPendentes = false; $("novidade").hidden = true;
+  desenharTrabalhos(); desenharTerminais(); desenharFila(); desenharPedidos(); desenharRotinas();
+  if (aba === "escritorio") { baixoChave = ""; desenharBaixo(); }
+}
+let listasChave = "", listasPendentes = false;
+function ocupado() {
+  const a = document.activeElement;
+  if (a && a.tagName === "TEXTAREA" && a.closest("#app")) return true;
+  if ([...document.querySelectorAll("#app video")].some(v => !v.paused)) return true;
+  if (document.querySelector("#app .armado")) return true;
+  return [...document.querySelectorAll("#app .ajuste")].some(c => !c.hidden && c.querySelector("textarea").value.trim());
+}
+$("nossas").addEventListener("toggle", () => { $("nossas").dataset.mexeu = "1"; });
+$("eb-fila").addEventListener("toggle", () => { $("eb-fila").dataset.mexeu = "1"; });
+$("novidade").addEventListener("click", () => { if (document.activeElement) document.activeElement.blur(); listasChave = ""; baixoChave = ""; listasPendentes = false; $("novidade").hidden = true; desenhar(); });
+document.addEventListener("focusout", () => setTimeout(() => { if (listasPendentes && !ocupado()) { listasChave = ""; desenhar(); } }, 300));
+function tile(v, r, cls, fn) {
+  const b = el("button", {type: "button", class: "tile " + cls}, el("span", {class: "v num", text: String(v)}), el("span", {class: "r", text: r}));
+  b.addEventListener("click", fn);
+  return b;
+}
+
+function desenharTrabalhos() {
+  const W = (E.trabalhos || {}).lista || [];
+  const ls = W.filter(t => filtroTrab === "ativos" ? !t.fim && !t.parado : filtroTrab === "feitos" ? t.fim : t.parado);
+  const vivos = W.filter(t => !t.fim && !t.parado);
+  $("trab-sub").textContent = `${vivos.filter(t => t.pct > 0).length} andando · ${vivos.filter(t => !t.pct).length} na fila · ${W.filter(t => t.fim).length} terminados · ${W.filter(t => t.parado).length} parados`;
+  for (const b of $("trab-filtro").children) b.setAttribute("aria-pressed", String(b.dataset.f === filtroTrab));
+  if (filtroTrab === "ativos" && ls.length) {
+    const anda = ls.filter(t => t.pct > 0).sort((a, b) => b.pct - a.pct), zero = ls.filter(t => !t.pct);
+    const blocos = anda.map(cartaoTrabalho);
+    if (zero.length) blocos.push(el("details", {class: "eb-fila", open: innerWidth >= 820 ? true : null},
+      el("summary", {text: `Na fila, ainda em 0% (${zero.length})`}),
+      el("div", {class: "fila0"}, zero.map(t => el("div", {class: "f0"}, el("b", {text: t.nome}), el("span", {text: [t.terminal, t.agora || t.etapa].filter(Boolean).join(" · ")}))))));
+    $("trab-lista").replaceChildren(...blocos);
+    return;
+  }
+  $("trab-lista").replaceChildren(...(ls.length ? ls.map(cartaoTrabalho) :
+    [el("div", {class: "vazio", text: filtroTrab === "ativos" ? "Nenhum trabalho com barra andando agora. Todo trabalho de 3 etapas ou mais aparece aqui sozinho." : "Nada aqui."})]));
+}
+function cartaoTrabalho(t) {
+  const eta = t.eta ? Date.parse(t.eta) / 1000 : null;
+  const falta = eta ? Math.round((eta - agoraS()) / 60) : null;
+  const linha2 = [
+    t.terminal ? el("span", {}, "quem ", el("b", {text: t.terminal})) : null,
+    t.total ? el("span", {class: "num", text: `etapa ${Math.min(t.feitos + 1, t.total)} de ${t.total}`}) : null,
+    !t.fim && falta != null ? el("span", {class: "num", text: falta > 0 ? `~${falta} min (${hora(t.eta)})` : "passou da previsão"}) : null,
+    el("span", {text: (t.fim ? "terminou " : "mexeu ") + haQuanto(t.atualizado)}),
+  ];
+  const det = el("details", {}, el("summary", {text: "etapas"}),
+    el("ol", {}, (t.passos || []).map(([f, n]) => el("li", {class: f ? "f" : null, text: n}))));
+  return el("article", {class: "trab" + (t.fim ? " fim" : "") + (t.parado ? " parado" : "")},
+    el("div", {class: "l1"}, el("span", {class: "nome", text: t.nome}), el("span", {class: "pct num", "data-v": String(t.pct), text: t.pct + "%"})),
+    el("div", {class: "barra", role: "progressbar", "aria-valuenow": t.pct, "aria-valuemin": 0, "aria-valuemax": 100, "aria-label": t.nome}, el("b", {style: `width:${t.pct}%`})),
+    t.fim ? null : el("div", {class: "l2"}, el("span", {}, "agora ", el("b", {text: t.agora || t.etapa || "começando"}))),
+    el("div", {class: "l2"}, linha2), t.passos && t.passos.length ? det : null);
+}
+
+const NOMES_ST = {busy: "trabalhando", idle: "parado", waiting: "esperando você"};
+function desenharTerminais() {
+  const T = (E.terminais || {}).lista || [];
+  const ls = filtroTerm === "busy" ? T.filter(t => t.status !== "idle") : T;
+  $("term-sub").textContent = `${T.filter(t => t.status === "busy").length} trabalhando de ${T.length} abertos`;
+  for (const b of $("term-filtro").children) b.setAttribute("aria-pressed", String(b.dataset.f === filtroTerm));
+  $("term-lista").replaceChildren(...(ls.length ? ls.map(t => el("div", {class: "term"},
+    el("i", {class: "st " + t.status, title: NOMES_ST[t.status] || t.status}),
+    el("div", {class: "t1"}, el("b", {text: nomeTela(t.nome)}), el("span", {text: [t.andar && t.andar !== "Térreo" ? t.andar : null, (NOMES_ST[t.status] || t.status) + " " + haQuanto(t.desde)].filter(Boolean).join(" · ")})),
+    t.titulo ? el("div", {class: "tt", text: t.titulo}) : null,
+    t.ultima && t.status !== "idle" ? el("div", {class: "ul", text: "“" + t.ultima + "”"}) : null))
+    : [el("div", {class: "vazio", text: "Nenhum terminal trabalhando agora."})]));
+}
+
+/* fila */
+const vivo = i => !["excluir"].includes(decididos.get(i.id));
+const precisaDeVoce = i => i.estado === "esperando" && (i.classe === "aprovar" || !i.classe || (i.classe === "pendencia" && i.pergunta));
+const comAGente = i => i.estado === "esperando" && i.classe === "pendencia" && !i.pergunta;
+function desenharFila() {
+  const F = ((E.fila || {}).lista || []).filter(vivo);
+  const esperando = F.filter(precisaDeVoce);
+  const resolvidos = F.filter(i => i.estado !== "esperando" && i.estado !== "info" && i.classe !== "cartao").slice(0, 6);
+  const nDec = esperando.filter(i => !decididos.has(i.id)).length;
+  $("fila-sub").textContent = nDec ? `${nDec} pra decidir` : "nada pra decidir agora";
+  $("fila-lista").replaceChildren(...(esperando.length || resolvidos.length ? [...esperando, ...resolvidos].map(cartaoFila)
+    : [el("div", {class: "vazio", text: "Quando um terminal termina algo que precisa do seu ok, aparece aqui com o botão."})]));
+  const nossas = F.filter(comAGente);
+  const dob = $("nossas");
+  if (!dob.dataset.mexeu) dob.open = innerWidth >= 820;
+  $("nossas-sub").textContent = `${nossas.length} com a gente · Editar se a gente entendeu errado`;
+  $("nossas-lista").replaceChildren(...(nossas.length ? nossas.map(cartaoFila) : [el("div", {class: "vazio", text: "Nenhuma pendência nossa anotada."})]));
+  desenharResultados();
+
+  const dk = DARK;
+  $("dark-lista").replaceChildren(...(dk.length ? dk.map(cartaoDark) : [el("div", {class: "vazio", text: "Nenhum Short esperando aprovação."})]));
+
+  const A = E.alertas || {};
+  $("alerta-sub").textContent = A.atualizado ? `rodada das ${hora(A.atualizado)} · só pra saber; a rotina do Geektavo usa na pauta` : "";
+  $("alerta-lista").replaceChildren(...((A.lista || []).length ? A.lista.slice(0, 12).map(a => el("div", {class: "alerta " + (a.nivel || "")},
+    el("span", {class: "x num", text: a.vezes ? String(a.vezes).replace(".", ",") + "x" : "X"}),
+    a.link ? el("a", {href: a.link, target: "_blank", rel: "noopener", text: a.titulo}) : el("span", {text: a.titulo})))
+    : [el("div", {class: "vazio", text: "Nenhum disparo hoje."})]));
+}
+const ROTULO = {alerta: "alerta de disparo", entrega: "entrega", roteiro: "roteiro", pauta: "pauta"};
+const FEITO = {aprovar: "aprovado", ajuste: "ajuste pedido", recusar: "recusado", sim: "você disse sim", nao: "você disse não", editar: "texto novo mandado", excluir: "resolvido"};
+function caixaTexto(rotulo, valor, botao) {
+  const t = el("textarea", {"aria-label": rotulo, placeholder: rotulo});
+  if (valor) t.value = valor;
+  return el("div", {class: "ajuste", hidden: true}, t, el("button", {class: "btn", type: "button", text: botao}));
+}
+function cartaoFila(i) {
+  const local = decididos.get(i.id);
+  const editado = local === "editar";
+  const decidido = (i.estado !== "esperando" || local) && !editado;
+  const pend = i.classe === "pendencia";
+  const botoes = i.botoes || {};
+  const est = el("div", {class: "estado", role: "status"});
+  const tipo = pend ? (i.pergunta ? "pergunta" : "pendência") : (ROTULO[i.tipo] || i.tipo || "entrega");
+  const quem = nomeTela(i.quem || i.origem);
+  const card = el("article", {"data-item": i.id, class: "card" + (pend && !i.pergunta ? " pend" : "") + (i.estado === "feito" ? " ok" : decidido ? " dec" : "")},
+    el("span", {class: "tipo", text: tipo + (quem ? " · " + quem : "") + " · " + haQuanto(i.criado_ts)}),
+    el("h3", {text: i.titulo}),
+    i.pergunta ? el("p", {class: "perg", text: i.pergunta}) : null,
+    i.oque || i.resumo ? el("p", {text: i.oque || i.resumo}) : null,
+    i.editado_ts ? el("span", {class: "ed", text: `você reescreveu ${haQuanto(i.editado_ts)}; ${i.quem || "o terminal"} está refazendo`}) : null,
+    i.link ? el("a", {class: "ver", href: i.link, target: "_blank", rel: "noopener", text: "ver relatório"}) : null);
+  if (decidido) {
+    est.textContent = (FEITO[i.decisao || local] || i.estado) + (i.resultado ? " · " + i.resultado : local && i.estado === "esperando" ? (guardado(i.id) ? " · guardado aqui, sai quando o PC voltar" : " · o PC confirma em até 20 s") : "");
+    card.append(est);
+    return card;
+  }
+  if (editado) est.textContent = "texto novo mandado · o PC entrega em até 20 s";
+  const mudar = caixaTexto("o que você quer, do seu jeito", i.oque || i.resumo || "", "Mandar texto novo");
+  const ajuste = caixaTexto("o que ajustar", "", "Mandar ajuste");
+  const abre = cx => () => { for (const c of card.querySelectorAll(".ajuste")) if (c !== cx) c.hidden = true; cx.hidden = !cx.hidden; if (!cx.hidden) cx.querySelector("textarea").focus(); };
+  const btn = (cls, txt, fn) => { const b = el("button", {class: cls, type: "button", text: txt}); b.addEventListener("click", fn); return b; };
+  const excluir = btn("lnk-ex", "Já resolvido, tirar da lista", ev => {
+    const b = ev.currentTarget;
+    if (!b.classList.contains("armado")) { b.classList.add("armado"); b.textContent = "Toque de novo pra tirar"; setTimeout(() => { b.classList.remove("armado"); b.textContent = "Já resolvido, tirar da lista"; }, 4000); return; }
+    decidir(i, "excluir", "", card);
+  });
+  const editar = btn("aj", "Editar", abre(mudar));
+  let acoes;
+  if (pend && i.pergunta) acoes = el("div", {class: "acoes"}, btn("sim", "Sim", ev => decidir(i, "sim", "", card, ev)), btn("nao", "Não", () => decidir(i, "nao", "", card)), editar);
+  else if (pend) acoes = el("div", {class: "acoes q1"}, editar);
+  else acoes = el("div", {class: "acoes"},
+    btn("sim", botoes.aprovar || "Aprovar", ev => decidir(i, "aprovar", "", card, ev)),
+    btn("aj", botoes.ajuste || "Ajustar", abre(ajuste)),
+    btn("nao", botoes.recusar || "Recusar", () => decidir(i, "recusar", "", card)));
+  mudar.querySelector("button").addEventListener("click", () => {
+    const t = mudar.querySelector("textarea").value.trim();
+    if (!t) { est.textContent = "escreva o texto novo"; return; }
+    decidir(i, "editar", t, card);
+  });
+  ajuste.querySelector("button").addEventListener("click", () => {
+    const t = ajuste.querySelector("textarea").value.trim();
+    if (!t) { est.textContent = "escreva o ajuste"; return; }
+    decidir(i, "ajuste", t, card);
+  });
+  card.append(el("div", {class: "pe"}, acoes, pend ? excluir : el("span", {class: "pe-vazio", "aria-hidden": "true"})), mudar, ...(pend ? [] : [ajuste]), est);
+  return card;
+}
+
+let filtroRes = "todos", resTodos = false;
+let pedidoId = null, pedidoTexto = null;   // o mesmo id no retry: pedido que chegou mas demorou não duplica
+const FASES = {concluido: "concluído", rodando: "rodando", parado: "parado", descartado: "descartado"};
+function desenharResultados() {
+  const C = ((E.fila || {}).lista || []).filter(i => i.classe === "cartao" && vivo(i));
+  const ls = C.filter(c => filtroRes === "todos" || c.fase === filtroRes);
+  for (const b of $("res-filtro").children) b.setAttribute("aria-pressed", String(b.dataset.f === filtroRes));
+  const n = f => C.filter(c => c.fase === f).length;
+  $("res-sub").textContent = C.length ? [[n("concluido"), "concluído", "concluídos"], [n("parado"), "parado", "parados"], [n("descartado"), "descartado", "descartados"]].filter(([k]) => k).map(([k, um, v]) => `${k} ${k === 1 ? um : v}`).join(" · ") : "o que cada trabalho virou, em uma linha";
+  const mostrar = resTodos ? ls : ls.slice(0, 6);
+  const filhos = mostrar.map(c => el("article", {class: "card", "data-fase": c.fase},
+    el("div", {class: "cab"}, el("span", {class: "fase " + c.fase, text: FASES[c.fase] || c.fase}), el("span", {class: "quem", text: [c.quem, haQuanto(c.atualizado_ts || c.criado_ts)].filter(Boolean).join(" · ")})),
+    el("h3", {text: c.titulo}),
+    c.oque ? el("p", {class: "oque", text: c.oque}) : null,
+    c.veredito ? el("p", {class: "veredito", text: c.veredito}) : null,
+    c.link ? el("a", {class: "ver", href: c.link, target: "_blank", rel: "noopener", text: "ver relatório"}) : null));
+  if (!filhos.length) filhos.push(el("div", {class: "vazio", text: "Quando um terminal termina, o resultado aparece aqui com o veredito."}));
+  $("res-lista").replaceChildren(...filhos);
+  const mais = $("res-mais");
+  if (ls.length > 6) {
+    const b = mais || el("button", {class: "chip mais", type: "button", id: "res-mais"});
+    b.textContent = resTodos ? "Mostrar menos" : `Ver todos (${ls.length})`;
+    b.onclick = () => { resTodos = !resTodos; desenharResultados(); };
+    if (!mais) $("res-lista").after(b);
+  } else if (mais) mais.remove();
+}
+const PESADO = new Set(["dinheiro", "apagar", "publicar"]);
+function confirmar(i, decisao, b) {
+  if (!["sim", "aprovar"].includes(decisao) || !(PESADO.has(i.so_ele) || /apag|exclu|compr|publica/i.test((i.pergunta || "") + " " + i.titulo))) return true;
+  if (b.classList.contains("armado")) return true;
+  const antes = b.textContent;
+  b.classList.add("armado"); b.textContent = "Toque de novo";
+  setTimeout(() => { b.classList.remove("armado"); b.textContent = antes; }, 4000);
+  return false;
+}
+async function decidir(i, decisao, nota, card, ev) {
+  if (ev && ev.currentTarget && !confirmar(i, decisao, ev.currentTarget)) return;
+  const est = card.querySelector(".estado");
+  for (const b of card.querySelectorAll("button")) b.disabled = true;
+  est.textContent = "mandando…";
+  try {
+    let ficou = false;
+    if (MODO === "pc") ficou = await caixaPC({tipo: "central-decisao", id: i.id, veredito: decisao, texto: nota || ""});
+    else if (MODO === "nuvem") {
+      const {error} = await comTempo(sb.from("votos").upsert({id: "central-d-" + i.id, dia: hojeISO(), tipo: "central-decisao", n: 0, veredito: decisao, logline: nota || null}));
+      if (error) throw error;
+    }
+    decididos.set(i.id, decisao); decididosEm.set(i.id, Date.now());
+    if (card.classList.contains("seu")) card.replaceWith(el("article", {class: "seu feito"}, el("div", {class: "seu-tx"}, el("b", {text: i.titulo}), el("span", {text: (FEITO[decisao] || decisao) + (ficou ? " · guardado aqui, sai quando o PC voltar" : " · o PC confirma em segundos")}))));
+    else card.replaceWith(cartaoFila(i));
+    for (const c of document.querySelectorAll(`[data-item="${CSS.escape(i.id)}"]`)) c.replaceWith(cartaoFila(i));
+    const n = ((E.fila || {}).lista || []).filter(x => precisaDeVoce(x) && !decididos.has(x.id)).length;
+    contador("fila", n); if ($("hud-esp")) $("hud-esp").textContent = n;
+  } catch (e) {
+    est.textContent = "não foi: " + (e.message || e);
+    for (const b of card.querySelectorAll("button")) b.disabled = false;
+  }
+}
+const DK = {qc: "Quadro Congelado", ss: "Seis Sirenes"};
+function cartaoDark(l) {
+  const local = decididos.get("dark:" + l.id);
+  const video = el("video", {controls: true, preload: "none", playsinline: true, poster: l.capa_url || null});
+  if (l.previa_url) video.src = l.previa_url;
+  const est = el("div", {class: "estado", role: "status", text: l.erro || (l.pedido || local ? "pedido anotado, o sistema confirma em até 15 min" : "")});
+  const card = el("article", {class: "card" + (l.pedido || local ? " dec" : "")},
+    el("span", {class: "tipo", text: `${DK[l.canal] || l.canal} · ${new Date(l.alvo_dia + "T12:00").toLocaleDateString("pt-BR", {weekday: "short", day: "2-digit", month: "2-digit"})}${l.estado === "escolhido" ? " · escolhido pro 12h" : ""}`}),
+    el("h3", {text: l.titulo || l.pasta}),
+    el("p", {class: "num", text: [l.nota != null ? `nota ${String(l.nota).replace(".", ",")}` : null, l.duracao ? `${Math.round(l.duracao)} s` : null].filter(Boolean).join(" · ")}),
+    l.previa_url || l.capa_url ? video : null);
+  if (l.pedido || local) { card.append(est); return card; }
+  const aj = el("div", {class: "ajuste", hidden: true},
+    el("textarea", {"aria-label": "o que ajustar", placeholder: "o que ajustar no Short"}),
+    el("button", {class: "btn", type: "button", text: "Mandar ajuste"}));
+  const sim = el("button", {class: "sim", type: "button", text: "Aprovar"});
+  const ajB = el("button", {class: "aj", type: "button", text: "Ajustar"});
+  const nao = el("button", {class: "nao", type: "button", text: "Descartar"});
+  const pedir = async (pedido, nota) => {
+    for (const b of card.querySelectorAll("button")) b.disabled = true;
+    est.textContent = "mandando…";
+    try {
+      let ficou = false;
+      if (MODO === "pc") ficou = await caixaPC({tipo: "dark", id: l.id, veredito: pedido, texto: nota || ""});
+      else if (MODO === "nuvem") {
+        const corpo = pedido === "ajuste" ? {pedido: "ajustar", pedido_dia: null, pedido_em: new Date().toISOString(), erro: "AJUSTE PEDIDO: " + nota}
+          : {pedido, pedido_dia: null, pedido_em: new Date().toISOString()};
+        const {error} = await comTempo(sb.from("dark_aprovacao").update(corpo).eq("id", l.id).select("id"));
+        if (error) throw error;
+      }
+      decididos.set("dark:" + l.id, pedido); decididosEm.set("dark:" + l.id, Date.now());
+      card.classList.add("dec");
+      card.querySelector(".acoes").remove(); aj.remove();
+      est.textContent = (pedido === "aprovar" ? "aprovado: entra no próximo horário livre (confirma em até 15 min)" : pedido === "descartar" ? "descartado" : "ajuste anotado: a Edição refaz e ele volta pra cá") + (ficou ? " · guardado aqui, sai quando o PC voltar" : "");
+      contador("fila", Math.max(0, (Number(document.querySelector('[data-n="fila"]').textContent) || 1) - 1));
+    } catch (e) {
+      est.textContent = "não foi: " + (e.message || e);
+      for (const b of card.querySelectorAll("button")) b.disabled = false;
+    }
+  };
+  sim.addEventListener("click", () => pedir("aprovar"));
+  nao.addEventListener("click", () => pedir("descartar"));
+  ajB.addEventListener("click", () => { aj.hidden = !aj.hidden; if (!aj.hidden) aj.querySelector("textarea").focus(); });
+  aj.querySelector("button").addEventListener("click", () => {
+    const t = aj.querySelector("textarea").value.trim();
+    if (!t) { est.textContent = "escreva o ajuste"; return; }
+    pedir("ajuste", t);
+  });
+  card.append(el("div", {class: "acoes"}, sim, ajB, nao), aj, est);
+  return card;
+}
+
+/* pedidos */
+const ETAPAS = [["novo", "mandado"], ["entregue", "chegou na central"], ["distribuido", "distribuído"], ["feito", "feito"]];
+function desenharPedidos() {
+  const P = ((E.pedidos || {}).lista || []);
+  enviados = enviados.filter(e => !P.some(p => p.texto === e.texto));
+  const todos = [...enviados.map(e => ({...e, estado: "novo", historico: [[e.criado_ts, "saiu do celular"]]})), ...P];
+  $("ped-lista").replaceChildren(...(todos.length ? todos.map(p => {
+    const n = ETAPAS.findIndex(([k]) => k === p.estado);
+    return el("article", {class: "ped"},
+      el("div", {class: "tx", text: p.texto}),
+      el("div", {class: "passos"}, ETAPAS.map(([, nome], k) => el("span", {class: k <= n ? "on" : null, text: nome}))),
+      p.destino && p.destino !== "TERMMINAL CENTRAL" ? el("div", {class: "l2", style: "font-size:13px"}, "foi pra ", el("b", {text: p.destino}), p.resposta ? " · " + p.resposta : "") :
+        p.resposta ? el("div", {style: "font-size:13px", text: p.resposta}) : null,
+      el("ul", {class: "hist"}, (p.historico || []).slice(-4).map(([t, h]) => el("li", {text: `${hora(t)} ${h}`}))));
+  }) : [el("div", {class: "vazio", text: "Nenhum pedido ainda."})]));
+}
+$("f-pedido").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const t = $("pedido").value.trim();
+  if (!t) return;
+  const b = ev.target.querySelector("button"); b.disabled = true;
+  $("pedido-msg").textContent = "mandando…";
+  try {
+    if (!pedidoId || pedidoTexto !== t) { pedidoId = String(Date.now()); pedidoTexto = t; }
+    if (MODO === "pc") await caixaPC({tipo: "central-pedido", id: pedidoId, texto: t});
+    else if (MODO === "nuvem") {
+      const {error} = await comTempo(sb.from("votos").upsert({id: "central-p-" + pedidoId, dia: hojeISO(), tipo: "central-pedido", n: 0, veredito: "novo", logline: t}));
+      if (error) throw error;
+    }
+    enviados.unshift({texto: t, criado_ts: agoraS()});
+    pedidoId = null; pedidoTexto = null;
+    $("pedido").value = "";
+    $("pedido-msg").textContent = MODO === "pc" ? "mandado. Chega no terminal central em segundos." : "mandado. Chega na central em até 20 s.";
+    desenharPedidos();
+  } catch (e) { $("pedido-msg").textContent = "não foi: " + (e.message || e); }
+  finally { b.disabled = false; }
+});
+
+/* rotinas */
+const CODIGOS = {1: "o script deu erro", 2: "arquivo não achado", 267014: "parada antes de terminar", 2147942402: "arquivo não achado",
+  2147946720: "não rodou: o PC estava desligado ou ocupado", 3221225786: "fechada no meio", 2147750687: "já estava rodando"};
+function linhaRotina(r) {
+  const rodando = r.estado === "rodando";
+  const off = r.estado === "desligada";
+  const res = off ? "desligada" : rodando ? "rodando agora" : r.ok ? "ok" : (CODIGOS[r.resultado] || "falhou");
+  return el("tr", {class: off ? "off" : r.ok || rodando ? null : "mal"},
+    el("td", {text: r.nome.replace(/^DAL MORO /, "")}),
+    el("td", {class: "num", "data-r": "última", text: r.ultima ? hora(r.ultima) : "nunca"}),
+    el("td", {class: off ? "r-off" : r.ok || rodando ? "r-ok" : "r-mal", text: res}),
+    el("td", {class: "num", "data-r": "próxima", text: r.proxima ? hora(r.proxima) : "sem horário"}));
+}
+function desenharRotinas() {
+  const R = (E.rotinas || {}).lista || [];
+  const casa = R.filter(r => DA_CASA.test(r.nome || "")), resto = R.filter(r => !DA_CASA.test(r.nome || ""));
+  const mal = casa.filter(r => !r.ok && r.estado !== "rodando" && r.estado !== "desligada").length;
+  const off = casa.filter(r => r.estado === "desligada").length;
+  $("rot-sub").textContent = casa.length ? `${casa.length} rotinas da casa · ${mal ? mal + " com falha na última vez" : "nenhuma falhou"}${off ? ` · ${off} desligada${off > 1 ? "s" : ""}` : ""}` : "Agendador do Windows";
+  contador("rotinas", mal);
+  $("rot-lista").replaceChildren(...casa.map(linhaRotina));
+  const w = $("rot-win");
+  w.hidden = !resto.length;
+  w.querySelector("summary").textContent = `Tarefas do próprio Windows e de outros programas (${resto.length})`;
+  w.querySelector("tbody").replaceChildren(...resto.map(linhaRotina));
+}
+
+/* ---------- escritório em pixel art (desenho nosso, nada copiado do Habblaud) ----------
+   Cada sala é um andar do Maestri; cada boneco é um terminal vivo; a sala das máquinas
+   tem um robô por rotina do Agendador. Mesmo dado do QG, outra vista. */
+let U = 4;                 // tamanho do "pixel" na tela
+let cenas = [], sel = null, sobre = null, quadro = 0;
+const PAL = {
+  piso1: "#0B1838", piso2: "#0D1C41", rodape: "#0A1636", parede: "#142A5E", paredeEsc: "#0F2150",
+  noite: "#040A1A", moldura: "#2B4A86", estrela: "#CFE6FF", mesa: "#8A5A3B", mesaTopo: "#B07A50", mesaFrente: "#5C3A25", mesaSombra: "#3E2618",
+  cadeira: "#1A2448", tampa: "#2A3556", tampaBorda: "#3B4A72", ciano: "#00C8FF", verm: "#FF2A4D", giz: "#EEF6FF", cinza: "#8FA0C2",
+  folha: "#2FBF71", folhaEsc: "#1E8A50", vaso: "#C2643A", metal: "#55678F", rack: "#121C36",
+};
+function hashN(s) { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; } return h; }
+function look(n) {
+  const h = hashN(n);
+  const camisas = ["#FF2A4D", "#00C8FF", "#7C5CFF", "#2FBF71", "#FF8A3D", "#F06BB0", "#E8EEF8", "#3D6BFF", "#FFC23D"];
+  const peles = ["#F5CDAE", "#E3AE86", "#B97A52", "#8A5534", "#5E3A22"];
+  const cabelos = ["#1B1626", "#4A2C1A", "#8A5A2B", "#D9CDB8", "#C2462E", "#2E3F8F", "#F06BB0"];
+  return {camisa: camisas[h % 9], pele: peles[(h >>> 4) % 5], cabelo: cabelos[(h >>> 8) % 7], corte: (h >>> 12) % 4,
+    item: (h >>> 15) % 5, oculos: (h >>> 18) % 4 === 0};
+}
+function r(ctx, x, y, w, h, c) { ctx.fillStyle = c; ctx.fillRect(x * U, y * U, w * U, h * U); }
+function escurece(hex, f) { const n = parseInt(hex.slice(1), 16); const c = k => Math.round(((n >> k) & 255) * f); return `rgb(${c(16)},${c(8)},${c(0)})`; }
+
+const CEL = {w: 34, h: 48};      // mesa + boneco + etiqueta, em unidades
+const ROB = {w: 28, h: 40};
+let PAR = 18; const PAD = 5;         // altura da parede, respiro da sala
+
+function trabalhoDe(nome) { return ((E.trabalhos || {}).lista || []).filter(t => !t.fim && !t.parado && t.terminal && t.terminal.toLowerCase() === nome.toLowerCase()); }
+function pendDe(nome) { return ((E.fila || {}).lista || []).filter(i => i.estado === "esperando" && (i.quem || "").toLowerCase() === nome.toLowerCase()); }
+
+const DA_CASA = /DAL ?MORO|Dark|Geektavo|Habblaud|Central|Correio|B[uú]ssola|Despertador|Achados|Tasks/i;
+let ESTREITO = false;
+function salas() {
+  const T = ((E.terminais || {}).lista || []);
+  const por = {};
+  for (const t of T) (por[t.andar || "Avulsos"] ||= []).push(t);
+  const ordem = {waiting: 0, busy: 1, idle: 2};
+  const ls = Object.entries(por).map(([nome, ts]) => {
+    const todos = ts.sort((a, b) => (ordem[a.status] ?? 3) - (ordem[b.status] ?? 3) || a.nome.localeCompare(b.nome));
+    const itens = ESTREITO ? todos.filter(t => t.status !== "idle") : todos;
+    return {nome: nome === "Térreo" ? "Sala principal" : nome, tipo: "gente", itens, parados: todos.length - itens.length, total: todos.length};
+  });
+  const peso = s => s.nome === "Sala principal" ? -1e9 : s.nome === "Avulsos" ? 1e9 : -s.itens.length;
+  ls.sort((a, b) => peso(a) - peso(b));
+  const R = ((E.rotinas || {}).lista || []).filter(x => x.estado !== "desligada" && DA_CASA.test(x.nome || ""));
+  const Rv = ESTREITO ? R.filter(x => !x.ok) : R;
+  if (R.length) ls.push({nome: "Máquinas", tipo: "robo", itens: Rv, parados: R.length - Rv.length, total: R.length});
+  // sala sem ninguém acordado vira só a placa e vai pro fim, numa faixa
+  return [...ls.filter(s => s.itens.length), ...ls.filter(s => !s.itens.length)];
+}
+
+function layout(W) {
+  ESTREITO = W < 1100;
+  PAR = W < 700 ? 22 : 18;
+  U = W >= 1200 ? 4 : W >= 700 ? 3 : 2;
+  const largU = Math.floor(W / U) - 4;
+  const out = [];
+  let x = 2, y = 2, alturaLinha = 0;
+  for (const s of salas()) {
+    const cel = s.tipo === "robo" ? ROB : (W < 700 ? {w: CEL.w, h: CEL.h + 8} : CEL);
+    const maxCols = Math.max(1, Math.floor((largU - 2 * PAD) / cel.w));
+    const nLin = Math.max(1, Math.ceil(s.itens.length / maxCols));
+    const cols = Math.max(1, Math.min(s.itens.length, Math.ceil(s.itens.length / nLin)));
+    const linhas = Math.ceil(s.itens.length / cols) || 0;
+    const soPlaca = !linhas;
+    const kP = W < 700 ? 1 : 5;
+    const w = soPlaca ? Math.floor((largU + 4) / kP) - 4
+      : W < 700 ? largU : Math.min(largU, Math.max(cols * cel.w + 2 * PAD, 84));
+    const fonte = Math.max(U * 3, 11), letras = s.nome.length + 8 + String(s.total ?? s.itens.length).length * 2 + (s.parados ? 14 : 0);
+    const minPlaca = Math.ceil(letras * fonte * 0.62 / U) + 12;
+    const h = linhas ? PAR + 3 + linhas * cel.h + PAD : PAR + 2;
+    if (x > 2 && (soPlaca !== (out.length && out[out.length - 1].soPlaca) || x + (soPlaca ? w : Math.min(largU, Math.max(w, minPlaca))) > largU + 2)) { x = 2; y += alturaLinha + 4; alturaLinha = 0; }
+    out.push({...s, x, y, w: soPlaca ? w : Math.min(largU, Math.max(w, minPlaca)), h, cols, cel, soPlaca});
+    x += out[out.length - 1].w + 4; alturaLinha = Math.max(alturaLinha, h);
+  }
+  // sala que ficou sozinha numa linha estica até a borda (sem buraco à direita)
+  const linhas = {};
+  for (const s of out) (linhas[s.y] ||= []).push(s);
+  for (const ls of Object.values(linhas)) {
+    const ult = ls[ls.length - 1], sobra = largU + 2 - (ult.x + ult.w);
+    if (sobra > 0 && !ult.soPlaca) { const cada = Math.floor(sobra / ls.length); ls.forEach((s, k) => { s.x += cada * k; s.w += cada; }); ult.w += sobra - cada * ls.length; }
+    const hMax = Math.max(...ls.map(s => s.h)); ls.forEach(s => { s.h = hMax; });
+  }
+  return {salas: out, alturaU: y + alturaLinha + 4};
+}
+
+function desenharSala(ctx, s) {
+  const {x, y, w, h} = s;
+  const semPiso = h <= PAR + 2;
+  for (let yy = y + PAR; !semPiso && yy < y + h; yy += 6) for (let xx = x; xx < x + w; xx += 6)
+    r(ctx, xx, yy, Math.min(6, x + w - xx), Math.min(6, y + h - yy), (Math.floor((xx - x) / 6) + Math.floor((yy - y) / 6)) % 2 ? PAL.piso1 : PAL.piso2);
+  r(ctx, x, y + PAR, w, 1, PAL.rodape);
+  r(ctx, x, y, w, PAR, PAL.parede); r(ctx, x, y + PAR - 2, w, 2, PAL.paredeEsc);
+  // janelas de noite, da direita pra esquerda, sem invadir a placa
+  ctx.font = `700 ${Math.max(U * 3, 11)}px "Space Mono",monospace`;
+  let tx = s.nome.toUpperCase();
+  const ocupados = s.tipo === "robo" ? s.itens.filter(i => i.ok).length : s.itens.filter(i => i.status === "busy").length;
+  const tot = s.total ?? s.itens.length;
+  const okR = s.tipo === "robo" ? tot - s.itens.filter(i => !i.ok).length - (ESTREITO ? 0 : 0) : 0;
+  const sub = s.tipo === "robo" ? `  ${ESTREITO ? tot - s.itens.length : okR}/${tot} ok` : `  ${ocupados}/${tot}` + (s.parados && !s.soPlaca ? ` · +${s.parados} parados` : "");
+  let lw = Math.ceil(ctx.measureText(tx + sub).width / U) + 7;
+  if (s.soPlaca && lw > w - 6) { tx = tx.split(" ")[0]; lw = Math.ceil(ctx.measureText(tx + sub).width / U) + 7; }
+  const nJan = s.soPlaca ? 0 : Math.min(6, Math.floor((w - lw - 12) / 34));
+  const passo = nJan > 0 ? Math.floor((w - lw - 12) / nJan) : 0;
+  for (let k = 0; k < nJan; k++) {
+    const jx = x + w - 4 - (k + 1) * passo + Math.floor((passo - 22) / 2);
+    if (jx < x + 4 + lw + 4) break;
+    r(ctx, jx - 1, y + 3, 22, 11, PAL.moldura); r(ctx, jx, y + 4, 20, 9, PAL.noite);
+    for (let e = 0; e < 4; e++) { const hs = hashN(s.nome + k + "e" + e); r(ctx, jx + 1 + hs % 18, y + 5 + (hs >>> 5) % 7, 1, 1, PAL.estrela); }
+    if (k === 0) { r(ctx, jx + 14, y + 5, 3, 3, "#FFF4C8"); r(ctx, jx + 13, y + 6, 1, 1, "#FFF4C8"); r(ctx, jx + 16, y + 5, 1, 1, PAL.noite); r(ctx, jx + 16, y + 6, 1, 1, PAL.noite); }
+    r(ctx, jx + 10, y + 4, 1, 9, PAL.moldura); r(ctx, jx, y + 8, 20, 1, PAL.moldura);
+  }
+  const ph = Math.max(9, Math.ceil(18 / U));
+  r(ctx, x + 3, y + 4, lw, ph, "#0A1636");
+  if (!s.soPlaca && w - lw > 70 && nJan < 6) { const qx = x + lw + 8; r(ctx, qx, y + 5, 10, 8, PAL.moldura); r(ctx, qx + 1, y + 6, 8, 6, "#0A1636"); r(ctx, qx + 2, y + 8, 3, 2, PAL.verm); r(ctx, qx + 5, y + 8, 3, 2, PAL.ciano); } r(ctx, x + 3, y + 4, 1, ph, s.tipo === "robo" ? "#3BE3A0" : PAL.ciano);
+  ctx.textBaseline = "middle";
+  ctx.fillStyle = PAL.giz; ctx.fillText(tx, (x + 6) * U, (y + 4 + ph / 2) * U + 1);
+  ctx.fillStyle = s.tipo === "robo" ? "#3BE3A0" : PAL.ciano; ctx.fillText(sub, (x + 6) * U + ctx.measureText(tx).width, (y + 4 + ph / 2) * U + 1);
+  if (w > 110 && !semPiso) { const px = x + w - 10, py = y + h - 14; r(ctx, px + 1, py + 7, 6, 5, PAL.vaso); r(ctx, px, py + 6, 8, 2, escurece(PAL.vaso, .8));
+    r(ctx, px + 2, py, 4, 7, PAL.folha); r(ctx, px, py + 2, 3, 3, PAL.folhaEsc); r(ctx, px + 5, py + 1, 3, 4, PAL.folhaEsc); }
+  r(ctx, x, y, 1, h, PAL.moldura); r(ctx, x + w - 1, y, 1, h, PAL.moldura); r(ctx, x, y + h - 1, w, 1, PAL.moldura);
+}
+
+function posItem(s, k) {
+  const usado = Math.min(s.itens.length, s.cols) * s.cel.w;
+  const x0 = s.x + Math.floor((s.w - usado) / 2);
+  return {x: x0 + (k % s.cols) * s.cel.w, y: s.y + PAR + 3 + Math.floor(k / s.cols) * s.cel.h};
+}
+
+function boneco(ctx, gx, gy, t, f) {
+  const c = look(t.nome), st = t.status, trab = st === "busy", dorme = st === "idle", chama = st === "waiting";
+  if (dorme) ctx.globalAlpha = .45;
+  const bob = trab && (f + hashN(t.nome)) % 4 < 2 ? 1 : 0;
+  r(ctx, gx + 11, gy + 10, 12, 13, PAL.cadeira); r(ctx, gx + 12, gy + 9, 10, 1, PAL.cadeira);
+  const hx = gx + 13 + (dorme ? 1 : 0), hy = gy + 8 + (dorme ? 2 : 0) + bob;
+  r(ctx, gx + 11, gy + 17 + bob, 12, 7, c.camisa); r(ctx, gx + 15, gy + 17 + bob, 4, 1, escurece(c.camisa, .75));
+  r(ctx, hx, hy, 8, 8, c.pele);
+  r(ctx, hx, hy - 1, 8, 2, c.cabelo);
+  if (c.corte === 0) { r(ctx, hx - 1, hy, 1, 4, c.cabelo); r(ctx, hx + 8, hy, 1, 4, c.cabelo); }
+  if (c.corte === 1) { r(ctx, hx - 1, hy - 1, 10, 2, c.cabelo); r(ctx, hx - 1, hy + 1, 1, 6, c.cabelo); r(ctx, hx + 8, hy + 1, 1, 6, c.cabelo); }
+  if (c.corte === 2) r(ctx, hx + 1, hy - 2, 6, 1, c.cabelo);
+  if (c.corte === 3) { r(ctx, hx - 1, hy - 1, 3, 3, c.cabelo); r(ctx, hx + 6, hy - 1, 3, 3, c.cabelo); }
+  const pisca = (f + hashN(t.nome)) % 23 === 0;
+  if (dorme || pisca) { r(ctx, hx + 1, hy + 4, 2, 1, "#3A2A2A"); r(ctx, hx + 5, hy + 4, 2, 1, "#3A2A2A"); }
+  else { r(ctx, hx + 2, hy + (trab ? 4 : 3), 1, 2, "#14101C"); r(ctx, hx + 5, hy + (trab ? 4 : 3), 1, 2, "#14101C"); }
+  if (c.oculos && !dorme) { r(ctx, hx + 1, hy + 3, 3, 1, "#14101C"); r(ctx, hx + 4, hy + 3, 3, 1, "#14101C"); }
+  if (chama) { r(ctx, gx + 23, gy + 8 + (f % 2), 2, 10, c.camisa); r(ctx, gx + 23, gy + 6 + (f % 2), 2, 2, c.pele); }
+  r(ctx, gx + 2, gy + 24, 30, 3, PAL.mesaTopo); r(ctx, gx + 2, gy + 27, 30, 1, PAL.mesa);
+  r(ctx, gx + 3, gy + 28, 28, 7, PAL.mesaFrente); r(ctx, gx + 3, gy + 35, 28, 1, PAL.mesaSombra);
+  r(ctx, gx + 15, gy + 30, 4, 1, "#C9A27A");
+  if (trab) { const a = f % 2; r(ctx, gx + 9, gy + 22 + a, 3, 2, c.pele); r(ctx, gx + 22, gy + 23 - a, 3, 2, c.pele); }
+  else if (!chama) { r(ctx, gx + 9, gy + 23, 3, 1, c.pele); r(ctx, gx + 22, gy + 23, 3, 1, c.pele); }
+  // notebook visto de trás, com as duas lentes do Geektavo
+  r(ctx, gx + 11, gy + 16, 12, 8, PAL.tampa); r(ctx, gx + 11, gy + 16, 12, 1, PAL.tampaBorda);
+  if (trab) { r(ctx, gx + 15, gy + 19, 4, 2, f % 2 ? PAL.ciano : "#66DEFF"); }
+  else if (chama) { r(ctx, gx + 15, gy + 19, 4, 2, PAL.verm); }
+  else { r(ctx, gx + 15, gy + 19, 4, 2, "#1A2546"); }
+  if (trab) { ctx.globalAlpha = .07 + (f % 3) * .03; r(ctx, hx, hy + 4, 8, 4, PAL.ciano); ctx.globalAlpha = .22; r(ctx, gx + 9, gy + 24, 16, 2, PAL.ciano); ctx.globalAlpha = 1; }
+  const it = c.item;
+  if (it === 0) { r(ctx, gx + 26, gy + 21, 3, 3, PAL.giz); r(ctx, gx + 29, gy + 22, 1, 1, PAL.giz); if (trab && f % 4 < 2) r(ctx, gx + 27, gy + 18, 1, 2, "#8FA0C2"); }
+  if (it === 1) { r(ctx, gx + 4, gy + 21, 3, 3, PAL.vaso); r(ctx, gx + 4, gy + 18, 3, 3, PAL.folha); }
+  if (it === 2) { r(ctx, gx + 25, gy + 22, 5, 1, PAL.verm); r(ctx, gx + 25, gy + 23, 5, 1, PAL.ciano); r(ctx, gx + 26, gy + 21, 4, 1, "#FFC23D"); }
+  if (it === 3) { r(ctx, gx + 5, gy + 19, 2, 2, "#FFC23D"); r(ctx, gx + 4, gy + 21, 4, 3, PAL.verm); }
+
+  if (chama) { const b = f % 2; r(ctx, gx + 25, gy - b, 7, 7, PAL.verm); r(ctx, gx + 26, gy + 7 - b, 2, 1, PAL.verm); r(ctx, gx + 28, gy + 1 - b, 1, 3, PAL.giz); r(ctx, gx + 28, gy + 5 - b, 1, 1, PAL.giz); }
+  ctx.globalAlpha = 1;
+  if (dorme) { const z = (f >> 1) % 3; ctx.fillStyle = "#6F80A8"; ctx.font = `700 ${U * 3}px "Space Mono",monospace`; ctx.textBaseline = "alphabetic"; ctx.fillText("z", (gx + 24 + z) * U, (gy + 8 - z) * U); }
+}
+
+function robo(ctx, gx, gy, o, f) {
+  const ok = o.ok, rodando = o.estado === "rodando";
+  r(ctx, gx + 4, gy + 4, 20, 24, PAL.rack); r(ctx, gx + 4, gy + 4, 20, 1, PAL.metal);
+  for (let k = 0; k < 4; k++) { r(ctx, gx + 6, gy + 7 + k * 5, 16, 3, "#1C2A4C"); r(ctx, gx + 19, gy + 8 + k * 5, 1, 1, (f + k) % 3 ? (ok ? "#3BE3A0" : PAL.verm) : "#1C2A4C"); }
+  const bob = rodando && f % 2 ? 1 : 0;
+  r(ctx, gx + 9, gy + 16 + bob, 10, 8, PAL.metal); r(ctx, gx + 10, gy + 17 + bob, 8, 3, "#0A1636");
+  r(ctx, gx + 11, gy + 18 + bob, 2, 1, ok ? PAL.ciano : PAL.verm); r(ctx, gx + 15, gy + 18 + bob, 2, 1, ok ? PAL.ciano : PAL.verm);
+  r(ctx, gx + 13, gy + 13 + bob, 1, 3, PAL.metal); r(ctx, gx + 12, gy + 12 + bob, 3, 1, ok ? "#3BE3A0" : (f % 2 ? PAL.verm : "#5A1020"));
+  r(ctx, gx + 8, gy + 24, 12, 6, escurece("#55678F", .8)); r(ctx, gx + 9, gy + 30, 3, 2, PAL.metal); r(ctx, gx + 16, gy + 30, 3, 2, PAL.metal);
+}
+
+function quebrarNome(ctx, txt, max) {
+  const out = [];
+  let linha = "";
+  for (const w of txt.split(" ")) {
+    const t = linha ? linha + " " + w : w;
+    if (ctx.measureText(t).width <= max || !linha) linha = t; else { out.push(linha); linha = w; }
+  }
+  if (linha) out.push(linha);
+  return out.slice(0, 3).map(l => { while (ctx.measureText(l).width > max + 4 && l.length > 3) l = l.slice(0, -1); return l; });
+}
+function etiqueta(ctx, cx, y, txt, cor, fundoCor, max) {
+  ctx.font = `700 ${U <= 2 ? 10 : 11}px "Space Mono",monospace`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  const ls = quebrarNome(ctx, txt, max), lh = U <= 2 ? 12 : 13;
+  const w = Math.max(...ls.map(l => ctx.measureText(l).width)) + 12, h = ls.length * lh + 5;
+  const top = Math.round(y - 9);
+  ctx.fillStyle = fundoCor; ctx.fillRect(Math.round(cx - w / 2), top, Math.round(w), h);
+  ctx.fillStyle = cor; ls.forEach((l, k) => ctx.fillText(l, cx, top + 3 + lh / 2 + k * lh + 1));
+  ctx.textAlign = "left";
+}
+
+function desenharEscritorio() {
+  const cv = $("cv"), box = $("escr");
+  if (!cv || $("v-escritorio").hidden) return;
+  const W = Math.max(300, box.clientWidth);
+  const L = layout(W);
+  const altura = Math.max(L.alturaU * U, 200);
+  const dpr = Math.min(2, devicePixelRatio || 1);
+  if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(altura * dpr)) {
+    cv.width = Math.round(W * dpr); cv.height = Math.round(altura * dpr); cv.style.height = altura + "px";
+  }
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.imageSmoothingEnabled = false;
+  ctx.fillStyle = "#050C1E"; ctx.fillRect(0, 0, W, altura);
+  const antes = sel;
+  sel = null;
+  cenas = [];
+  for (const s of L.salas) {
+    desenharSala(ctx, s);
+    s.itens.forEach((it, k) => {
+      const p = posItem(s, k);
+      if (s.tipo === "robo") robo(ctx, p.x, p.y + 2, it, quadro + k); else boneco(ctx, p.x, p.y + 6, it, quadro + k);
+      const rect = {x: p.x * U, y: p.y * U, w: s.cel.w * U, h: s.cel.h * U, it, sala: s};
+      const marcado = antes && antes.sala.tipo === s.tipo && antes.it.nome === it.nome;
+      if (marcado) sel = rect;
+      const cx = (p.x + s.cel.w / 2) * U;
+      const curto = nomeTela(it.nome);
+      const cor = s.tipo === "robo" ? (it.ok ? PAL.giz : "#FF9AAC") : it.status === "waiting" ? "#FFD0D8" : it.status === "busy" ? PAL.giz : "#A9B6D2";
+      etiqueta(ctx, cx, (p.y + s.cel.h - 7) * U, curto, cor, marcado ? "#00627F" : "rgba(5,12,30,.85)", s.cel.w * U - 8);
+      if (s.tipo !== "robo") {
+        const tr = trabalhoDe(it.nome).find(t => t.pct > 0);
+        if (tr) {
+          const bw = 26 * U, bx = Math.round(cx - bw / 2), by = (p.y + 1) * U;
+          ctx.fillStyle = "rgba(5,12,30,.9)"; ctx.fillRect(bx - 3, by - 3, bw + 6, U + 18);
+          ctx.fillStyle = "#16305F"; ctx.fillRect(bx, by, bw, U);
+          ctx.fillStyle = PAL.ciano; ctx.fillRect(bx, by, Math.round(bw * tr.pct / 100), U);
+          ctx.font = '700 10px "Space Mono",monospace'; ctx.textAlign = "center"; ctx.textBaseline = "top";
+          ctx.fillStyle = PAL.giz; ctx.fillText(tr.pct + "%", cx, by + U + 2); ctx.textAlign = "left";
+        }
+        const pend = pendDe(it.nome).length;
+        if (pend) { const bx = (p.x + s.cel.w - 7) * U, by = (p.y + 12) * U; ctx.fillStyle = PAL.verm; ctx.fillRect(bx, by, 18, 16);
+          ctx.fillStyle = "#07122B"; ctx.font = '700 11px "Space Mono",monospace'; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(String(pend), bx + 9, by + 8); ctx.textAlign = "left"; }
+      }
+      if (marcado || (sobre && sobre.sala.tipo === s.tipo && sobre.it.nome === it.nome)) {
+        ctx.strokeStyle = marcado ? PAL.ciano : "rgba(0,200,255,.45)"; ctx.lineWidth = 2; ctx.setLineDash([6, 4]);
+        ctx.strokeRect(rect.x + 2, rect.y + 2, rect.w - 4, rect.h - 4); ctx.setLineDash([]);
+      }
+      cenas.push(rect);
+    });
+  }
+  if (!L.salas.length) { ctx.fillStyle = PAL.cinza; ctx.font = '14px "Space Mono",monospace'; ctx.textBaseline = "alphabetic"; ctx.fillText("Esperando o PC mandar quem está aberto…", 20, 40); }
+  desenharHud(); desenharFicha(); listaAcessivel(); desenharBaixo();
+}
+
+let baixoChave = "";
+function linhaSeu(i) {
+  const est = el("span", {class: "estado", role: "status"});
+  const row = el("article", {class: "seu"},
+    el("div", {class: "seu-tx"}, el("b", {text: i.titulo}), el("span", {text: [nomeTela(i.quem), i.pergunta || i.oque || i.resumo].filter(Boolean).join(" · ")})));
+  const btn = (cls, txt, fn) => { const b = el("button", {class: cls, type: "button", text: txt}); b.addEventListener("click", fn); return b; };
+  const ver = btn("aj", "Abrir", () => { irPara("fila"); setTimeout(() => { const a = [...document.querySelectorAll("#fila-lista article")].find(x => x.querySelector("h3") && x.querySelector("h3").textContent === i.titulo); if (a) a.scrollIntoView({behavior: "smooth", block: "center"}); }, 120); });
+  const acoes = i.classe === "pendencia"
+    ? [btn("sim", "Sim", ev => decidir(i, "sim", "", row, ev)), btn("nao", "Não", () => decidir(i, "nao", "", row)), ver]
+    : [btn("sim", (i.botoes || {}).aprovar || "Aprovar", ev => decidir(i, "aprovar", "", row, ev)), ver];
+  row.append(el("div", {class: "acoes seu-ac"}, acoes), est);
+  return row;
+}
+function desenharBaixo() {
+  const W = ((E.trabalhos || {}).lista || []).filter(t => !t.fim && !t.parado);
+  const seu = ((E.fila || {}).lista || []).filter(i => precisaDeVoce(i) && vivo(i));
+  const chave = JSON.stringify([Math.floor(agoraS() / 60), W.map(t => [t.nome, t.pct, t.agora, t.atualizado]), seu.map(i => [i.id, i.estado, i.atualizado_ts]), [...decididos]]);
+  if (!carregou) { $("eb-seu").replaceChildren(el("div", {class: "vazio", text: "Carregando…"})); return; }
+  if (chave === baixoChave) return;      // não refaz a cada quadro (perderia o texto que ele está digitando)
+  if (ocupado()) return;
+  baixoChave = chave;
+  const anda = W.filter(t => t.pct > 0), fila0 = W.filter(t => !t.pct);
+  $("eb-trab-sub").textContent = anda.length ? `${anda.length} com barra` : "";
+  const filhos = anda.length ? anda.map(cartaoTrabalho) : [el("div", {class: "vazio", text: "Nenhuma barra andando agora."})];
+  $("eb-trab").replaceChildren(...filhos);
+  $("eb-trab").classList.toggle("n4", anda.length === 4);
+  const nf = $("eb-fila");
+  nf.hidden = !fila0.length;
+  if (innerWidth >= 820 && !nf.dataset.mexeu) nf.open = true;
+  if (fila0.length) nf.replaceChildren(el("summary", {text: `Na fila, ainda em 0% (${fila0.length})`}),
+    el("div", {class: "fila0"}, fila0.map(t => el("div", {class: "f0"}, el("b", {text: t.nome}), el("span", {text: [t.terminal, t.agora || t.etapa].filter(Boolean).join(" · ")})))));
+  const n = seu.filter(i => !decididos.has(i.id)).length;
+  $("eb-seu-sub").textContent = n ? `${n} ${n > 1 ? "coisas" : "coisa"} · o resto a gente resolve` : "nada: a gente está dando conta";
+  const pend = seu.filter(i => i.estado === "esperando" && !decididos.has(i.id));
+  const linhas = pend.slice(0, 5).map(linhaSeu);
+  if (pend.length > 5) { const b = el("button", {class: "chip mais", type: "button", text: `Ver as ${pend.length} em Pendências`}); b.addEventListener("click", () => irPara("fila")); linhas.push(b); }
+  $("eb-seu").replaceChildren(...(linhas.length ? linhas : [el("div", {class: "vazio", text: "Nada esperando você."})]));
+}
+
+function desenharHud() {
+  const T = E.terminais || {}, W = E.trabalhos || {};
+  const esperando = ((E.fila || {}).lista || []).filter(i => precisaDeVoce(i) && !decididos.has(i.id)).length;
+  $("hud-trab").textContent = T.trabalhando ?? 0;
+  $("hud-esp").textContent = esperando;
+  $("hud-and").textContent = (W.lista || []).filter(t => !t.fim && !t.parado && t.pct > 0).length;
+  $("hud-esp").parentElement.classList.toggle("zero", !esperando);
+  $("hud-sub").textContent = `${T.total ?? 0} terminais abertos · ${((E.rotinas || {}).lista || []).length} rotinas no PC · toque num boneco pra ver o que ele faz`;
+}
+
+function linhaTrab(t) {
+  return el("div", {class: "f-trab"},
+    el("div", {class: "l1"}, el("span", {text: t.nome}), el("b", {class: "num", text: t.pct + "%"})),
+    el("div", {class: "barra"}, el("b", {style: `width:${t.pct}%`})),
+    el("span", {class: "f-mut", text: [t.agora || t.etapa ? "agora: " + (t.agora || t.etapa) : null, t.total ? `etapa ${Math.min(t.feitos + 1, t.total)} de ${t.total}` : null].filter(Boolean).join(" · ")}));
+}
+let fichaChave = "";
+function desenharFicha() {
+  const f = $("ficha");
+  if (!sel) { f.hidden = true; fichaChave = ""; return; }
+  const ch = JSON.stringify([Math.floor(agoraS() / 60), sel.sala.tipo, sel.it, trabalhoDe(sel.it.nome || ""), pendDe(sel.it.nome || "").length]);
+  if (ch === fichaChave && !f.hidden) return;
+  fichaChave = ch;
+  const it = sel.it, robo = sel.sala.tipo === "robo";
+  const fechar = el("button", {class: "f-x", type: "button", "aria-label": "fechar", text: "×"});
+  fechar.addEventListener("click", () => { sel = null; desenharEscritorio(); });
+  let corpo;
+  if (robo) {
+    corpo = [el("span", {class: "f-tipo", text: "rotina do PC (Agendador)"}), el("h3", {text: it.nome}),
+      el("p", {class: it.ok ? "f-ok" : "f-mal", text: it.ok ? "Da última vez deu certo." : `Falhou da última vez (código ${it.resultado}).`}),
+      el("p", {class: "f-mut", text: `última: ${it.ultima ? hora(it.ultima) : "nunca"} · próxima: ${it.proxima ? hora(it.proxima) : "sem horário"}`})];
+  } else {
+    const trs = trabalhoDe(it.nome), pend = pendDe(it.nome);
+    const ver = el("button", {class: "btn sec", type: "button", text: "Ver no QG"});
+    ver.addEventListener("click", () => irPara("fila"));
+    corpo = [el("span", {class: "f-tipo", text: `${sel.sala.nome} · ${NOMES_ST[it.status] || it.status} ${haQuanto(it.desde)}`}),
+      el("h3", {text: nomeTela(it.nome)}),
+      it.titulo ? el("p", {class: "f-tit", text: it.titulo}) : null,
+      it.ultima ? el("p", {class: "f-mut", text: "“" + it.ultima + "”"}) : null,
+      trs.length ? trs.map(linhaTrab) : el("p", {class: "f-mut", text: "Sem barra de andamento aberta."}),
+      pend.length ? el("div", {class: "f-pend"}, el("span", {text: `${pend.length} ${pend.length > 1 ? "coisas esperam" : "coisa espera"} você deste terminal`}), ver) : null];
+  }
+  const [tipo, ...resto] = corpo.flat().filter(Boolean);
+  f.replaceChildren(el("div", {class: "f-cab"}, tipo, fechar), ...resto);
+  f.hidden = false;
+}
+function listaAcessivel() {
+  const box = $("escr-lista");
+  const chave = cenas.map(c => c.it.nome + (c.it.status || c.it.ok)).join("|");
+  if (box.dataset.k === chave) return;
+  box.dataset.k = chave;
+  box.replaceChildren(...cenas.map(c => {
+    const b = el("button", {type: "button", text: `${c.it.nome}: ${c.sala.tipo === "robo" ? (c.it.ok ? "rotina ok" : "rotina falhou") : NOMES_ST[c.it.status] || c.it.status}`});
+    b.addEventListener("click", () => { sel = c; desenharEscritorio(); });
+    return b;
+  }));
+}
+function acharCena(ev) {
+  const r0 = $("cv").getBoundingClientRect(), x = ev.clientX - r0.left, y = ev.clientY - r0.top;
+  return cenas.find(c => x >= c.x && x < c.x + c.w && y >= c.y && y < c.y + c.h) || null;
+}
+$("cv").addEventListener("click", ev => { const c = acharCena(ev); sel = c && !(sel && sel.it.nome === c.it.nome) ? c : null; desenharEscritorio(); });
+$("cv").addEventListener("mousemove", ev => { const c = acharCena(ev); if ((c && c.it) !== (sobre && sobre.it)) { sobre = c; $("cv").style.cursor = c ? "pointer" : "default"; desenharEscritorio(); } });
+document.addEventListener("keydown", ev => { if (ev.key === "Escape" && sel) { sel = null; desenharEscritorio(); } });
+setInterval(() => { if (aba === "escritorio" && !document.hidden) { quadro++; desenharEscritorio(); } }, 450);
+addEventListener("resize", () => { if (aba === "escritorio") desenharEscritorio(); });
+for (const b of document.querySelectorAll("[data-ir]")) b.addEventListener("click", () => irPara(b.dataset.ir));
+
+/* ---------- filtros ---------- */
+$("trab-filtro").addEventListener("click", e => { const f = e.target.closest("[data-f]"); if (f) { filtroTrab = f.dataset.f; desenharTrabalhos(); } });
+$("res-filtro").addEventListener("click", e => { const f = e.target.closest("[data-f]"); if (f) { filtroRes = f.dataset.f; resTodos = false; desenharResultados(); } });
+$("term-filtro").addEventListener("click", e => { const f = e.target.closest("[data-f]"); if (f) { filtroTerm = f.dataset.f; desenharTerminais(); } });
+
+/* ---------- entrada ---------- */
+let timer = null;
+function abrir() {
+  for (const d of lerGuardados()) {
+    if (d.tipo === "central-decisao") { decididos.set(d.id, d.veredito); decididosEm.set(d.id, Date.now()); }
+    else if (d.tipo === "dark") { decididos.set("dark:" + d.id, d.veredito); decididosEm.set("dark:" + d.id, Date.now()); }
+  }
+  $("porta").hidden = true; $("app").hidden = false; $("abas-baixo").hidden = false; $("rodape").hidden = false;
+  try { const a = sessionStorage.getItem("central-aba"); if (a && ABAS.some(([x]) => x === a)) aba = a; } catch (e) {}
+  montarAbas(); irPara(aba);
+  carregar();
+  clearInterval(timer);
+  timer = setInterval(() => { if (!document.hidden) carregar(); }, MODO === "nuvem" ? 15000 : 4000);
+  if (MODO !== "nuvem") $("sair").hidden = true;
+  if (MODO === "pc") {     // código novo da página: recarrega sozinha (sem perder a vista)
+    let versao = null;
+    setInterval(async () => {
+      try {
+        const v = await (await fetch("/versao", {cache: "no-store"})).text();
+        if (versao && v !== versao && !document.querySelector("textarea:focus")) location.reload();
+        versao = v;
+      } catch (e) {}
+    }, 30000);
+  }
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden && !$("app").hidden) carregar(); });
+function porta(msg) {
+  clearInterval(timer); carregou = false;
+  $("app").hidden = true; $("abas-baixo").hidden = true; $("rodape").hidden = true; $("porta").hidden = false;
+  $("pc-t").textContent = "fechada";
+  if (msg) { $("login-msg").textContent = msg; $("login-msg").className = "msg erro"; }
+}
+$("f-login").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const email = $("email").value.trim().toLowerCase();
+  const m = $("login-msg"); m.className = "msg";
+  if (email !== DONO) { m.textContent = "Esse e-mail não abre a central."; m.className = "msg erro"; return; }
+  m.textContent = "mandando…";
+  const r = await sb.auth.signInWithOtp({email, options: {emailRedirectTo: location.origin + location.pathname, shouldCreateUser: false}});
+  m.textContent = r.error ? "Não mandou: " + r.error.message : "Link mandado. Abra o e-mail neste aparelho.";
+  if (r.error) m.className = "msg erro";
+});
+$("sair").addEventListener("click", async () => { await sb.auth.signOut(); porta(); });
+
+(async () => {
+  if (MODO !== "nuvem") { abrir(); return; }
+  if (!sb) { porta("Não carregou a biblioteca do banco. Recarregue a página."); return; }
+  const {data: {session}} = await sb.auth.getSession();
+  if (session && session.user.email === DONO) abrir(); else porta();
+  sb.auth.onAuthStateChange((ev, s) => { if (s && s.user.email === DONO && $("app").hidden) abrir(); });
+})();
+</script>
+</body>
+</html>
