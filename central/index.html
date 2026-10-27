@@ -568,7 +568,7 @@ const decididosEm = new Map(); // quando foi mandada: sem confirmação em 90 s,
 let carregou = false, falhas = 0;
 const comPrazo = () => (AbortSignal.timeout ? AbortSignal.timeout(8000) : undefined);
 const comTempo = q => Promise.race([q, new Promise((_, nao) => setTimeout(() => nao(new Error("o servidor demorou; tente de novo")), 8000))]);
-let carregando = false;
+let carregando = false, tentouRenovar = false;
 function expirarDecididos() {
   const F = (E.fila || {}).lista || [];
   for (const [id, t] of decididosEm) {
@@ -590,6 +590,13 @@ async function carregar() {
     } else {
       const {data, error} = await comTempo(sb.from("dark_dados").select("canal,dados,atualizado_em").eq("data", "2000-01-01").like("canal", "central-%"));
       if (error) { if (error.status === 401 || /JWT/i.test(error.message || "")) { porta("A sessão venceu. Entre de novo."); return; } throw error; }
+      if (!data.length) {   // o banco só esconde as linhas: confere quem está logado antes de mostrar a tela vazia
+        const {data: {session}} = await sb.auth.getSession();
+        if (!session || (session.user.email || "").toLowerCase() !== DONO) { porta("Este aparelho está logado com outro e-mail" + (session ? " (" + session.user.email + ")" : "") + ". Entre de novo com o do dono."); return; }
+        if (!tentouRenovar) { tentouRenovar = true; await sb.auth.refreshSession(); carregando = false; return carregar(); }
+        throw new Error("o banco não devolveu nada pro dono");
+      }
+      tentouRenovar = false;
       E = {};
       for (const l of data) E[l.canal.replace("central-", "")] = l.dados;
       const hoje = hojeISO();
@@ -1389,8 +1396,12 @@ $("sair").addEventListener("click", async () => { await sb.auth.signOut(); porta
   if (MODO !== "nuvem") { abrir(); return; }
   if (!sb) { porta("Não carregou a biblioteca do banco. Recarregue a página."); return; }
   const {data: {session}} = await sb.auth.getSession();
-  if (session && session.user.email === DONO) abrir(); else porta();
-  sb.auth.onAuthStateChange((ev, s) => { if (s && s.user.email === DONO && $("app").hidden) abrir(); });
+  if (session && (session.user.email || "").toLowerCase() === DONO) abrir(); else porta(session ? "Este aparelho está logado com " + session.user.email + ". Entre com o do dono." : "");
+  sb.auth.onAuthStateChange((ev, s) => {
+    const dono = s && (s.user.email || "").toLowerCase() === DONO;
+    if (dono && $("app").hidden) abrir();
+    else if (!dono && !$("app").hidden) porta(s ? "Este aparelho trocou pro e-mail " + s.user.email + ". Entre de novo com o do dono." : "");
+  });
 })();
 </script>
 </body>
