@@ -332,8 +332,8 @@ body.no-escr main{max-width:none;padding:0}
     <button class="btn" type="submit">Mandar o código</button>
   </form>
   <form id="f-codigo" class="ajuste" hidden>
-    <label for="codigo" class="msg" style="color:var(--muted)">código do e-mail</label>
-    <input id="codigo" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6,10}" maxlength="10" required>
+    <label for="codigo" class="msg" style="color:var(--muted)">código do e-mail, ou o link copiado</label>
+    <input id="codigo" type="text" autocomplete="one-time-code" autocapitalize="off" spellcheck="false" required>
     <button class="btn" type="submit">Entrar</button>
   </form>
   <div class="msg" id="login-msg" role="status"></div>
@@ -1392,15 +1392,18 @@ $("f-login").addEventListener("submit", async ev => {
   if (email !== DONO) { m.textContent = "Esse e-mail não abre a central."; m.className = "msg erro"; return; }
   m.textContent = "mandando…";
   const r = await sb.auth.signInWithOtp({email, options: {emailRedirectTo: location.origin + location.pathname, shouldCreateUser: false}});
-  m.textContent = r.error ? "Não mandou: " + (/rate|seconds/i.test(r.error.message) ? "espere 1 minuto pra pedir outro." : r.error.message) : "Mandei. Digite aqui o código de 6 dígitos do e-mail (copiar e colar do Gmail funciona).";
+  m.textContent = r.error ? "Não mandou: " + (/rate|seconds/i.test(r.error.message) ? "espere 1 minuto pra pedir outro." : r.error.message) : "Mandei. Digite aqui o código de 6 dígitos do e-mail. Se o e-mail só tiver o link, segure o dedo nele, copie e cole aqui.";
   if (r.error) { m.className = "msg erro"; return; }
   $("f-codigo").hidden = false; $("codigo").value = ""; $("codigo").focus();
 });
 $("f-codigo").addEventListener("submit", async ev => {
   ev.preventDefault();
-  const m = $("login-msg"), token = $("codigo").value.replace(/\D/g, "");
+  const m = $("login-msg"), v = $("codigo").value.trim();
   m.className = "msg"; m.textContent = "conferindo…";
-  const r = await sb.auth.verifyOtp({email: DONO, token, type: "email"});
+  let hash = null;
+  try { if (/token=/.test(v)) hash = new URL(v).searchParams.get("token"); } catch (e) {}
+  const r = hash ? await sb.auth.verifyOtp({token_hash: hash, type: "magiclink"})
+                 : await sb.auth.verifyOtp({email: DONO, token: v.replace(/\D/g, ""), type: "email"});
   if (r.error) { m.className = "msg erro"; m.textContent = /expired|invalid/i.test(r.error.message) ? "Código errado ou vencido. Confira ou peça outro." : "Não entrou: " + r.error.message; return; }
   $("f-codigo").hidden = true; m.textContent = "";
   if (r.data.session && $("app").hidden) abrir();
