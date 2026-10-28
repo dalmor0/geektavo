@@ -175,7 +175,15 @@ textarea:focus{border-color:var(--accent);outline:0}
 .fase.descartado{background:var(--bad-bg);color:var(--bad)}
 .res .quem{font-size:11.5px;color:var(--muted);margin-left:auto}
 .res .veredito{font-size:14px;color:var(--ink);margin:0}
-.res .card .ver{margin-top:auto;padding-top:4px}
+.res .card .ver{padding-top:2px}
+.res .prog{display:grid;gap:5px}
+.res .prog .l1{display:flex;align-items:baseline;gap:10px;font-size:12.5px;color:var(--muted)}
+.res .prog .l1 .pct{font:700 15px var(--body);color:var(--ink);min-width:3.2em}
+.res .prog .l1 span:last-child{overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.res .prog.espera .barra b{background:var(--muted)}
+.res .conv{font-size:12.5px;color:var(--accent);margin:0}
+.res .conv.anotada{color:var(--muted)}
+.res .pe-c{margin-top:auto;display:grid;gap:6px;padding-top:2px}
 .res .oque{font-size:12.5px;color:var(--muted);margin:0}
 .mais{justify-self:start}
 
@@ -824,12 +832,7 @@ function desenharResultados() {
   const n = f => C.filter(c => c.fase === f).length;
   $("res-sub").textContent = C.length ? [[n("concluido"), "concluído", "concluídos"], [n("parado"), "parado", "parados"], [n("descartado"), "descartado", "descartados"]].filter(([k]) => k).map(([k, um, v]) => `${k} ${k === 1 ? um : v}`).join(" · ") : "o que cada trabalho virou, em uma linha";
   const mostrar = resTodos ? ls : ls.slice(0, 6);
-  const filhos = mostrar.map(c => el("article", {class: "card", "data-fase": c.fase},
-    el("div", {class: "cab"}, el("span", {class: "fase " + c.fase, text: FASES[c.fase] || c.fase}), el("span", {class: "quem", text: [c.quem, haQuanto(c.atualizado_ts || c.criado_ts)].filter(Boolean).join(" · ")})),
-    el("h3", {text: c.titulo}),
-    c.oque ? el("p", {class: "oque", text: c.oque}) : null,
-    c.veredito ? el("p", {class: "veredito", text: c.veredito}) : null,
-    c.link ? el("a", {class: "ver", href: c.link, target: "_blank", rel: "noopener", text: "ver relatório"}) : null));
+  const filhos = mostrar.map(cartaoResultado);
   if (!filhos.length) filhos.push(el("div", {class: "vazio", text: "Quando um terminal termina, o resultado aparece aqui com o veredito."}));
   $("res-lista").replaceChildren(...filhos);
   const mais = $("res-mais");
@@ -839,6 +842,71 @@ function desenharResultados() {
     b.onclick = () => { resTodos = !resTodos; desenharResultados(); };
     if (!mais) $("res-lista").after(b);
   } else if (mais) mais.remove();
+}
+// cartão de resultado: barra no RODANDO, SUGERIR no meio do processo, RETOMAR nos outros
+const enviadosC = new Map();   // id do cartão -> {tipo, ts, ficou} até a ponte confirmar
+function barraCartao(c) {
+  const p = c.progresso || {pct: null, texto: "pedindo o % ao " + (c.quem || "terminal dono"), de: "pedido"};
+  const pct = p.pct == null ? null : Math.max(0, Math.min(100, Math.round(p.pct)));
+  const detalhe = p.de === "pedido" ? p.texto + (p.em ? " " + haQuanto(p.em) : "")
+    : [p.total ? `etapa ${Math.min((p.feitos || 0) + 1, p.total)} de ${p.total}` : null, p.texto, p.parado ? "parada" : null].filter(Boolean).join(" · ");
+  return el("div", {class: "prog" + (pct == null ? " espera" : "")},
+    el("div", {class: "l1"}, el("span", {class: "pct num", text: pct == null ? "?%" : pct + "%"}), el("span", {text: detalhe})),
+    el("div", {class: "barra", role: "progressbar", "aria-valuenow": pct == null ? null : pct, "aria-valuemin": 0, "aria-valuemax": 100, "aria-label": "andamento de " + c.titulo, "aria-valuetext": pct == null ? "sem % ainda" : pct + "%"},
+      el("b", {style: `width:${pct || 0}%`})));
+}
+function linhaConversa(c) {
+  const ult = (c.conversa || [])[(c.conversa || []).length - 1];
+  const env = enviadosC.get(c.id);
+  if (env && (!ult || ult.ts < env.ts - 60)) {
+    return el("p", {class: "conv", role: "status", text: (env.tipo === "sugerir" ? "Sugestão mandada" : "Pedido de retomar mandado") + (env.ficou ? " · guardado aqui, sai quando o PC voltar" : " · o PC confirma em segundos")});
+  }
+  if (env) enviadosC.delete(c.id);
+  if (!ult) return null;
+  const oque = ult.tipo === "sugerir" ? "Sua sugestão" : "Seu pedido de retomar";
+  if (!ult.chegou) return el("p", {class: "conv anotada", text: `${oque} ficou anotada: sai quando o Maestri abrir`});
+  const onde = nomeTela(ult.chegou) + (ult.chegou !== c.quem && c.quem ? `, que repassa pro ${c.quem}` : "");
+  return el("p", {class: "conv", text: `${oque} chegou no ${onde} · ${haQuanto(ult.ts)}`});
+}
+async function mandarCartao(c, tipo, texto) {
+  let ficou = false;
+  if (MODO === "pc") ficou = await caixaPC({tipo: "central-decisao", id: c.id, veredito: tipo, texto});
+  else if (MODO === "nuvem") {
+    const {error} = await comTempo(sb.from("votos").upsert({id: "central-d-" + c.id, dia: hojeISO(), tipo: "central-decisao", n: 0, veredito: tipo, logline: texto}));
+    if (error) throw error;
+  }
+  enviadosC.set(c.id, {tipo, ts: agoraS(), ficou});
+}
+function cartaoResultado(c) {
+  const rodando = c.fase === "rodando";
+  const tipo = rodando ? "sugerir" : "retomar";
+  const est = el("div", {class: "estado", role: "status"});
+  const caixa = caixaTexto(rodando ? `sua sugestão pro ${c.quem || "terminal"}` : "como quer que retome", "", rodando ? "Mandar sugestão" : "Mandar pra retomar");
+  const abrirB = el("button", {class: "aj", type: "button", text: rodando ? "Sugerir" : "Retomar", "aria-expanded": "false"});
+  abrirB.addEventListener("click", () => { caixa.hidden = !caixa.hidden; abrirB.setAttribute("aria-expanded", String(!caixa.hidden)); if (!caixa.hidden) caixa.querySelector("textarea").focus(); });
+  const card = el("article", {class: "card", "data-fase": c.fase, "data-cartao": c.id},
+    el("div", {class: "cab"}, el("span", {class: "fase " + c.fase, text: FASES[c.fase] || c.fase}), el("span", {class: "quem", text: [c.quem, haQuanto(c.atualizado_ts || c.criado_ts)].filter(Boolean).join(" · ")})),
+    el("h3", {text: c.titulo}),
+    c.oque ? el("p", {class: "oque", text: c.oque}) : null,
+    rodando ? barraCartao(c) : null,
+    c.veredito ? el("p", {class: "veredito", text: c.veredito}) : null);
+  const conv = linhaConversa(c);
+  card.append(el("div", {class: "pe-c"}, conv, el("div", {class: "acoes q1"}, abrirB), caixa, est,
+    c.link ? el("a", {class: "ver", href: c.link, target: "_blank", rel: "noopener", text: "ver relatório"}) : null));
+  caixa.querySelector("button").addEventListener("click", async ev => {
+    const t = caixa.querySelector("textarea").value.trim();
+    if (!t) { est.textContent = rodando ? "escreva a sugestão" : "escreva como quer que retome"; return; }
+    const b = ev.currentTarget; b.disabled = true; abrirB.disabled = true; est.textContent = "mandando…";
+    try {
+      await mandarCartao(c, tipo, t);
+      caixa.querySelector("textarea").value = ""; caixa.hidden = true; est.textContent = "";
+      const nova = linhaConversa(c), velha = card.querySelector(".conv");
+      if (velha) velha.replaceWith(nova); else card.querySelector(".pe-c").prepend(nova);
+      if (!rodando) est.textContent = "o cartão volta pra Rodando assim que o PC entregar";
+    } catch (e) { est.textContent = "não foi: " + (e.message || e); }
+    b.disabled = false; abrirB.disabled = false;
+  });
+  return card;
 }
 const PESADO = new Set(["dinheiro", "apagar", "publicar"]);
 function confirmar(i, decisao, b) {
