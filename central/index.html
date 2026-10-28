@@ -325,11 +325,16 @@ body.no-escr main{max-width:none;padding:0}
 
 <section class="porta" id="porta" hidden>
   <h1>Central</h1>
-  <p>Só você entra. Digite o seu e-mail e abra o link que chegar (vale pro celular e pro computador; depois ele lembra).</p>
+  <p>Só você entra. Digite o seu e-mail e use o código de 6 dígitos que chegar (ou abra o link neste mesmo navegador). Depois ele lembra.</p>
   <form id="f-login" class="ajuste">
     <label for="email" class="msg" style="color:var(--muted)">e-mail</label>
     <input id="email" type="email" autocomplete="email" inputmode="email" required>
-    <button class="btn" type="submit">Mandar o link</button>
+    <button class="btn" type="submit">Mandar o código</button>
+  </form>
+  <form id="f-codigo" class="ajuste" hidden>
+    <label for="codigo" class="msg" style="color:var(--muted)">código do e-mail</label>
+    <input id="codigo" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6,10}" maxlength="10" required>
+    <button class="btn" type="submit">Entrar</button>
   </form>
   <div class="msg" id="login-msg" role="status"></div>
 </section>
@@ -1387,8 +1392,18 @@ $("f-login").addEventListener("submit", async ev => {
   if (email !== DONO) { m.textContent = "Esse e-mail não abre a central."; m.className = "msg erro"; return; }
   m.textContent = "mandando…";
   const r = await sb.auth.signInWithOtp({email, options: {emailRedirectTo: location.origin + location.pathname, shouldCreateUser: false}});
-  m.textContent = r.error ? "Não mandou: " + r.error.message : "Link mandado. Abra o e-mail neste aparelho.";
-  if (r.error) m.className = "msg erro";
+  m.textContent = r.error ? "Não mandou: " + (/rate|seconds/i.test(r.error.message) ? "espere 1 minuto pra pedir outro." : r.error.message) : "Mandei. Digite aqui o código de 6 dígitos do e-mail (copiar e colar do Gmail funciona).";
+  if (r.error) { m.className = "msg erro"; return; }
+  $("f-codigo").hidden = false; $("codigo").value = ""; $("codigo").focus();
+});
+$("f-codigo").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const m = $("login-msg"), token = $("codigo").value.replace(/\D/g, "");
+  m.className = "msg"; m.textContent = "conferindo…";
+  const r = await sb.auth.verifyOtp({email: DONO, token, type: "email"});
+  if (r.error) { m.className = "msg erro"; m.textContent = /expired|invalid/i.test(r.error.message) ? "Código errado ou vencido. Confira ou peça outro." : "Não entrou: " + r.error.message; return; }
+  $("f-codigo").hidden = true; m.textContent = "";
+  if (r.data.session && $("app").hidden) abrir();
 });
 $("sair").addEventListener("click", async () => { await sb.auth.signOut(); porta(); });
 
