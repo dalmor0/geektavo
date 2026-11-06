@@ -33,7 +33,7 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
-body{background:var(--noite);color:var(--giz);font:400 16px/1.5 var(--body);margin:0;min-height:100svh;display:flex;flex-direction:column}
+body{overflow-wrap:break-word;background:var(--noite);color:var(--giz);font:400 16px/1.5 var(--body);margin:0;min-height:100svh;display:flex;flex-direction:column}
 main{flex:1;width:100%;max-width:1240px;margin:0 auto;padding:32px 32px 64px}
 h1,h2,h3{text-wrap:balance} p{text-wrap:pretty}
 a{color:var(--giz);text-decoration-color:var(--cinza);text-underline-offset:4px}
@@ -326,6 +326,9 @@ section.espera{display:grid;gap:8px;align-content:start}
 .site b{font:600 20px/1.3 var(--body)}
 @media (max-width:820px){ .gh{grid-template-columns:minmax(0,1fr);gap:24px} .gh-idx{display:none} .gh-sel{display:block;min-height:48px} }
 
+.l2 > *,.l2 b,.f0 b,.f0 span,.ped .tx,.alerta span,.mq b,.it .tit,.seu-tx b{min-width:0;overflow-wrap:anywhere}
+select{max-width:100%}
+
 /* faixa do Jarvis: ele em toda tela */
 .jfaixa{border-bottom:1px solid var(--fio);background:var(--noite)}
 .jf-in{max-width:1240px;margin:0 auto;padding:6px 32px;display:flex;align-items:center;gap:12px 20px;min-height:48px}
@@ -401,6 +404,15 @@ section.espera{display:grid;gap:8px;align-content:start}
 .rodape{max-width:1240px;margin:0 auto;padding:0 32px 24px;color:var(--cinza);font-size:14px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;width:100%}
 .rodape button{background:none;border:0;color:var(--cinza);text-decoration:underline;cursor:pointer;min-height:44px;padding:0}
 @media (max-width:700px){ .rodape{padding:0 16px 24px} }
+@supports (padding:max(0px)){
+  main,.topo-in,.jf-in,.rodape{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+  @media (min-width:701px){ main,.topo-in,.jf-in,.rodape{padding-left:max(32px,env(safe-area-inset-left));padding-right:max(32px,env(safe-area-inset-right))} }
+  @media (max-width:820px){
+    .abas-baixo{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right))}
+    .ficha{left:env(safe-area-inset-left);right:env(safe-area-inset-right)}
+  }
+}
+@media (max-width:360px){ .abas-baixo button{font-size:12px;letter-spacing:-.01em} .abas-baixo button[data-c]::after{min-width:16px;padding:0 3px} }
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -678,6 +690,7 @@ function el(tag, at = {}, ...filhos) {
   return e;
 }
 const agoraS = () => Date.now() / 1000;
+const motivo = e => { const m = (e && e.message) || String(e || ""); return /Failed to fetch|NetworkError|Load failed|network/i.test(m) ? "sem internet agora; tente de novo quando a rede voltar" : m; };
 const nomeTela = n => (n || "").replace(/TERMMINAL/g, "TERMINAL");
 function haQuanto(s) {
   if (!s) return "";
@@ -783,7 +796,7 @@ function verbos(box, msg) {
   const m = jarvisModo();
   const ativo = {falando: "falar", ouvindo: "ouvir", vigiando: "vigiar", pensando: "vigiar"}[m];
   const lista = VERBOS.filter(([k]) => MODO === "pc" || k !== "ouvir");   // microfone só faz sentido na frente do PC
-  const fora = MODO === "teste" || (MODO === "pc" && !J.ok);
+  const fora = MODO === "teste" || (MODO === "pc" && !J.ok) || m === "dormindo" || (MODO === "nuvem" && !navigator.onLine);
   const ch = JSON.stringify([ativo, lista.length, fora]);
   if (box.dataset.k === ch) return;
   box.dataset.k = ch;
@@ -810,7 +823,7 @@ async function jarvisAcao(acao, texto, msg, b) {
     } else throw new Error("na conferência os botões não mandam nada");
     msg.textContent = JFEITO[acao] + (MODO === "nuvem" ? " (o PC recebe em até 20 s)" : "");
     setTimeout(() => { msg.textContent = ""; }, 8000);
-  } catch (e) { msg.textContent = "não foi: " + (e.message || e); }
+  } catch (e) { msg.textContent = "não foi: " + motivo(e); }
   if (b) b.disabled = false;
   await lerJarvis();
   desenharJdiz();
@@ -867,7 +880,7 @@ function desenharJarvis() {
 /* ---------- Edição: o Edita Como Eu por dentro (só no PC) ---------- */
 let ED = null, edChave = "";
 async function lerEdicao() {
-  if (MODO === "nuvem") { const e = E.edicao; ED = !e ? null : e.no_ar ? e : {fora: true}; desenharEdicao(); return; }
+  if (MODO === "nuvem") { const e = E.edicao; ED = !e ? (carregou ? {fora: true} : null) : e.no_ar ? e : {fora: true}; desenharEdicao(); return; }
   if (MODO !== "pc") { desenharEdicao(); return; }
   try {
     const r = await fetch("/edicao/api/estado", {cache: "no-store", signal: AbortSignal.timeout ? AbortSignal.timeout(20000) : undefined});
@@ -1130,6 +1143,16 @@ function desenharFaixa() {
   const U0 = U; U = 1; jarvis(ctx, 0, 0, m, quadro); U = U0;
 }
 $("jf-abre").addEventListener("click", () => irPara("jarvis"));
+let larguraAntes = innerWidth;
+addEventListener("resize", () => {     // girou o celular: Andamento e Atalhos mudam de lugar (aba ou dentro de Áreas)
+  const cruzou = (larguraAntes <= 820) !== (innerWidth <= 820);
+  larguraAntes = innerWidth;
+  if (!cruzou || $("app").hidden) return;
+  arChave = "";
+  if (aba === "areas" && ["agora", "atalhos"].includes(arSel) && innerWidth > 820) irPara(arSel);
+  else if (["agora", "atalhos"].includes(aba) && innerWidth <= 820) irPara(aba);
+  else if (aba === "areas") desenharAreas();
+});
 
 /* ---------- dados ---------- */
 let E = {};          // estado vindo da ponte: terminais, trabalhos, rotinas, alertas, fila, pedidos, maquina
@@ -1146,7 +1169,7 @@ function expirarDecididos() {
   for (const [id, t] of decididosEm) {
     const item = F.find(i => i.id === id);
     if (item && item.estado !== "esperando") { decididos.delete(id); decididosEm.delete(id); continue; }   // a ponte confirmou
-    if (Date.now() - t > 90000 && !guardado(id)) { decididos.delete(id); decididosEm.delete(id); }
+    if (Date.now() - t > 90000 && !guardado(id) && pcVivo()) { decididos.delete(id); decididosEm.delete(id); }   // PC sem sinal: fica anotado até ele voltar
   }
 }
 
@@ -1161,8 +1184,8 @@ async function carregar() {
       DARK = E.dark || E._dark || [];
     } else {
       if (!sb) throw new Error("sem a biblioteca do banco (sem rede)");
-      const {data, error} = await comTempo(sb.from("dark_dados").select("canal,dados,atualizado_em").eq("data", "2000-01-01").like("canal", "central-%"));
-      if (error) { if (error.status === 401 || /JWT/i.test(error.message || "")) { porta("A sessão venceu. Entre de novo."); return; } throw error; }
+      const {data, error, status} = await comTempo(sb.from("dark_dados").select("canal,dados,atualizado_em").eq("data", "2000-01-01").like("canal", "central-%"));
+      if (error) { if (status === 401 || error.status === 401 || error.code === "PGRST301" || /JWT|JWS|token/i.test(error.message || "")) { porta("A sessão venceu. Entre de novo."); return; } throw error; }
       if (!data.length) {   // o banco só esconde as linhas: confere quem está logado antes de mostrar a tela vazia
         const {data: {session}} = await sb.auth.getSession();
         if (!session || (session.user.email || "").toLowerCase() !== DONO) { porta("Este aparelho está logado com outro e-mail" + (session ? " (" + session.user.email + ")" : "") + ". Entre de novo com o do dono."); return; }
@@ -1196,7 +1219,10 @@ function avisoVelho() {
   const m = E.maquina || {}, idade = m.batida ? agoraS() - m.batida : null;
   const a = $("velho");
   if (!carregou) { a.hidden = false; a.textContent = falhas ? "Não consegui ler o PC agora. Tentando de novo sozinho…" : "Carregando o estado do PC…"; return; }
-  if (idade != null && idade > 120) { a.hidden = false; a.textContent = `Os dados são de ${haQuanto(m.batida)}: a ponte do PC parou. Os botões ficam guardados e saem quando ela voltar.`; }
+  if (MODO === "nuvem" && !navigator.onLine) { a.hidden = false; a.textContent = `Sem internet agora. Mostrando o último dado, de ${hora(m.batida)}. Os botões voltam quando a rede voltar.`; }
+  else if (idade != null && idade > 120) { a.hidden = false; a.textContent = MODO === "nuvem"
+    ? `O PC não manda sinal desde ${hora(m.batida)} (desligado ou sem internet). O que você tocar fica anotado e sai quando ele voltar.`
+    : `Os dados pararam em ${hora(m.batida)}: a ponte do PC parou. Os botões ficam guardados e saem quando ela voltar.`; }
   else a.hidden = true;
 }
 
@@ -1205,8 +1231,9 @@ let filtroTrab = "ativos", filtroTerm = "busy";
 function desenhar() {
   const m = E.maquina || {};
   const idade = m.batida ? agoraS() - m.batida : 1e9;
-  $("pc").className = "pc " + (idade < 120 ? "vivo" : "morto");
-  $("pc-t").replaceChildren(idade < 120 ? "PC no ar" : "PC sem sinal", m.batida ? el("span", {class: "det", text: " · " + haQuanto(m.batida)}) : "");
+  const semRede = MODO === "nuvem" && !navigator.onLine;
+  $("pc").className = "pc " + (idade < 120 && !semRede ? "vivo" : "morto");
+  $("pc-t").replaceChildren(semRede ? "sem internet" : idade < 120 ? "PC no ar" : "PC sem sinal", m.batida ? el("span", {class: "det", text: " · " + haQuanto(m.batida)}) : "");
   $("atualizado").textContent = m.batida ? `Atualizado ${hora(m.batida)} · ${MODO === "nuvem" ? "a página relê a cada 15 s" : "tela do PC, relê sozinha"}` : "";
 
   const T = E.terminais || {lista: []}, W = E.trabalhos || {lista: []}, R = E.rotinas || {lista: []}, F = E.fila || {lista: []};
@@ -1234,8 +1261,8 @@ function ocupado() {
   const a = document.activeElement;
   if (a && a.tagName === "TEXTAREA" && a.closest("#app")) return true;
   if ([...document.querySelectorAll("#app video")].some(v => !v.paused)) return true;
-  if (document.querySelector("#app .armado")) return true;
-  return [...document.querySelectorAll("#app .ajuste")].some(c => !c.hidden && c.querySelector("textarea").value.trim());
+  if ([...document.querySelectorAll("#app .armado")].some(x => x.offsetParent !== null)) return true;
+  return [...document.querySelectorAll("#app .ajuste")].some(c => !c.hidden && c.offsetParent !== null && c.querySelector("textarea").value.trim());
 }
 $("nossas").addEventListener("toggle", () => { $("nossas").dataset.mexeu = "1"; });
 $("eb-fila").addEventListener("toggle", () => { $("eb-fila").dataset.mexeu = "1"; });
@@ -1265,6 +1292,8 @@ function desenharTrabalhos() {
   $("trab-lista").replaceChildren(...(ls.length ? ls.map(cartaoTrabalho) :
     [el("p", {class: "vazio", text: filtroTrab === "ativos" ? "Nenhum trabalho com barra andando agora. Todo trabalho de 3 etapas ou mais aparece aqui sozinho." : "Nada aqui."})]));
 }
+const ABERTOS = new Set();
+document.addEventListener("toggle", ev => { const d = ev.target; if (d.tagName !== "DETAILS" || !d.closest(".trab")) return; const n = d.closest(".trab").querySelector(".nome"); if (n) (d.open ? ABERTOS.add(n.textContent) : ABERTOS.delete(n.textContent)); }, true);
 function regua(pct, pronto, rotulo) {
   return el("div", {class: "regua" + (pronto ? " pronto" : ""), role: "progressbar", "aria-valuenow": pct == null ? null : pct, "aria-valuemin": 0, "aria-valuemax": 100, "aria-label": rotulo},
     el("b", {style: `width:${pct || 0}%`}));
@@ -1356,7 +1385,7 @@ function cartaoFila(i) {
     i.editado_ts ? el("span", {class: "ed", text: `você reescreveu ${haQuanto(i.editado_ts)}; ${i.quem || "o terminal"} está refazendo`}) : null,
     i.link ? el("a", {class: "ver", href: i.link, target: "_blank", rel: "noopener", text: "ver relatório"}) : null);
   if (decidido) {
-    est.textContent = (FEITO[i.decisao || local] || i.estado) + (i.resultado ? " · " + i.resultado : local && i.estado === "esperando" ? (guardado(i.id) ? " · guardado aqui, sai quando o PC voltar" : " · o PC confirma em até 20 s") : "");
+    est.textContent = (FEITO[i.decisao || local] || i.estado) + (i.resultado ? " · " + i.resultado : local && i.estado === "esperando" ? (guardado(i.id) ? " · guardado aqui, sai quando o PC voltar" : pcVivo() ? " · o PC confirma em até 20 s" : " · anotado, sai quando o PC voltar") : "");
     card.append(est);
     return card;
   }
@@ -1367,7 +1396,8 @@ function cartaoFila(i) {
   const btn = (cls, txt, fn) => { const b = el("button", {class: cls, type: "button", text: txt}); b.addEventListener("click", fn); return b; };
   const excluir = btn("lnk-ex", "Já resolvido, tirar da lista", ev => {
     const b = ev.currentTarget;
-    if (!b.classList.contains("armado")) { b.classList.add("armado"); b.textContent = "Toque de novo pra tirar"; setTimeout(() => { b.classList.remove("armado"); b.textContent = "Já resolvido, tirar da lista"; }, 4000); return; }
+    if (b.classList.contains("armado") && Date.now() - (+b.dataset.armou || 0) < 400) return;
+    if (!b.classList.contains("armado")) { b.dataset.armou = Date.now(); b.classList.add("armado"); b.textContent = "Toque de novo pra tirar"; setTimeout(() => { b.classList.remove("armado"); b.textContent = "Já resolvido, tirar da lista"; }, 4000); return; }
     decidir(i, "excluir", "", card);
   });
   const editar = btn("aj", "Editar", abre(mudar));
@@ -1441,7 +1471,7 @@ async function mandarCartao(c, tipo, texto) {
   let ficou = false;
   if (MODO === "pc") ficou = await caixaPC({tipo: "central-decisao", id: c.id, veredito: tipo, texto});
   else if (MODO === "nuvem") {
-    const {error} = await comTempo(sb.from("votos").upsert({id: "central-d-" + c.id, dia: hojeISO(), tipo: "central-decisao", n: 0, veredito: tipo, logline: texto}));
+    const {error} = await comTempo(sb.from("votos").upsert({id: "central-d-" + c.id + "~" + Date.now(), dia: hojeISO(), tipo: "central-decisao", n: 0, veredito: tipo, logline: texto}));
     if (error) throw error;
   }
   enviadosC.set(c.id, {tipo, ts: agoraS(), ficou});
@@ -1472,7 +1502,7 @@ function cartaoResultado(c) {
       const nova = linhaConversa(c), velha = card.querySelector(".conv");
       if (velha) velha.replaceWith(nova); else card.querySelector(".pe-c").prepend(nova);
       if (!rodando) est.textContent = "o cartão volta pra Rodando assim que o PC entregar";
-    } catch (e) { est.textContent = "não foi: " + (e.message || e); }
+    } catch (e) { est.textContent = "não foi: " + motivo(e); }
     b.disabled = false; abrirB.disabled = false;
   });
   return card;
@@ -1480,8 +1510,9 @@ function cartaoResultado(c) {
 const PESADO = new Set(["dinheiro", "apagar", "publicar"]);
 function confirmar(i, decisao, b) {
   if (!["sim", "aprovar"].includes(decisao) || !(PESADO.has(i.so_ele) || /apag|exclu|compr|publica/i.test((i.pergunta || "") + " " + i.titulo))) return true;
-  if (b.classList.contains("armado")) return true;
+  if (b.classList.contains("armado")) return Date.now() - (+b.dataset.armou || 0) > 400;
   const antes = b.textContent;
+  b.dataset.armou = Date.now();
   b.classList.add("armado"); b.textContent = "Toque de novo";
   setTimeout(() => { b.classList.remove("armado"); b.textContent = antes; }, 4000);
   return false;
@@ -1505,7 +1536,7 @@ async function decidir(i, decisao, nota, card, ev) {
     const n = ((E.fila || {}).lista || []).filter(x => precisaDeVoce(x) && !decididos.has(x.id)).length;
     contador("fila", n); baixoChave = "";
   } catch (e) {
-    est.textContent = "não foi: " + (e.message || e);
+    est.textContent = "não foi: " + motivo(e);
     for (const b of card.querySelectorAll("button")) b.disabled = false;
   }
 }
@@ -1543,9 +1574,8 @@ function cartaoDark(l) {
       card.classList.add("dec");
       card.querySelector(".acoes").remove(); aj.remove();
       est.textContent = (pedido === "aprovar" ? "aprovado: entra no próximo horário livre (confirma em até 15 min)" : pedido === "descartar" ? "descartado" : "ajuste anotado: a Edição refaz e ele volta pra cá") + (ficou ? " · guardado aqui, sai quando o PC voltar" : "");
-      contador("fila", Math.max(0, (Number(document.querySelector('[data-n="fila"]').textContent) || 1) - 1));
     } catch (e) {
-      est.textContent = "não foi: " + (e.message || e);
+      est.textContent = "não foi: " + motivo(e);
       for (const b of card.querySelectorAll("button")) b.disabled = false;
     }
   };
@@ -1595,7 +1625,7 @@ $("f-pedido").addEventListener("submit", async ev => {
     $("pedido").value = "";
     $("pedido-msg").textContent = MODO === "pc" ? "mandado. Chega no terminal central em segundos." : "mandado. Chega na central em até 20 s.";
     desenharPedidos();
-  } catch (e) { $("pedido-msg").textContent = "não foi: " + (e.message || e); }
+  } catch (e) { $("pedido-msg").textContent = "não foi: " + motivo(e); }
   finally { b.disabled = false; }
 });
 
@@ -2141,8 +2171,11 @@ function abrir() {
     }, 30000);
   }
 }
+addEventListener("online", () => { if (!$("app").hidden) carregar(); });
+addEventListener("offline", () => { if (!$("app").hidden) { avisoVelho(); desenhar(); } });
 document.addEventListener("visibilitychange", () => { if (!document.hidden && !$("app").hidden) carregar(); });
 function porta(msg) {
+  $("jfaixa").hidden = true;
   clearInterval(timer); carregou = false;
   $("app").hidden = true; $("abas-baixo").hidden = true; $("rodape").hidden = true; $("porta").hidden = false;
   $("pc-t").textContent = "fechada";
@@ -2154,6 +2187,7 @@ $("f-login").addEventListener("submit", async ev => {
   const m = $("login-msg"); m.className = "msg";
   if (email !== DONO) { m.textContent = "Esse e-mail não abre a central."; m.className = "msg erro"; return; }
   m.textContent = "mandando…";
+  if (!sb) { m.textContent = "Sem internet agora. Quando voltar, recarregue a página."; m.className = "msg erro"; return; }
   const r = await sb.auth.signInWithOtp({email, options: {emailRedirectTo: location.origin + location.pathname, shouldCreateUser: false}});
   m.textContent = r.error ? "Não mandou: " + (/rate|seconds/i.test(r.error.message) ? "espere 1 minuto pra pedir outro." : r.error.message) : "Mandei. Digite aqui o código de 6 dígitos do e-mail. Se o e-mail só tiver o link, segure o dedo nele, copie e cole aqui.";
   if (r.error) { m.className = "msg erro"; return; }
@@ -2171,7 +2205,7 @@ $("f-codigo").addEventListener("submit", async ev => {
   $("f-codigo").hidden = true; m.textContent = "";
   if (r.data.session && $("app").hidden) abrir();
 });
-$("sair").addEventListener("click", async () => { await sb.auth.signOut(); porta(); });
+$("sair").addEventListener("click", async () => { if (sb) await sb.auth.signOut(); porta(); });
 
 if ("serviceWorker" in navigator && MODO !== "teste" && (location.protocol === "https:" || MODO === "pc")) {
   addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));

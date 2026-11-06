@@ -2,7 +2,7 @@
    Página: rede primeiro, cópia guardada se cair. Ícones e manifesto: guardados.
    Dados (Supabase, /estado.json, Jarvis, Edição) nunca passam por aqui: a página guarda o último
    estado no próprio navegador e mostra com o aviso de dado velho. */
-const CAIXA = "central-v2";
+const CAIXA = "central-v3";
 const FORA = ["cdn.jsdelivr.net", "fonts.googleapis.com", "fonts.gstatic.com"];   // biblioteca do banco e fontes: guardadas pra abrir sem rede
 const CASCA = ["./", "manifest.webmanifest", "icone-192.png", "icone-512.png", "icone-180.png"];
 const LIB = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js";
@@ -19,10 +19,13 @@ self.addEventListener("fetch", e => {
     })));
     return;
   }
-  const casca = e.request.mode === "navigate" || CASCA.some(c => u.pathname.endsWith("/" + c.replace("./", "")));
-  if (!casca) return;
+  const raiz = new URL("./", self.registration.scope).pathname;
+  const pagina = e.request.mode === "navigate" && (u.pathname === raiz || u.pathname === raiz + "index.html");
+  const casca = pagina || CASCA.slice(1).some(c => u.pathname === raiz + c);
+  if (!casca) return;          // /estado.json, /jarvis/api, /edicao e o resto passam direto
   e.respondWith(fetch(e.request).then(r => {
-    if (r.ok) { const cp = r.clone(); caches.open(CAIXA).then(c => c.put(e.request.mode === "navigate" ? "./" : e.request, cp)); }
+    const html = (r.headers.get("content-type") || "").includes("text/html");
+    if (r.ok && (!pagina || html)) { const cp = r.clone(); caches.open(CAIXA).then(c => c.put(pagina ? "./" : e.request, cp)); }
     return r;
-  }).catch(() => caches.match(e.request.mode === "navigate" ? "./" : e.request).then(r => r || caches.match("./"))));
+  }).catch(() => caches.match(pagina ? "./" : e.request).then(r => r || (pagina ? caches.match("./") : Response.error()))));
 });
