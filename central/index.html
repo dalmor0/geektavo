@@ -1160,6 +1160,7 @@ async function carregar() {
       E = await r.json();
       DARK = E.dark || E._dark || [];
     } else {
+      if (!sb) throw new Error("sem a biblioteca do banco (sem rede)");
       const {data, error} = await comTempo(sb.from("dark_dados").select("canal,dados,atualizado_em").eq("data", "2000-01-01").like("canal", "central-%"));
       if (error) { if (error.status === 401 || /JWT/i.test(error.message || "")) { porta("A sessão venceu. Entre de novo."); return; } throw error; }
       if (!data.length) {   // o banco só esconde as linhas: confere quem está logado antes de mostrar a tela vazia
@@ -2177,7 +2178,11 @@ if ("serviceWorker" in navigator && MODO !== "teste" && (location.protocol === "
 }
 (async () => {
   if (MODO !== "nuvem") { abrir(); return; }
-  if (!sb) { porta("Não carregou a biblioteca do banco. Recarregue a página."); return; }
+  if (!sb) {       // sem rede e sem a biblioteca guardada: abre com o último estado, se tiver
+    let u = null; try { u = JSON.parse(localStorage.getItem("central-ultimo") || "null"); } catch (e) {}
+    if (u && u.E) { abrir(); return; }
+    porta("Sem internet agora. Quando voltar, recarregue."); return;
+  }
   const {data: {session}} = await sb.auth.getSession();
   if (session && (session.user.email || "").toLowerCase() === DONO) abrir(); else porta(session ? "Este aparelho está logado com " + session.user.email + ". Entre com o do dono." : "");
   sb.auth.onAuthStateChange((ev, s) => {
