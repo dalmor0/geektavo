@@ -326,8 +326,10 @@ section.espera{display:grid;gap:8px;align-content:start}
 .site b{font:600 20px/1.3 var(--body)}
 @media (max-width:820px){ .gh{grid-template-columns:minmax(0,1fr);gap:24px} .gh-idx{display:none} .gh-sel{display:block;min-height:48px} }
 
-.l2 > *,.l2 b,.f0 b,.f0 span,.ped .tx,.alerta span,.mq b,.it .tit,.seu-tx b{min-width:0;overflow-wrap:anywhere}
-select{max-width:100%}
+.l2 > *,.l2 b,.f0 b,.f0 span,.ped .tx,.ped .hist li,.alerta span,.mq b,.it .tit,.seu-tx b,.term .t1 b,.term .t1 span,.card .tipo,#ar-nome,.gh-nome,.f-tit,.f-mut{min-width:0;overflow-wrap:anywhere}
+.ped{grid-template-columns:minmax(0,1fr)}
+.ar-det > *,.ar-corpo > *{min-width:0}
+select{max-width:100%;min-width:0}
 
 /* faixa do Jarvis: ele em toda tela */
 .jfaixa{border-bottom:1px solid var(--fio);background:var(--noite)}
@@ -412,6 +414,7 @@ select{max-width:100%}
     .ficha{left:env(safe-area-inset-left);right:env(safe-area-inset-right)}
   }
 }
+@supports (padding:max(0px)){ .novidade{right:max(16px,calc(env(safe-area-inset-right) + 16px))} @media (max-width:820px){ .novidade{left:max(16px,calc(env(safe-area-inset-left) + 16px))} } }
 @media (max-width:360px){ .abas-baixo button{font-size:12px;letter-spacing:-.01em} .abas-baixo button[data-c]::after{min-width:16px;padding:0 3px} }
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -1160,7 +1163,7 @@ let DARK = [];
 let enviados = [];   // pedidos que saíram daqui e a ponte ainda não pegou
 const decididos = new Map();  // decisões já mandadas daqui (id -> decisão), até a ponte confirmar
 const decididosEm = new Map(); // quando foi mandada: sem confirmação em 90 s, o botão volta
-let carregou = false, falhas = 0;
+let carregou = false, falhas = 0, copia = false;
 const comPrazo = () => (AbortSignal.timeout ? AbortSignal.timeout(8000) : undefined);
 const comTempo = q => Promise.race([q, new Promise((_, nao) => setTimeout(() => nao(new Error("o servidor demorou; tente de novo")), 8000))]);
 let carregando = false, tentouRenovar = false;
@@ -1201,16 +1204,17 @@ async function carregar() {
       DARK = r.error ? [] : r.data;
       try { localStorage.setItem("central-ultimo", JSON.stringify({E, DARK})); } catch (e) {}
     }
-    carregou = true;
+    carregou = true; copia = false;
     await mandarGuardados();
     expirarDecididos();
     desenhar();
     falhas = 0;
   } catch (e) {
     if (!carregou && MODO === "nuvem") {      // sem rede: mostra o último que chegou (o aviso diz de quando é)
-      try { const u = JSON.parse(localStorage.getItem("central-ultimo") || "null"); if (u && u.E) { E = u.E; DARK = u.DARK || []; carregou = true; desenhar(); } } catch (x) {}
+      try { const u = JSON.parse(localStorage.getItem("central-ultimo") || "null"); if (u && u.E) { E = u.E; DARK = u.DARK || []; carregou = true; } } catch (x) {}
     }
-    if (++falhas >= 3) { $("pc-t").textContent = "sem dados agora"; $("pc").className = "pc morto"; }
+    if (MODO === "nuvem" && carregou) { copia = true; desenhar(); }
+    if (++falhas >= 3 && !carregou) { $("pc-t").textContent = navigator.onLine ? "sem dados agora" : "sem internet"; $("pc").className = "pc morto"; }
     avisoVelho();
     if (MODO === "pc" && falhas >= 3) { const a = $("velho"); a.hidden = false; a.textContent = "A tela do PC saiu do ar. O que você tocar fica guardado aqui e sai sozinho quando ela voltar."; }
   } finally { carregando = false; }
@@ -1219,7 +1223,8 @@ function avisoVelho() {
   const m = E.maquina || {}, idade = m.batida ? agoraS() - m.batida : null;
   const a = $("velho");
   if (!carregou) { a.hidden = false; a.textContent = falhas ? "Não consegui ler o PC agora. Tentando de novo sozinho…" : "Carregando o estado do PC…"; return; }
-  if (MODO === "nuvem" && !navigator.onLine) { a.hidden = false; a.textContent = `Sem internet agora. Mostrando o último dado, de ${hora(m.batida)}. Os botões voltam quando a rede voltar.`; }
+  if (MODO === "nuvem" && copia && navigator.onLine) { a.hidden = false; a.textContent = `Não consegui ler o banco agora. Mostrando o último dado, de ${hora(m.batida)}. Tento de novo sozinho.`; }
+  else if (MODO === "nuvem" && !navigator.onLine) { a.hidden = false; a.textContent = `Sem internet agora. Mostrando o último dado, de ${hora(m.batida)}. Os botões voltam quando a rede voltar.`; }
   else if (idade != null && idade > 120) { a.hidden = false; a.textContent = MODO === "nuvem"
     ? `O PC não manda sinal desde ${hora(m.batida)} (desligado ou sem internet). O que você tocar fica anotado e sai quando ele voltar.`
     : `Os dados pararam em ${hora(m.batida)}: a ponte do PC parou. Os botões ficam guardados e saem quando ela voltar.`; }
@@ -1232,8 +1237,8 @@ function desenhar() {
   const m = E.maquina || {};
   const idade = m.batida ? agoraS() - m.batida : 1e9;
   const semRede = MODO === "nuvem" && !navigator.onLine;
-  $("pc").className = "pc " + (idade < 120 && !semRede ? "vivo" : "morto");
-  $("pc-t").replaceChildren(semRede ? "sem internet" : idade < 120 ? "PC no ar" : "PC sem sinal", m.batida ? el("span", {class: "det", text: " · " + haQuanto(m.batida)}) : "");
+  $("pc").className = "pc " + (idade < 120 && !semRede && !copia ? "vivo" : "morto");
+  $("pc-t").replaceChildren(semRede ? "sem internet" : copia ? "sem leitura" : idade < 120 ? "PC no ar" : "PC sem sinal", m.batida ? el("span", {class: "det", text: " · " + haQuanto(m.batida)}) : "");
   $("atualizado").textContent = m.batida ? `Atualizado ${hora(m.batida)} · ${MODO === "nuvem" ? "a página relê a cada 15 s" : "tela do PC, relê sozinha"}` : "";
 
   const T = E.terminais || {lista: []}, W = E.trabalhos || {lista: []}, R = E.rotinas || {lista: []}, F = E.fila || {lista: []};
@@ -1251,12 +1256,30 @@ function desenhar() {
   desenharNovas();
   const chave = JSON.stringify([Math.floor(agoraS() / 60), E.fila, E.trabalhos, E.terminais, E.rotinas, E.pedidos, E.alertas, DARK, [...decididos], enviados.length, filtroTrab, filtroTerm, filtroRes, resTodos]);
   if (chave === listasChave) return;
-  if (ocupado()) { listasPendentes = true; $("novidade").hidden = false; return; }
+  if (ocupado() && !forcar) { listasPendentes = true; $("novidade").hidden = false; return; }
+  const rascunhos = forcar ? guardarRascunhos() : null;
+  forcar = false;
   listasChave = chave; listasPendentes = false; $("novidade").hidden = true;
   desenharTrabalhos(); desenharTerminais(); desenharFila(); desenharPedidos(); desenharRotinas();
+  if (rascunhos) devolverRascunhos(rascunhos);
   if (aba === "escritorio") { baixoChave = ""; desenharBaixo(); }
 }
-let listasChave = "", listasPendentes = false;
+let listasChave = "", listasPendentes = false, forcar = false;
+function guardarRascunhos() {
+  const out = [];
+  for (const card of document.querySelectorAll("#app [data-item], #app [data-cartao]")) {
+    const cx = [...card.querySelectorAll(".ajuste")].map(a => [a.hidden, a.querySelector("textarea").value]);
+    if (cx.some(([h, v]) => !h || v.trim())) out.push([card.dataset.item ? "data-item" : "data-cartao", card.dataset.item || card.dataset.cartao, cx]);
+  }
+  return out;
+}
+function devolverRascunhos(ls) {
+  for (const [at, id, cx] of ls) {
+    const card = document.querySelector(`#app [${at}="${CSS.escape(id)}"]`);
+    if (!card) continue;
+    [...card.querySelectorAll(".ajuste")].forEach((a, k) => { if (!cx[k]) return; a.hidden = cx[k][0]; a.querySelector("textarea").value = cx[k][1]; });
+  }
+}
 function ocupado() {
   const a = document.activeElement;
   if (a && a.tagName === "TEXTAREA" && a.closest("#app")) return true;
@@ -1266,7 +1289,7 @@ function ocupado() {
 }
 $("nossas").addEventListener("toggle", () => { $("nossas").dataset.mexeu = "1"; });
 $("eb-fila").addEventListener("toggle", () => { $("eb-fila").dataset.mexeu = "1"; });
-$("novidade").addEventListener("click", () => { if (document.activeElement) document.activeElement.blur(); listasChave = ""; baixoChave = ""; listasPendentes = false; $("novidade").hidden = true; desenhar(); });
+$("novidade").addEventListener("click", () => { if (document.activeElement) document.activeElement.blur(); listasChave = ""; baixoChave = ""; listasPendentes = false; forcar = true; $("novidade").hidden = true; desenhar(); });
 document.addEventListener("focusout", () => setTimeout(() => { if (listasPendentes && !ocupado()) { listasChave = ""; desenhar(); } }, 300));
 function tile(v, r, cls, fn) {
   const b = el("button", {type: "button", class: "tile " + cls}, el("span", {class: "v num", text: String(v)}), el("span", {class: "r", text: r}));
@@ -1308,7 +1331,7 @@ function cartaoTrabalho(t) {
     !t.fim && falta != null ? el("span", {class: "num", text: falta > 0 ? `~${falta} min (${hora(t.eta)})` : "passou da previsão"}) : null,
     el("span", {text: (t.fim ? "terminou " : "mexeu ") + haQuanto(t.atualizado)}),
   ];
-  const det = el("details", {}, el("summary", {text: "etapas"}),
+  const det = el("details", {open: ABERTOS.has(t.nome) || null}, el("summary", {text: "etapas"}),
     el("ol", {}, (t.passos || []).map(([f, n]) => el("li", {class: f ? "f" : null, text: n}))));
   return el("article", {class: "trab" + (pronto ? " fim" : "") + (t.parado ? " parado" : "")},
     el("div", {class: "l1"}, el("span", {class: "nome", text: t.nome}),
