@@ -2215,19 +2215,53 @@ $("f-login").addEventListener("submit", async ev => {
   m.textContent = "mandando…";
   if (!sb) { m.textContent = "Sem internet agora. Quando voltar, recarregue a página."; m.className = "msg erro"; return; }
   const r = await sb.auth.signInWithOtp({email, options: {emailRedirectTo: location.origin + location.pathname, shouldCreateUser: false}});
-  m.textContent = r.error ? "Não mandou: " + (/rate|seconds/i.test(r.error.message) ? "espere 1 minuto pra pedir outro." : r.error.message) : "Mandei. Digite aqui o código de 6 dígitos do e-mail. Se o e-mail só tiver o link, segure o dedo nele, copie e cole aqui.";
+  m.textContent = r.error ? "Não mandou: " + (/rate|seconds/i.test(r.error.message) ? "espere 1 minuto pra pedir outro." : r.error.message) : "Mandei. Digite aqui o código de 6 dígitos que está no assunto do e-mail. Sem código? Segure o dedo no link, copie e cole aqui sem tocar nele antes (tocar gasta o link).";
   if (r.error) { m.className = "msg erro"; return; }
   $("f-codigo").hidden = false; $("codigo").value = ""; $("codigo").focus();
 });
+function lerLink(v) {
+  let s = String(v || "").trim().replace(/^<|>$/g, "");
+  for (let i = 0; i < 4; i++) {            // desembrulha google.com/url?q=, ?url=, ?u=, ?link=
+    let u; try { u = new URL(s); } catch (e) { break; }
+    const p = u.searchParams;
+    const dentro = p.get("q") || p.get("url") || p.get("u") || p.get("link") || p.get("redirect");
+    if (dentro && /^https?:\/\//i.test(dentro) && !p.get("token") && !p.get("token_hash")) { s = dentro; continue; }
+    break;
+  }
+  let u = null; try { u = new URL(s); } catch (e) {}
+  if (!u) {
+    const so = s.replace(/[\s.-]/g, "");
+    if (/^\d{6,10}$/.test(so)) return {codigo: so};
+    if (/^(pkce_)?[a-f0-9]{20,}$/i.test(so)) return {hash: so, tipo: "magiclink"};
+    return null;
+  }
+  const q = u.searchParams, h = new URLSearchParams(u.hash.replace(/^#/, ""));
+  const pega = k => q.get(k) || h.get(k);
+  if (pega("access_token") && pega("refresh_token")) return {sessao: {access_token: pega("access_token"), refresh_token: pega("refresh_token")}};
+  if (pega("error_code") || pega("error")) return {erro: pega("error_code") || pega("error"), desc: pega("error_description") || ""};
+  const hash = pega("token_hash") || pega("token");
+  if (hash) return {hash, tipo: pega("type") || "magiclink"};
+  if (pega("code")) return {code: pega("code")};
+  return null;
+}
+const VENCIDO = "Esse link já venceu ou já foi usado (cada link vale uma vez). Peça outro e entre com o código de 6 dígitos.";
+
 $("f-codigo").addEventListener("submit", async ev => {
   ev.preventDefault();
-  const m = $("login-msg"), v = $("codigo").value.trim();
+  const m = $("login-msg"), p = lerLink($("codigo").value);
   m.className = "msg"; m.textContent = "conferindo…";
-  let hash = null;
-  try { if (/token=/.test(v)) hash = new URL(v).searchParams.get("token"); } catch (e) {}
-  const r = hash ? await sb.auth.verifyOtp({token_hash: hash, type: "magiclink"})
-                 : await sb.auth.verifyOtp({email: DONO, token: v.replace(/\D/g, ""), type: "email"});
-  if (r.error) { m.className = "msg erro"; m.textContent = /expired|invalid/i.test(r.error.message) ? "Código errado ou vencido. Confira ou peça outro." : "Não entrou: " + r.error.message; return; }
+  const erro = t => { m.className = "msg erro"; m.textContent = t; };
+  if (!p) return erro("Não reconheci. Cole o código de 6 dígitos ou o link inteiro do e-mail.");
+  if (p.erro) return erro(/expired|invalid/i.test(p.erro + " " + p.desc) ? VENCIDO : "O link voltou com erro: " + (p.desc || p.erro));
+  let r;
+  if (p.codigo) r = await sb.auth.verifyOtp({email: DONO, token: p.codigo, type: "email"});
+  else if (p.sessao) r = await sb.auth.setSession(p.sessao);
+  else if (p.code) r = await sb.auth.exchangeCodeForSession(p.code);
+  else {
+    r = await sb.auth.verifyOtp({token_hash: p.hash, type: p.tipo});
+    if (r.error && p.tipo !== "email") r = await sb.auth.verifyOtp({token_hash: p.hash, type: "email"});
+  }
+  if (r.error) return erro(/expired|invalid|not found|already/i.test(r.error.message) ? (p.codigo ? "Código errado ou vencido. Confira ou peça outro." : VENCIDO) : "Não entrou: " + r.error.message);
   $("f-codigo").hidden = true; m.textContent = "";
   if (r.data.session && $("app").hidden) abrir();
 });
@@ -2245,6 +2279,11 @@ if ("serviceWorker" in navigator && MODO !== "teste" && (location.protocol === "
   }
   const {data: {session}} = await sb.auth.getSession();
   if (session && (session.user.email || "").toLowerCase() === DONO) abrir(); else porta(session ? "Este aparelho está logado com " + session.user.email + ". Entre com o do dono." : "");
+  const volta = lerLink(location.href);
+  if (volta && volta.erro && !session) {
+    history.replaceState(null, "", location.pathname);
+    porta(/expired|invalid/i.test(volta.erro + " " + volta.desc) ? VENCIDO : "O link não abriu: " + (volta.desc || volta.erro));
+  }
   sb.auth.onAuthStateChange((ev, s) => {
     const dono = s && (s.user.email || "").toLowerCase() === DONO;
     if (dono && $("app").hidden) abrir();
