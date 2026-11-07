@@ -108,17 +108,47 @@ h2 small{font:400 14px/1.4 var(--body);color:var(--cinza);letter-spacing:0}
 .chip{background:none;border:0;padding:0;min-height:44px;min-width:44px;font:600 15px var(--body);color:var(--cinza);cursor:pointer}
 .chip[aria-pressed="true"]{color:var(--giz);text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:9px}
 
-/* % como fio de régua */
-.regua{position:relative;height:4px}
-.regua::before{content:"";position:absolute;left:0;right:0;top:1px;height:2px;background:var(--fio)}
-.regua b{position:absolute;left:0;top:0;height:4px;background:var(--ciano);transition:width .6s ease}
-.regua.pronto b{background:var(--giz);width:100%!important}
-.trab{border-bottom:1px solid var(--fio);padding:16px 0;display:grid;gap:8px}
+/* medidor ao vivo (06/11, "tipo um vídeo no YouTube"): % grande colado na régua, a régua cortada
+   por etapa como os capítulos de um vídeo, cabeça de leitura giz no ponto em que está, quanto falta
+   do lado. Enche segundo a segundo (cheio com transição linear de 1 s, igual ao relógio da página). */
+.med{container-type:inline-size;min-width:0;display:grid;gap:6px}
+.med-in{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"pct falta" "barra barra" "etapa etapa";align-items:end;gap:10px 16px}
+.med-pct{grid-area:pct;font:900 44px/.86 var(--display);letter-spacing:.01em;color:var(--giz);white-space:nowrap;font-variant-numeric:tabular-nums}
+.med-pct small{font-size:.5em;letter-spacing:0;margin-left:.06em;vertical-align:.62em}
+.med-barra{grid-area:barra;position:relative;height:14px;min-width:0}
+.med-seg{position:absolute;inset:0;background:var(--fio)}
+.med-cheio{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--ciano);transition:width 1s linear}
+.med-cab{position:absolute;top:-6px;bottom:-6px;left:0;width:3px;margin-left:-1px;background:var(--giz);transition:left 1s linear}
+.med-falta{grid-area:falta;display:grid;justify-items:end;text-align:right;line-height:1.25;min-width:0}
+.med-falta b{font:700 18px var(--body);color:var(--giz);white-space:nowrap;font-variant-numeric:tabular-nums}
+.med-falta span{font-size:14px;color:var(--cinza);white-space:nowrap;font-variant-numeric:tabular-nums}
+.med-etapa{grid-area:etapa;margin:-2px 0 0;font-size:14px;line-height:1.4;color:var(--cinza);overflow-wrap:anywhere}
+.med-etapa b{color:var(--giz);font-weight:600}
+/* estourou: "+43 min" grande no lugar do "faltam", cabeça mais grossa (vermelho é só do que espera ele) */
+.med.passou .med-falta b{font:900 26px/1 var(--display);letter-spacing:.01em}
+.med.passou .med-falta span{color:var(--giz);font-weight:600}
+.med.passou .med-cab{width:5px;margin-left:-2px}
+.med.fixo .med-falta b{font-weight:400;color:var(--cinza)}
+.med-so{margin:0;font-size:14px;color:var(--cinza)}
+.med.parado .med-cheio,.med.espera .med-cheio{background:var(--cinza)}
+.med.parado .med-pct,.med.espera .med-pct{color:var(--cinza)}
+.med.fim .med-cheio{background:var(--giz)}
+.med.fim .med-pct{color:var(--cinza)}
+.med.mini .med-pct{font-size:28px}
+.med.mini .med-barra{height:10px}
+.med.mini .med-cab{top:-5px;bottom:-5px}
+.med.mini .med-falta b{font-size:16px}
+/* "Andando agora" do Escritório: grade de verdade (as colunas de jornal desencontravam as linhas) */
+#eb-trab{column-count:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:24px;align-items:stretch}
+#eb-trab > .trab{align-content:start}
+#eb-trab > .trab{border-left:1px solid var(--fio);padding-left:24px}
+#eb-trab > .trab:nth-child(3n+1){border-left:0;padding-left:0}
+@media (max-width:1099px){ #eb-trab{grid-template-columns:repeat(2,minmax(0,1fr))} #eb-trab > .trab:nth-child(n){border-left:1px solid var(--fio);padding-left:24px} #eb-trab > .trab:nth-child(2n+1){border-left:0;padding-left:0} }
+@media (max-width:700px){ #eb-trab{grid-template-columns:minmax(0,1fr)} #eb-trab > .trab:nth-child(n){border-left:0;padding-left:0} }
+.trab{border-bottom:1px solid var(--fio);padding:16px 0 18px;display:grid;gap:12px}
 .trab .l1{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
 .trab .nome{font:600 20px/1.3 var(--body);min-width:0;overflow-wrap:anywhere}
-.trab .pct{font:600 16px var(--body);font-variant-numeric:tabular-nums;white-space:nowrap}
-.trab .zero{font-size:14px;color:var(--cinza);font-weight:400}
-.trab.parado{color:var(--cinza)} .trab.parado .regua b{background:var(--cinza)}
+.trab.parado{color:var(--cinza)}
 .l2{font-size:14px;color:var(--cinza);display:flex;flex-wrap:wrap;gap:4px 16px;margin:0}
 .l2 b{color:var(--giz);font-weight:600}
 details.secao > summary{text-decoration:none;min-height:auto;color:inherit;display:block}
@@ -176,7 +206,8 @@ details summary::-webkit-details-marker{display:none}
 .ajuste{display:grid;gap:8px}
 textarea,input[type=text],input[type=email],select{width:100%;background:var(--noite);border:1px solid var(--fio);padding:12px;font-size:16px;color:var(--giz)}
 textarea{min-height:96px;resize:vertical}
-textarea:focus,input:focus,select:focus{border-color:var(--giz);outline:0}
+textarea:focus,input:focus,select:focus{border-color:var(--giz);outline:0;box-shadow:inset 0 0 0 1px var(--giz)}
+textarea:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--giz);outline-offset:3px}
 .estado{font-size:14px;color:var(--giz);min-height:1em;margin:0}
 .estado:empty{display:none}
 .fase{font:600 14px var(--body);color:var(--cinza)}
@@ -185,10 +216,6 @@ textarea:focus,input:focus,select:focus{border-color:var(--giz);outline:0}
 .res .quem{font-size:14px;color:var(--cinza)}
 .res .veredito{font-size:16px;color:var(--giz)}
 .res .oque{font-size:14px}
-.prog{display:grid;gap:6px}
-.prog .l1{display:flex;align-items:baseline;gap:12px;font-size:14px;color:var(--cinza)}
-.prog .l1 .pct{font:600 16px var(--body);color:var(--giz);min-width:3em;font-variant-numeric:tabular-nums}
-.prog.espera .regua b{background:var(--cinza)}
 .conv{font-size:14px;color:var(--giz);margin:0} .conv.anotada{color:var(--cinza)}
 .pe-c{display:grid;gap:8px}
 #res-mais{justify-self:start}
@@ -259,9 +286,8 @@ section.espera{display:grid;gap:8px;align-content:start}
 .f-mut{margin:0;color:var(--cinza);font-size:14px;overflow-wrap:anywhere}
 .f-ok{margin:0;color:var(--cinza)} .f-mal{margin:0;color:var(--giz);font-weight:700}
 .f-x{flex:none;min-height:44px;min-width:44px;background:none;border:0;padding:0 12px;color:var(--cinza);font:600 14px var(--body);text-decoration:underline;text-underline-offset:4px;cursor:pointer}
-.f-trab{display:grid;gap:6px;padding-top:8px;border-top:1px solid var(--fio)}
-.f-trab .l1{display:flex;gap:8px;justify-content:space-between;font-size:15px}
-.f-trab .l1 b{font:600 16px var(--body)}
+.f-trab{display:grid;gap:8px;padding-top:8px;border-top:1px solid var(--fio)}
+.f-trab .l1{font-size:15px;margin:0}
 .f-pend{display:grid;gap:8px;padding-top:8px;border-top:1px solid var(--fio);font-size:15px}
 .f-pend span{display:flex;gap:12px;align-items:baseline}
 .f-pend span::before{content:"";width:12px;height:12px;background:var(--verm);flex:none}
@@ -289,6 +315,19 @@ section.espera{display:grid;gap:8px;align-content:start}
 @media (max-width:820px){ .jv-topo{grid-template-columns:minmax(0,1fr)} .jv-cara{order:-1;max-width:360px} }
 .jv-estado{font:900 44px/1.05 var(--display);margin:0}
 .jv-estado .on{color:var(--ciano)}
+/* conversa livre com o Jarvis (06/11): pergunta e resposta na tela, no PC e no celular */
+.perg-lin{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px}
+.perg-lin input{min-height:44px}
+.rotulo{text-wrap:pretty}
+.jv-resp{display:grid}
+.jv-r{display:grid;gap:4px;padding:14px 0;border-bottom:1px solid var(--fio)}
+.jv-r:first-child{padding-top:4px}
+.jv-r .p{margin:0;font-size:14px;color:var(--cinza);overflow-wrap:anywhere}
+.jv-r .p b{color:var(--giz);font-weight:600}
+.jv-r .r{margin:0;font:400 18px/1.5 var(--body);color:var(--giz);max-width:60ch;overflow-wrap:anywhere}
+.jv-r .r.pensa{color:var(--ciano)}
+.jv-r .r.erro{color:var(--cinza)}
+.jv-r .q{margin:0;font-size:14px;color:var(--cinza)}
 .painel-frame{width:100%;height:82vh;min-height:560px;border:1px solid var(--fio);background:var(--ceu);display:block}
 .mq{display:grid;gap:0}
 .mq div{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid var(--fio);font-size:15px}
@@ -339,7 +378,7 @@ select{max-width:100%;min-width:0}
 .jf-in{max-width:1240px;margin:0 auto;padding:6px 32px;display:flex;align-items:center;gap:12px 20px;min-height:48px}
 #jf-cara{width:30px;height:31px;image-rendering:pixelated;flex:none}
 .jf-txt{background:none;border:0;padding:0;color:var(--cinza);font:400 15px var(--body);text-align:left;cursor:pointer;flex:1;min-width:0;white-space:nowrap;overflow:hidden;min-height:44px;display:flex;align-items:center;gap:6px}
-.jf-txt b{flex:none}
+.jf-txt b{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .jf-txt span{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .jf-txt b{color:var(--giz);font-weight:600}
 .jf-txt b.on{color:var(--ciano)}
@@ -562,6 +601,17 @@ select{max-width:100%;min-width:0}
       </div>
       <canvas class="jv-cara" id="jv-cara" aria-hidden="true"></canvas>
     </div>
+    <section class="secao" id="jv-conversa">
+      <h2>Pergunte qualquer coisa</h2>
+      <div class="duas">
+        <form class="pedir" id="f-conversa">
+          <label for="conversa" class="rotulo">Pergunta livre, o Jarvis responde aqui por escrito. Trabalho pros terminais vai pelo Pedir, logo abaixo.</label>
+          <div class="perg-lin"><input id="conversa" type="text" required maxlength="600" autocomplete="off" enterkeyhint="send" placeholder="ex.: quanto espaço tem no disco C?"><button class="btn" type="submit">Perguntar</button></div>
+          <span class="msg" id="conversa-msg" role="status"></span>
+        </form>
+        <div class="jv-resp" id="jv-resp"></div>
+      </div>
+    </section>
     <div class="duas">
       <section class="secao">
         <h2>Pedir</h2>
@@ -840,8 +890,63 @@ function desenharJdiz() {
   $("jd-quando").textContent = [JM[jarvisModo()], f.quando].filter(Boolean).join(" · ");
   verbos($("jd-verbos"), $("jd-msg"));
 }
+/* conversa livre: no PC vai direto pelo servidor.py (/jarvis/api/conversa); no celular vira uma linha em
+   votos (tipo central-jarvis, veredito conversa) e a ponte devolve a resposta em E.jarvis.respostas */
+const MINHAS = [];         // perguntas desta tela: {id, pergunta, resposta, estado: pensando|ok|erro, em}
+let convChave = "";
+function desenharConversa() {
+  const daPonte = ((E.jarvis || {}).respostas || []);
+  for (const m of MINHAS) {
+    const r = daPonte.find(x => x.id === m.id);
+    if (r && r.estado !== "pensando" && m.estado === "pensando") $("conversa-msg").textContent = r.estado === "ok" ? "O Jarvis respondeu." : "O Jarvis não conseguiu responder.";
+    if (r && r.estado !== "pensando") Object.assign(m, r);
+    else if (m.estado === "pensando" && agoraS() - m.em > 240) Object.assign(m, {estado: "erro", resposta: "O PC não devolveu a resposta em 4 min. Tente de novo."});
+  }
+  const ids = new Set(MINHAS.map(m => m.id));
+  const ls = [...MINHAS, ...daPonte.filter(x => !ids.has(x.id))].sort((a, b) => b.em - a.em).slice(0, 4);
+  for (const m of MINHAS) if (m.semSinal && pcVivo()) m.semSinal = false;
+  const ch = JSON.stringify([ls.map(x => [x.id, x.estado, x.resposta, x.semSinal]), Math.floor(agoraS() / 60)]);
+  if (ch === convChave) return;
+  convChave = ch;
+  $("jv-resp").replaceChildren(...(ls.length ? ls.map(x => el("article", {class: "jv-r"},
+    el("p", {class: "p"}, "Você: ", el("b", {text: x.pergunta})),
+    el("p", {class: "r" + (x.estado === "pensando" ? " pensa" : x.estado === "erro" ? " erro" : ""), text: x.estado === "pensando" ? (x.via !== "celular" ? "O Jarvis está pensando…" : x.semSinal ? "O PC está sem sinal. A pergunta fica guardada e sai quando ele voltar." : "Pensando… a pergunta foi pro PC, a resposta chega aqui em até 1 min.") : x.resposta || "Ele não disse nada."}),
+    el("p", {class: "q", text: [x.estado === "pensando" ? null : "Jarvis", haQuanto(x.em), x.velocidade === "trabalho" ? "virou pedido pros terminais" : null].filter(Boolean).join(" · ")})))
+    : [el("p", {class: "vazio", text: "Nada perguntado ainda. A resposta aparece aqui."})]));
+}
+$("f-conversa").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const t = $("conversa").value.trim().slice(0, 600);
+  if (!t) return;
+  const b = ev.target.querySelector("button"), msg = $("conversa-msg");
+  b.disabled = true; msg.textContent = "";
+  const item = {id: "central-j-" + Date.now(), pergunta: t, estado: "pensando", em: agoraS(), via: MODO === "nuvem" ? "celular" : "pc"};
+  try {
+    if (MODO === "teste") throw new Error("na conferência a pergunta não sai daqui");
+    MINHAS.unshift(item); $("conversa").value = ""; desenharConversa();
+    if (MODO === "pc") {
+      const r = await fetch("/jarvis/api/conversa", {method: "POST", headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({texto: t, canal: "central", idioma: "pt", falar: false}), signal: AbortSignal.timeout ? AbortSignal.timeout(100000) : undefined});
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.erro === "fora do ar" ? "o Jarvis está fora do ar" : "o Jarvis não respondeu (" + r.status + ")");
+      Object.assign(item, {estado: "ok", resposta: d.fala_pt || d.legenda || d.fala || "", velocidade: d.velocidade});
+    } else {
+      const {error} = await comTempo(sb.from("votos").upsert({id: item.id, dia: hojeISO(), tipo: "central-jarvis", n: 0, veredito: "conversa", logline: t}));
+      if (error) throw error;
+      item.semSinal = carregou && !pcVivo();
+      msg.textContent = item.semSinal ? "O PC está sem sinal agora: a pergunta sai quando ele voltar." : "Mandado. O PC pega em até 20 s.";
+    }
+  } catch (e) {
+    if (MINHAS.includes(item)) Object.assign(item, {estado: "erro", resposta: "Não foi: " + motivo(e)});
+    else msg.textContent = "não foi: " + motivo(e);
+    if (!$("conversa").value) $("conversa").value = t;
+  }
+  b.disabled = false;
+  convChave = ""; desenharConversa();
+});
 let jvChave = "";
 function desenharJarvis() {
+  desenharConversa();
   const m = jarvisModo(), f = jarvisFala();
   $("jv-estado").replaceChildren("Jarvis ", el("span", {class: ["falando", "ouvindo"].includes(m) ? "on" : null, text: JM[m]}));
   $("jv-fala").textContent = f.texto;
@@ -1252,7 +1357,7 @@ function desenhar() {
 
   $("placar").replaceChildren(
     tile(T.trabalhando ?? 0, (T.trabalhando === 1 ? "terminal trabalhando" : "terminais trabalhando"), "", () => { filtroTerm = "busy"; desenharTerminais(); $("term-lista").scrollIntoView({behavior: "smooth"}); }),
-    tile((W.lista || []).filter(t => !t.fim && !t.parado && t.pct > 0).length, ((W.lista || []).filter(t => !t.fim && !t.parado && t.pct > 0).length === 1 ? "trabalho andando" : "trabalhos andando"), "", () => { filtroTrab = "ativos"; desenharTrabalhos(); $("trab-lista").scrollIntoView({behavior: "smooth"}); }),
+    tile((W.lista || []).filter(anda).length, ((W.lista || []).filter(anda).length === 1 ? "trabalho andando" : "trabalhos andando"), "", () => { filtroTrab = "ativos"; desenharTrabalhos(); $("trab-lista").scrollIntoView({behavior: "smooth"}); }),
     tile(esperando, "só você resolve", esperando ? "espera" : "", () => irPara("fila")),
     tile(nossas, "pendências nossas", "", () => irPara("fila")));
   avisoVelho();
@@ -1304,11 +1409,11 @@ function desenharTrabalhos() {
   const W = (E.trabalhos || {}).lista || [];
   const ls = W.filter(t => filtroTrab === "ativos" ? !t.fim && !t.parado : filtroTrab === "feitos" ? t.fim : t.parado);
   const vivos = W.filter(t => !t.fim && !t.parado);
-  $("trab-sub").textContent = `${vivos.filter(t => t.pct > 0).length} andando · ${vivos.filter(t => !t.pct).length} na fila · ${W.filter(t => t.fim).length} terminados · ${W.filter(t => t.parado).length} parados`;
+  $("trab-sub").textContent = `${vivos.filter(anda).length} andando · ${vivos.filter(t => !anda(t)).length} na fila · ${W.filter(t => t.fim).length} terminados · ${W.filter(t => t.parado).length} parados`;
   for (const b of $("trab-filtro").children) b.setAttribute("aria-pressed", String(b.dataset.f === filtroTrab));
   if (filtroTrab === "ativos" && ls.length) {
-    const anda = ls.filter(t => t.pct > 0).sort((a, b) => b.pct - a.pct), zero = ls.filter(t => !t.pct);
-    const blocos = anda.map(cartaoTrabalho);
+    const andando = ls.filter(anda).sort((a, b) => b.pct - a.pct), zero = ls.filter(t => !anda(t));
+    const blocos = andando.map(cartaoTrabalho);
     if (zero.length) blocos.push(el("details", {class: "eb-fila", open: innerWidth >= 820 ? true : null},
       el("summary", {text: `Na fila, ainda não começaram (${zero.length})`}),
       el("div", {class: "fila0"}, zero.map(t => el("div", {class: "f0"}, el("b", {text: t.nome}), el("span", {text: [t.terminal, t.agora || t.etapa].filter(Boolean).join(" · ")}))))));
@@ -1320,27 +1425,115 @@ function desenharTrabalhos() {
 }
 const ABERTOS = new Set();
 document.addEventListener("toggle", ev => { const d = ev.target; if (d.tagName !== "DETAILS" || !d.closest(".trab")) return; const n = d.closest(".trab").querySelector(".nome"); if (n) (d.open ? ABERTOS.add(n.textContent) : ABERTOS.delete(n.textContent)); }, true);
-function regua(pct, pronto, rotulo) {
-  return el("div", {class: "regua" + (pronto ? " pronto" : ""), role: "progressbar", "aria-valuenow": pct == null ? null : pct, "aria-valuemin": 0, "aria-valuemax": 100, "aria-label": rotulo},
-    el("b", {style: `width:${pct || 0}%`}));
+/* ---------- barra ao vivo (06/11). Mesma conta da TV da sala (JARVIS/painel/sala.html) e do contrato
+   no scripts/progresso.py: com n etapas e k feitas, a etapa aberta dura d = (eta - passo_desde)/(n-k);
+   sem eta, a média das fechadas (passo_desde - comeco)/k; sem nada, 10 min. A barra anda
+   pct + 100/n x fração da etapa (reto, no máximo 0,97 dela), nunca volta, para em 99 até o fim.
+   Recalcula a cada segundo aqui mesmo, sem ir na rede. ---------- */
+const PASSO_CHUTE = 600;
+const segs = v => v == null || v === "" ? null : typeof v === "number" ? v : (Date.parse(v) / 1000 || null);
+const anda = t => !t.fim && !t.parado && (t.pct > 0 || !!t.passo_desde || !!t.eta);
+const MAXVIVO = new Map();       // nome -> {k, pct}: a barra nunca anda pra trás dentro da mesma etapa
+function fracao(f) {             // reto, junto com o "faltam": em 0,97 da etapa para e espera ela fechar
+  return Math.min(.97, Math.max(0, f));
 }
+function duracao(s) {
+  s = Math.max(0, s);
+  if (s < 60) return "menos de 1 min";
+  const m = Math.ceil(s / 60);
+  if (m < 60) return `${m} min`;
+  if (m < 48 * 60) { const h = Math.floor(m / 60), r = m % 60; return r ? `${h} h ${String(r).padStart(2, "0")} min` : `${h} h`; }
+  return `${Math.round(m / 1440)} dias`;
+}
+function contagem(s) {          // o "faltam" conta segundo a segundo abaixo de 1 h, igual ao tempo de um vídeo
+  s = Math.max(0, Math.floor(s));
+  if (s >= 3600) return duracao(s);
+  const m = Math.floor(s / 60), r = s % 60;
+  return m ? `${m} min ${String(r).padStart(2, "0")} s` : `${r} s`;
+}
+function aoVivo(t, agora = agoraS()) {
+  const n = t.total || 0, k = Math.min(t.feitos || 0, n);
+  const base = t.pct != null ? t.pct : n ? k / n * 100 : null;
+  if (base == null) return {estado: "espera", pct: 0};
+  if (t.fim || base >= 100) return {estado: "fim", pct: 100};
+  if (t.parado) return {estado: "parado", pct: base};
+  if (!n) return {estado: "fixo", pct: base};
+  const desde = segs(t.passo_desde) || segs(t.atualizado) || segs(t.comeco) || agora;
+  const comeco = segs(t.comeco), eta = segs(t.eta), resta = n - k;
+  let d, fonte;
+  if (eta && eta > desde) { d = (eta - desde) / resta; fonte = t.eta_fonte === "ritmo" ? "ritmo" : "eta"; }
+  else if (k > 0 && comeco && desde > comeco) { d = (desde - comeco) / k; fonte = "ritmo"; }
+  else { d = PASSO_CHUTE; fonte = "chute"; }
+  d = Math.max(d, 30);
+  const passou = Math.max(0, agora - desde);
+  let pct = Math.min(99, base + 100 / n * Math.min(.97, fracao(passou / d)));
+  const chave = t.nome + "|" + (t.terminal || "");
+  const antes = MAXVIVO.get(chave);
+  if (antes && antes.k === k && antes.pct > pct) pct = antes.pct;
+  MAXVIVO.set(chave, {k, pct});
+  const falta = eta && eta > desde ? eta - agora : d * resta - passou;   // eta vencida antes da etapa abrir: conta pelo ritmo
+  return {estado: "anda", pct, falta, fim: agora + falta, fonte, k, n};
+}
+function pintarMedidor(m) {
+  const t = m._t, v = aoVivo(t), pct = Math.max(0, Math.min(100, v.pct));
+  const inteiro = v.estado === "anda" ? Math.floor(pct) : Math.round(pct);
+  m.className = "med " + v.estado + (m._mini ? " mini" : "") + (v.estado === "anda" && v.falta < 0 ? " passou" : "");
+  m._pct.firstChild.nodeValue = v.estado === "espera" ? "?" : String(inteiro);
+  m._cheio.style.width = pct + "%";
+  m._cab.style.left = pct + "%";
+  m._cab.hidden = v.estado !== "anda";
+  m._barra.setAttribute("aria-valuenow", String(inteiro));
+  let alto, baixo;
+  if (v.estado === "anda") {
+    if (v.falta >= 0 && v.fonte === "eta") { alto = "faltam " + contagem(v.falta); baixo = "lá pelas " + hora(v.fim); }
+    else if (v.falta >= 0) { alto = "uns " + duracao(v.falta); baixo = v.fonte === "chute" ? "chute: nenhuma etapa fechou" : "pelo ritmo até agora"; }   // estimativa: sem segundo
+    else { alto = "+" + duracao(-v.falta).replace("menos de 1 min", "1 min"); baixo = "passou da previsão"; }
+  } else if (v.estado === "fim") { alto = "pronto"; baixo = t.atualizado ? "terminou " + haQuanto(t.atualizado) : ""; }
+  else if (v.estado === "parado") { alto = "parado"; baixo = t.atualizado ? "mexeu " + haQuanto(t.atualizado) : ""; }
+  else if (v.estado === "espera") { alto = "esperando o %"; baixo = t._nota || ""; }
+  else { alto = "sem previsão"; baixo = t.atualizado ? "mexeu " + haQuanto(t.atualizado) : ""; }
+  if (m._alto.textContent !== alto) m._alto.textContent = alto;
+  if (m._baixo.textContent !== baixo) m._baixo.textContent = baixo;
+  const altoLeitor = v.estado === "anda" && v.falta >= 0 ? "faltam " + duracao(v.falta) : v.estado === "anda" ? "passou " + duracao(-v.falta) + " da previsão" : alto;   // leitor de tela: minuto, não segundo
+  const vt = [v.estado === "espera" ? "sem %" : inteiro + "%", altoLeitor, baixo].filter(Boolean).join(", ");
+  if (m._barra.getAttribute("aria-valuetext") !== vt) m._barra.setAttribute("aria-valuetext", vt);
+}
+function cortesEtapa(n) {       // os vãos entre etapas, como os capítulos na barra de um vídeo
+  if (!(n >= 2 && n <= 24)) return "";
+  const p = [], a = n > 10 ? 0.5 : 2, z = n > 10 ? 0.5 : 1;   // muitas etapas: vão de 1 px, senão vira conta de colar
+  for (let i = 1; i < n; i++) { const b = (i / n * 100).toFixed(3); p.push(`#000 calc(${b}% - ${a}px)`, `transparent calc(${b}% - ${a}px)`, `transparent calc(${b}% + ${z}px)`, `#000 calc(${b}% + ${z}px)`); }
+  return `linear-gradient(90deg,#000 0,${p.join(",")},#000 100%)`;
+}
+function medidor(t, {mini = false, rotulo = t.nome, etapa = true} = {}) {
+  const cheio = el("i", {class: "med-cheio"}), seg = el("span", {class: "med-seg"}, cheio), cab = el("i", {class: "med-cab"});
+  const corte = cortesEtapa(t.total || 0);
+  if (corte) { seg.style.maskImage = corte; seg.style.webkitMaskImage = corte; }
+  const barra = el("div", {class: "med-barra", role: "progressbar", "aria-valuemin": 0, "aria-valuemax": 100, "aria-label": "andamento de " + rotulo}, seg, cab);
+  const pct = el("span", {class: "med-pct"}, "0", el("small", {text: "%"}));
+  const alto = el("b"), baixo = el("span");
+  const n = t.total || 0, k = Math.min(t.feitos || 0, n);
+  const passo = t.etapa || (t.passos || []).filter(p => !p[0]).map(p => p[1])[0] || "";
+  const linha = etapa && !t.fim && n ? el("p", {class: "med-etapa"}, `etapa ${Math.min(k + 1, n)} de ${n}`, passo ? " · " : null, passo ? el("b", {text: passo}) : null) : null;
+  const m = el("div", {class: "med", "data-vivo": ""}, el("div", {class: "med-in"}, pct, barra, el("div", {class: "med-falta"}, alto, baixo), linha));
+  Object.assign(m, {_t: t, _mini: mini, _pct: pct, _cheio: cheio, _cab: cab, _barra: barra, _alto: alto, _baixo: baixo});
+  pintarMedidor(m);
+  return m;
+}
+const pintarTodos = () => { for (const m of document.querySelectorAll(".med[data-vivo]")) pintarMedidor(m); };
+setInterval(() => { if (!document.hidden) pintarTodos(); }, 1000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) pintarTodos(); });   // voltou pra aba: já no ponto certo
 function cartaoTrabalho(t) {
-  const eta = t.eta ? Date.parse(t.eta) / 1000 : null;
-  const falta = eta ? Math.round((eta - agoraS()) / 60) : null;
-  const pronto = t.fim || t.pct >= 100;
+  const agoraTxt = t.agora && t.agora !== t.etapa ? t.agora : "";
   const linha2 = [
+    !t.fim && agoraTxt ? el("span", {}, "agora ", el("b", {text: agoraTxt})) : null,
     t.terminal ? el("span", {}, "quem ", el("b", {text: t.terminal})) : null,
-    t.total ? el("span", {class: "num", text: `etapa ${Math.min(t.feitos + 1, t.total)} de ${t.total}`}) : null,
-    !t.fim && falta != null ? el("span", {class: "num", text: falta > 0 ? `~${falta} min (${hora(t.eta)})` : "passou da previsão"}) : null,
-    el("span", {text: (t.fim ? "terminou " : "mexeu ") + haQuanto(t.atualizado)}),
+    t.fim ? null : el("span", {text: "mexeu " + haQuanto(t.atualizado)}),
   ];
   const det = el("details", {open: ABERTOS.has(t.nome) || null}, el("summary", {text: "etapas"}),
     el("ol", {}, (t.passos || []).map(([f, n]) => el("li", {class: f ? "f" : null, text: n}))));
-  return el("article", {class: "trab" + (pronto ? " fim" : "") + (t.parado ? " parado" : "")},
-    el("div", {class: "l1"}, el("span", {class: "nome", text: t.nome}),
-      pronto ? el("span", {class: "pct", text: "pronto"}) : t.pct ? el("span", {class: "pct", text: t.pct + "%"}) : el("span", {class: "pct zero", text: "não começou"})),
-    pronto || t.pct ? regua(t.pct, pronto, t.nome) : null,
-    t.fim ? null : el("p", {class: "l2"}, el("span", {}, "agora ", el("b", {text: t.agora || t.etapa || "começando"}))),
+  return el("article", {class: "trab" + (t.fim ? " fim" : "") + (t.parado ? " parado" : "")},
+    el("div", {class: "l1"}, el("span", {class: "nome", text: t.nome})),
+    medidor(t),
     el("p", {class: "l2"}, linha2), t.passos && t.passos.length ? det : null);
 }
 
@@ -1471,14 +1664,40 @@ function desenharResultados() {
 }
 // cartão de resultado: barra no RODANDO, SUGERIR no meio do processo, RETOMAR nos outros
 const enviadosC = new Map();   // id do cartão -> {tipo, ts, ficou} até a ponte confirmar
+const palavrasB = x => new Set((x || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(/[^a-z0-9]+/).filter(w => w.length >= 3 || /^\d+$/.test(w)));
+const GENERICAS = new Set(["banca", "curta", "barra", "barras", "fase", "trabalho", "central", "pagina", "agente", "teste", "review", "critique", "rodada", "versao"]);
+function trabalhoDoCartao(c) {   // cartão e trabalho do mesmo terminal com o mesmo assunto no TÍTULO: a barra é a do trabalho
+  const alvo = palavrasB(c.titulo || "");
+  let melhor = null, nota = 0;
+  for (const t of ((E.trabalhos || {}).lista || [])) {
+    if (t.fim || !c.quem || (t.terminal || "").toLowerCase() !== c.quem.toLowerCase()) continue;
+    const comum = [...palavrasB(t.nome)].filter(w => alvo.has(w));
+    const forte = comum.some(w => w.length >= 5 && !GENERICAS.has(w));
+    if (!(forte || comum.length >= 2)) continue;    // uma palavra solta tipo "banca" ou "fase" não basta (06/11: o Telles casou errado)
+    if (comum.length > nota) { melhor = t; nota = comum.length; }
+  }
+  return melhor;
+}
 function barraCartao(c) {
   const p = c.progresso || {pct: null, texto: "pedindo o % ao " + (c.quem || "terminal dono"), de: "pedido"};
-  const pct = p.pct == null ? null : Math.max(0, Math.min(100, Math.round(p.pct)));
-  const detalhe = p.de === "pedido" ? p.texto + (p.em ? " " + haQuanto(p.em) : "")
-    : [p.total ? `etapa ${Math.min((p.feitos || 0) + 1, p.total)} de ${p.total}` : null, p.texto, p.parado ? "parada" : null].filter(Boolean).join(" · ");
-  return el("div", {class: "prog" + (pct == null ? " espera" : "")},
-    el("div", {class: "l1"}, el("span", {class: "pct num", text: pct == null ? "?%" : pct >= 100 ? "pronto" : pct + "%"}), el("span", {text: detalhe})),
-    regua(pct, pct >= 100, "andamento de " + c.titulo));
+  if (p.de === "cartao") {
+    const tr = trabalhoDoCartao(c);
+    if (tr) return medidor(tr, {mini: true, rotulo: c.titulo});
+    // o hook dos agentes grava 10% "agente pesquisando e montando" só pra marcar o começo: não é medida, não vira barra
+    if (p.pct != null && p.pct <= 10 && /^agente pesquisando/.test(p.texto || "")) return el("p", {class: "med-so"}, "agente trabalhando", p.em ? " · mexeu " + haQuanto(p.em) : "");
+  }
+  if (p.de === "trabalho") {   // o cartão segue o trabalho do progresso.py: anda ao vivo igual
+    const igual = ((E.trabalhos || {}).lista || []).find(x => x.nome === p.nome && !x.fim);
+    if (igual) return medidor(igual, {mini: true, rotulo: c.titulo});
+    const t = {nome: p.nome || c.titulo, pct: p.pct, feitos: p.feitos, total: p.total, eta: p.eta, comeco: p.comeco,
+               atualizado: p.atualizado || p.em, passo_desde: p.passo_desde, parado: p.parado, fim: false, etapa: p.texto};
+    return medidor(t, {mini: true, rotulo: c.titulo});
+  }
+  const t = {nome: "cartao:" + c.id, pct: p.pct == null ? null : Math.max(0, Math.min(100, p.pct)), total: 0,
+             atualizado: p.em, fim: p.pct >= 100, _nota: p.texto + (p.em ? " " + haQuanto(p.em) : "")};
+  const m = medidor(t, {mini: true, rotulo: c.titulo, etapa: false});
+  if (p.de !== "pedido" && p.texto) m.firstChild.append(el("p", {class: "med-etapa", text: p.texto}));
+  return m;
 }
 function linhaConversa(c) {
   const ult = (c.conversa || [])[(c.conversa || []).length - 1];
@@ -2016,14 +2235,15 @@ function desenharEscritorio() {
       const cor = s.tipo === "robo" ? PAL.giz : it.status === "waiting" ? "#FFD0D8" : it.status === "busy" ? PAL.giz : "#A9B6D2";
       etiqueta(ctx, cx, (p.y + s.cel.h - 7) * U, nomeTela(it.nome), cor, marcado ? PAL.giz : "rgba(5,12,30,.88)", s.cel.w * U - 8, marcado);
       if (s.tipo !== "robo") {
-        const tr = trabalhoDe(it.nome).find(t => t.pct > 0);
+        const tr = trabalhoDe(it.nome).find(anda);
         if (tr) {
           const bw = 26 * U, bx = Math.round(cx - bw / 2), by = (p.y + 1) * U;
           ctx.fillStyle = "rgba(5,12,30,.9)"; ctx.fillRect(bx - 3, by - 3, bw + 6, U + 19);
           ctx.fillStyle = PAL.fio; ctx.fillRect(bx, by + Math.floor(U / 3), bw, Math.max(1, Math.ceil(U / 2)));
-          ctx.fillStyle = PAL.ciano; ctx.fillRect(bx, by, Math.round(bw * tr.pct / 100), U);
+          const vv = Math.floor(aoVivo(tr).pct);      // a mesma barra ao vivo da lista, redesenhada a cada quadro
+          ctx.fillStyle = PAL.ciano; ctx.fillRect(bx, by, Math.round(bw * vv / 100), U);
           ctx.font = "600 condensed 12px Archivo,sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "top";
-          ctx.fillStyle = PAL.giz; ctx.fillText(tr.pct + "%", cx, by + U + 2); ctx.textAlign = "left";
+          ctx.fillStyle = PAL.giz; ctx.fillText(vv + "%", cx, by + U + 2); ctx.textAlign = "left";
         }
         const pend = pendDe(it.nome).length;
         if (pend) { const bx = (p.x + s.cel.w - 7) * U, by = (p.y + 12) * U; ctx.fillStyle = PAL.verm; ctx.fillRect(bx, by, 18, 18);
@@ -2083,9 +2303,9 @@ function desenharBaixo() {
   if (chave === baixoChave) return;      // não refaz a cada quadro (perderia o que ele está fazendo)
   if (ocupado()) return;
   baixoChave = chave;
-  const anda = W.filter(t => t.pct > 0), fila0 = W.filter(t => !t.pct);
-  $("eb-trab-sub").textContent = anda.length ? `${anda.length} com barra` : "";
-  $("eb-trab").replaceChildren(...(anda.length ? anda.map(cartaoTrabalho) : [el("p", {class: "vazio", text: "Nenhuma barra andando agora."})]));
+  const andando = W.filter(anda), fila0 = W.filter(t => !anda(t));
+  $("eb-trab-sub").textContent = andando.length ? `${andando.length} com barra` : "";
+  $("eb-trab").replaceChildren(...(andando.length ? andando.map(cartaoTrabalho) : [el("p", {class: "vazio", text: "Nenhuma barra andando agora."})]));
   const nf = $("eb-fila");
   nf.hidden = !fila0.length;
   if (innerWidth >= 820 && !nf.dataset.mexeu) nf.open = true;
@@ -2104,15 +2324,14 @@ function desenharBaixo() {
 
 function desenharHud() {
   const T = E.terminais || {}, W = E.trabalhos || {};
-  const and = (W.lista || []).filter(t => !t.fim && !t.parado && t.pct > 0).length;
+  const and = (W.lista || []).filter(anda).length;
   $("hud-sub").textContent = `${T.trabalhando ?? 0} de ${T.total ?? 0} terminais trabalhando · ${and} ${and === 1 ? "barra andando" : "barras andando"} · ${((E.rotinas || {}).lista || []).length} rotinas no PC`;
 }
 
 function linhaTrab(t) {
   return el("div", {class: "f-trab"},
-    el("div", {class: "l1"}, el("span", {text: t.nome.toLowerCase() === (t.terminal || "").toLowerCase() ? "andamento" : t.nome}), el("b", {class: "num", text: t.pct + "%"})),
-    regua(t.pct, t.pct >= 100, t.nome),
-    el("span", {class: "f-mut", text: [t.agora || t.etapa ? "agora: " + (t.agora || t.etapa) : null, t.total ? `etapa ${Math.min(t.feitos + 1, t.total)} de ${t.total}` : null].filter(Boolean).join(" · ")}));
+    el("p", {class: "l1", text: t.nome.toLowerCase() === (t.terminal || "").toLowerCase() ? "andamento" : t.nome}),
+    medidor(t, {mini: true}));
 }
 let fichaChave = "";
 function desenharFicha() {
