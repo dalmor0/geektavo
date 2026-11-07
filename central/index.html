@@ -420,6 +420,15 @@ select{max-width:100%;min-width:0}
 body.conv-aberta{overflow:hidden}
 @media (max-width:360px){ .verbos{gap:4px 16px} }
 
+/* senhas faladas do Jarvis (07/11) */
+.senhas{display:grid;gap:16px;max-width:640px}
+.senhas .lin2{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end}
+.senhas label{display:grid;gap:6px}
+.senhas input{min-height:48px;font-size:16px}
+.senhas .sec{background:none;border:1px solid var(--fio);color:var(--giz);min-height:48px;padding:0 16px;font:700 15px var(--body);cursor:pointer}
+.senhas .est{font-size:15px;margin:0}
+.senhas .est b{font-weight:700}
+
 /* áreas */
 .ar{display:grid;grid-template-columns:240px minmax(0,1fr);gap:48px;align-items:start}
 .ar-idx button b{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
@@ -664,6 +673,27 @@ body.conv-aberta{overflow:hidden}
           <span class="msg" id="conversa-msg" role="status"></span>
         </form>
         <div class="jv-resp" id="jv-resp"></div>
+      </div>
+    </section>
+    <section class="secao" id="jv-senhas">
+      <h2>Senhas faladas</h2>
+      <div class="senhas">
+        <p class="rotulo">Na Alexa ou no microfone do PC: "Jarvis, acesso ilimitado" e a senha 1 liberam tudo que você pode, até a conversa fechar ou 30 min sem falar ("Jarvis, trava" fecha na hora). Apagar, gastar e mandar em seu nome pedem a senha 2 a cada vez, ou o Aprovar aqui no celular. As senhas ficam só no PC, guardadas embaralhadas.</p>
+        <p class="est" id="sh-est" role="status">…</p>
+        <form class="lin2" id="f-s1">
+          <label class="rotulo">Senha 1 (acesso ilimitado)<input id="sh-s1" type="password" autocomplete="new-password" maxlength="120" placeholder="nova senha 1"></label>
+          <button class="btn" type="submit">Guardar</button>
+        </form>
+        <form class="lin2" id="f-s2">
+          <label class="rotulo">Senha 2 (apagar, gastar, mandar), diferente da 1<input id="sh-s2" type="password" autocomplete="new-password" maxlength="120" placeholder="nova senha 2"></label>
+          <button class="btn" type="submit">Guardar</button>
+        </form>
+        <form class="lin2" id="f-teto">
+          <label class="rotulo">Teto de gasto por voz, em reais (0 = nada por voz)<input id="sh-teto" type="text" inputmode="decimal" maxlength="10" placeholder="0"></label>
+          <button class="sec" type="submit">Guardar teto</button>
+        </form>
+        <div><button class="sec" type="button" id="sh-destravar" hidden>Destravar a senha 2</button></div>
+        <span class="msg" id="sh-msg" role="status"></span>
       </div>
     </section>
     <div class="duas">
@@ -1040,9 +1070,9 @@ const conversa = (() => {
     v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, "data"); v.setUint32(40, n * 2, true);
     return URL.createObjectURL(new Blob([b], {type: "audio/wav"}));
   }
-  function destravar() {
+  function destravar() {   // no toque: destrava o <audio> (e o speechSynthesis, que no iPhone precisa de texto de verdade)
     try { S.som.src = silencio(); S.som.play().catch(() => {}); } catch (e) {}
-    try { if (window.speechSynthesis) speechSynthesis.speak(new SpeechSynthesisUtterance("")); } catch (e) {}
+    try { if (window.speechSynthesis && !S.vozDestravada) { const u = new SpeechSynthesisUtterance("."); u.volume = 0; speechSynthesis.speak(u); S.vozDestravada = true; } } catch (e) {}
   }
   async function token() {
     if (!sb) return null;
@@ -1085,19 +1115,35 @@ const conversa = (() => {
       speechSynthesis.speak(u);
     });
   }
-  function tocar(url) {
+  function tocar(url) {   // true se tocou até o fim; o microfone só reabre depois do "ended"
     return new Promise(ok => {
-      S.som.onended = S.som.onerror = () => ok();
+      S.som.onended = () => ok(true);
+      S.som.onerror = () => ok(false);
       S.som.src = url;
-      S.som.play().catch(() => ok());
+      S.som.volume = 1;
+      S.som.play().catch(() => ok(false));
     });
   }
   async function dizer(d) {
     if (!S.aberta) return;
+    // 07/11: no iPhone o reconhecimento deixa o áudio em modo gravação e o speechSynthesis sai mudo (e respeita
+    // a chave de silêncio). Agora: para o microfone, toca o MP3 da voz do Jarvis por <audio> (gerado no PC se
+    // ainda não existe) e só cai na voz do aparelho se o PC não entregar o som.
+    try { S.rec && S.rec.abort(); } catch (e) {}
+    S.rec = null;
+    await new Promise(r => setTimeout(r, 250));
     S.falando = true; estado("falando");
     try {
-      if (d.audios && d.audios.length) { for (const u of d.audios) { if (!S.falando) break; await tocar(u); } }
-      else await falarAparelho(d.fala, d.idioma);
+      let audios = d.audios && d.audios.length ? d.audios : null;
+      if (!audios && d.fala && MODO === "nuvem" && S.via === "direto") {
+        $("conv-vivo").textContent = "preparando a voz…";
+        try { audios = (await chamar("/voz", JSON.stringify({texto: d.fala, idioma: d.idioma}), "application/json", 16000)).audios; }
+        catch (e) { audios = null; }
+        $("conv-vivo").textContent = "";
+      }
+      let tocou = false;
+      if (audios && audios.length) for (const u of audios) { if (!S.falando) break; tocou = (await tocar(u)) || tocou; }
+      if (!tocou && S.falando) await falarAparelho(d.fala, d.idioma);
     } finally { S.falando = false; }
   }
   function calar() {
@@ -1229,6 +1275,7 @@ const conversa = (() => {
     try {
       const d = await chamar("/recados", null, null, 6000);
       for (const r of d.recados || []) { linha("ele", r.fala); await dizer({fala: r.fala, idioma: "en"}); }
+      if ((d.recados || []).length) { estado("pronto"); if (S.aberta && S.auto) ouvir(); }
     } catch (e) {}
   }
   async function abrir() {
@@ -1286,8 +1333,56 @@ const conversa = (() => {
   if (window.speechSynthesis) speechSynthesis.getVoices();
   return {abrir, fechar, conferir: {estado, aviso}};   // conferir: só pra conferência visual mostrar os estados
 })();
+/* ---------- senhas faladas (07/11): só o dono, direto no PC pelo Funnel; o texto nunca fica na página ---------- */
+const senhas = (() => {
+  async function chamar(corpo) {
+    if (MODO !== "nuvem" || !sb) throw new Error("as senhas só se definem pela Central do celular (com login)");
+    const {data: {session}} = await sb.auth.getSession();
+    if (!session) throw new Error("entre com o login primeiro");
+    const r = await fetch(JV_URL + "/senha", {method: corpo ? "POST" : "GET",
+      headers: Object.assign({Authorization: "Bearer " + session.access_token}, corpo ? {"Content-Type": "application/json"} : {}),
+      body: corpo ? JSON.stringify(corpo) : undefined, signal: AbortSignal.timeout ? AbortSignal.timeout(9000) : undefined});
+    const d = await r.json().catch(() => ({}));
+    if (r.status === 401) throw new Error("o PC não reconheceu o login");
+    if (!r.ok && !d.estado) throw new Error(d.erro || "o PC respondeu " + r.status);
+    return d;
+  }
+  function mostrar(e) {
+    if (!e) return;
+    const p = [];
+    p.push(e.s1_definida ? "Senha 1 definida" + (e.s1_definida_em ? " em " + e.s1_definida_em : "") : "Senha 1 ainda não definida");
+    p.push(e.s2_definida ? (e.s2_travada ? "senha 2 TRAVADA (3 erros)" : "senha 2 definida") : "senha 2 ainda não definida");
+    p.push("teto R$ " + String(e.teto_gasto || 0).replace(".", ","));
+    if (e.s1_bloqueada_min) p.push("senha 1 bloqueada por mais " + e.s1_bloqueada_min + " min");
+    $("sh-est").textContent = p.join(" · ") + ".";
+    $("sh-destravar").hidden = !e.s2_travada;
+  }
+  async function ler() {
+    try { mostrar((await chamar(null)).estado); }
+    catch (e) { $("sh-est").textContent = "Não deu pra ler agora: " + motivo(e) + "."; }
+  }
+  async function mandar(corpo, form, campo) {
+    const msg = $("sh-msg"), b = form ? form.querySelector("button") : $("sh-destravar");
+    if (b) b.disabled = true;
+    msg.textContent = "guardando…";
+    try {
+      const d = await chamar(corpo);
+      msg.textContent = d.ok ? (d.msg || "guardado") + "." : "Não foi: " + (d.msg || "recusado") + ".";
+      mostrar(d.estado);
+    } catch (e) { msg.textContent = "Não foi: " + motivo(e) + "."; }
+    if (campo) campo.value = "";   // a senha não fica na tela, nem se der erro
+    if (b) b.disabled = false;
+  }
+  $("f-s1").addEventListener("submit", ev => { ev.preventDefault(); const c = $("sh-s1"); if (c.value.trim()) mandar({acao: "definir", qual: "s1", texto: c.value}, ev.target, c); });
+  $("f-s2").addEventListener("submit", ev => { ev.preventDefault(); const c = $("sh-s2"); if (c.value.trim()) mandar({acao: "definir", qual: "s2", texto: c.value}, ev.target, c); });
+  $("f-teto").addEventListener("submit", ev => { ev.preventDefault(); const c = $("sh-teto"); mandar({acao: "teto", valor: c.value.trim() || "0"}, ev.target, c); });
+  $("sh-destravar").addEventListener("click", () => mandar({acao: "destravar"}, null, null));
+  return {ler};
+})();
 let jvChave = "";
+let senhasLidas = false;
 function desenharJarvis() {
+  if (!senhasLidas && !$("v-jarvis").hidden) { senhasLidas = true; senhas.ler(); }   // estado das senhas faladas, uma vez
   desenharConversa();
   const m = jarvisModo(), f = jarvisFala();
   $("jv-estado").replaceChildren("Jarvis ", el("span", {class: ["falando", "ouvindo"].includes(m) ? "on" : null, text: JM[m]}));
