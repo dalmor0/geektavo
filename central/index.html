@@ -454,6 +454,53 @@ body.conv-aberta{overflow:hidden}
 .it.parado .tit{color:var(--cinza)}
 .it p{margin:0;font-size:15px;color:var(--cinza);overflow-wrap:anywhere}
 .it .arq{font-size:13px;color:var(--cinza);overflow-wrap:anywhere}
+/* ler por dentro (07/11): o item com partes abre ali mesmo; busca, grupos e abrir tudo no topo do sub */
+.ar-ferr{display:grid;gap:4px}
+.ar-ferr .filtro{align-items:center}
+.ar-ferr .chip .q{font-weight:400}
+.ar-ferr .filtro{gap:0 20px}
+.ar-busca{width:100%;max-width:420px;min-height:48px;background:var(--noite);border:1px solid var(--fio);padding:10px 12px;font-size:16px;color:var(--giz)}
+.ar-busca:focus{border-color:var(--giz);outline:0;box-shadow:inset 0 0 0 1px var(--giz)}
+.ar-busca::placeholder{color:var(--cinza)}
+.ar-ferr .f2{display:flex;flex-wrap:wrap;align-items:center;gap:8px 24px}
+.ar-ferr .conta{font-size:14px;color:var(--cinza)}
+.ar-corpo .colunas.lendo{columns:auto;column-count:1;max-width:78ch}
+.it .abre{background:none;border:0;padding:0;margin:0;width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer;display:grid;gap:4px;min-height:44px}
+.it .abre .ler{font:600 14px var(--body);color:var(--ciano);text-decoration:underline;text-underline-offset:4px;justify-self:start;min-height:28px;display:inline-flex;align-items:center}
+@media (hover:hover){ .it .abre:hover .tit{text-decoration:underline;text-decoration-color:var(--fio);text-underline-offset:5px} }
+.it .abre[aria-expanded="true"] .resumo{display:none}
+.it .dentro{display:grid;align-content:start;gap:18px;margin:8px 0 6px;padding-left:14px;border-left:2px solid var(--fio)}
+.dentro h4{margin:0 0 4px;font:700 12px/1.3 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--cinza)}
+.dentro .tx{margin:0;font-size:16px;line-height:1.55;color:var(--giz);white-space:pre-line;overflow-wrap:anywhere;max-width:68ch}
+.dentro .lista{margin:0;padding:0 0 0 18px;display:grid;gap:6px;font-size:16px;line-height:1.55;color:var(--giz);max-width:68ch}
+.dentro .lista li{overflow-wrap:anywhere;padding-left:2px}
+.dentro .lista li::marker{color:var(--cinza)}
+.dentro .lista .sub{margin-left:18px;list-style:circle}
+.dentro .fontes{display:flex;flex-wrap:wrap;gap:0 18px;margin:2px 0 0}
+.dentro .fontes a{color:var(--ciano);min-height:44px;display:inline-flex;align-items:center;font-size:15px;text-underline-offset:4px}
+.dentro .ops{display:grid;gap:14px}
+.dentro .op{display:grid;gap:12px;border-top:1px solid var(--fio);padding-top:14px}
+.dentro .op > b{font:700 18px/1.35 var(--body);color:var(--giz)}
+.dentro .op .pt{padding-left:0}
+.it > .ver,.it .acoes-it .ver{min-height:44px;display:inline-flex;align-items:center;justify-self:start}
+.it .acoes-it{display:flex;flex-wrap:wrap;align-items:center;gap:0 24px}
+.ler-b{background:none;border:0;padding:0;min-height:44px;min-width:44px;font:600 15px var(--body);color:var(--ciano);text-decoration:underline;text-underline-offset:4px;cursor:pointer;text-align:left}
+.dentro .pe-fechar{position:sticky;bottom:0;justify-self:stretch;background:var(--noite);border-top:1px solid var(--fio);margin-left:-14px;padding-left:14px;z-index:1}
+@media (max-width:820px){ .dentro .pe-fechar{bottom:calc(var(--barra) + env(safe-area-inset-bottom))} }
+.ar-ferr .filtro{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:0 20px;padding-right:44px;overscroll-behavior-x:contain}
+.ar-ferr .filtro::-webkit-scrollbar{display:none}
+.ar-ferr .filtro{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent)}
+.ar-corpo .lendo .it,.dentro .ops,.dentro .op,.dentro .pt{align-content:start}
+.ar-ferr .chip{flex:none;white-space:nowrap;font-size:14px;font-weight:500}
+.ar-ferr .chip[aria-pressed="true"]{text-decoration:none;color:var(--giz);font-weight:700}
+.ar-ferr .chip .q{opacity:.65}
+.dentro .ops > h4{color:var(--giz)}
+.dentro .op{gap:8px}
+.dentro .dir{color:var(--cinza);font-size:.92em}
+.dentro .rub{color:var(--cinza);font:700 13px/1.3 var(--body);letter-spacing:.06em}
+.dentro .op .pt h4{display:inline;margin:0 8px 0 0}
+.dentro .op .pt h4 + .tx{display:inline}
+.subabas button{min-width:44px}
 @media (max-width:820px){
   .ar{grid-template-columns:minmax(0,1fr);gap:16px}
   .ar-idx{display:none}
@@ -1115,13 +1162,21 @@ const conversa = (() => {
       speechSynthesis.speak(u);
     });
   }
+  function sessao(tipo) {   // 07/11: iPhone (Safari 17+): "playback" toca no alto-falante e ignora a chave de silêncio
+    try { if (navigator.audioSession) navigator.audioSession.type = tipo; } catch (e) {}
+  }
   function tocar(url) {   // true se tocou até o fim; o microfone só reabre depois do "ended"
     return new Promise(ok => {
-      S.som.onended = () => ok(true);
-      S.som.onerror = () => ok(false);
+      let feito = false, comecou = false;
+      const fim = v => { if (feito) return; feito = true; clearTimeout(prazo); ok(v); };
+      // 07/11: se o Safari travar sem "error" nem "playing" (rede, formato), não fica mudo pra sempre
+      const prazo = setTimeout(() => { if (!comecou) { try { S.som.pause(); } catch (e) {} fim(false); } }, 8000);
+      S.som.onplaying = () => { comecou = true; };
+      S.som.onended = () => fim(true);
+      S.som.onerror = () => fim(false);
       S.som.src = url;
       S.som.volume = 1;
-      S.som.play().catch(() => ok(false));
+      S.som.play().catch(() => fim(false));
     });
   }
   async function dizer(d) {
@@ -1132,6 +1187,7 @@ const conversa = (() => {
     try { S.rec && S.rec.abort(); } catch (e) {}
     S.rec = null;
     await new Promise(r => setTimeout(r, 250));
+    sessao("playback");
     S.falando = true; estado("falando");
     try {
       let audios = d.audios && d.audios.length ? d.audios : null;
@@ -1153,6 +1209,7 @@ const conversa = (() => {
   }
   // --------------------------------------------------------------- ouvido
   function ouvirNavegador() {
+    sessao("auto");   // o reconhecimento do Safari cuida do microfone sozinho
     return new Promise((ok, nao) => {
       const r = new Rec();
       r.lang = "pt-BR"; r.interimResults = true; r.continuous = false; r.maxAlternatives = 1;
@@ -1170,6 +1227,7 @@ const conversa = (() => {
     });
   }
   async function ouvirGravando() {   // reserva: grava, para sozinho no silêncio, e o whisper do PC transcreve
+    sessao("play-and-record");
     const fluxo = await navigator.mediaDevices.getUserMedia({audio: true});
     const tipo = ["audio/mp4", "audio/webm;codecs=opus", "audio/webm"].find(t => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t));
     const g = tipo ? new MediaRecorder(fluxo, {mimeType: tipo}) : new MediaRecorder(fluxo), pedacos = [];
@@ -1586,7 +1644,7 @@ setInterval(async () => {
 setInterval(() => { if (naMesa() && !document.hidden && !$("app").hidden) lerEdicao(); }, 10000);
 
 /* ---------- Áreas: menu e submenu (CENTRAL/areas/, contrato em CENTRAL/areas/CONTRATO.md) ---------- */
-let arSel = null, arChave = "";
+let arSel = null, arChave = "", arUlt = "";
 const subSel = {};
 try { Object.assign(subSel, JSON.parse(sessionStorage.getItem("central-subs") || "{}")); arSel = sessionStorage.getItem("central-area"); } catch (e) {}
 const naMesa = () => aba === "areas" && arSel === "edicao" && subSel.edicao === "_mesa";
@@ -1607,17 +1665,137 @@ function listaAreas() {
 const nEspera = a => (a.subs || []).reduce((n, s) => n + (s.itens || []).filter(i => i.estado === "espera").length, 0);
 const EST = {anda: "andando", pronto: "pronto", parado: "parado", falhou: "falhou"};
 const EST2 = {...EST, espera: "esperando você"};
-function itemArea(i) {
+/* 07/11, ler por dentro: item com "partes" ou "opcoes" (contrato) abre e fecha ali mesmo. O que fica aberto,
+   o grupo e a busca de cada sub ficam guardados neste aparelho (só conveniência; sem eles a página funciona igual). */
+const AR_PREF = "central-ar-pref";
+let arPref = {};
+try { arPref = JSON.parse(localStorage.getItem(AR_PREF) || "{}") || {}; } catch (e) { arPref = {}; }
+const guardaPref = () => { try { localStorage.setItem(AR_PREF, JSON.stringify(arPref)); } catch (e) {} };
+const abertos = () => (arPref.abertos = arPref.abertos || {});
+const prefSub = c => ((arPref.subs = arPref.subs || {})[c] = arPref.subs[c] || {});
+const semAcento = t => String(t || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const temDentro = i => (i.partes || []).length > 0 || (i.opcoes || []).length > 0;
+// roteiro: direção de cena fica cinza e a fala em giz. Linha que abre em CAIXA ALTA ("TELA CHEIA, 1s:", "CENA DA
+// SÉRIE") vira rubrica até os dois-pontos (ou inteira); trecho entre parênteses curto também.
+function rubrica(l) {
+  const conta = (s, re) => (s.match(re) || []).length, CX = /[A-ZÀ-Ý]/g, mi = /[a-zà-ÿ]/g;
+  const m = /^([^:\n]{3,40}):(\s.*)?$/.exec(l);
+  if (m && /^[A-ZÀ-Ý]{3}/.test(m[1]) && conta(m[1], CX) >= 3 && conta(m[1], mi) <= 2)
+    return [el("span", {class: "rub", text: m[1] + ":"}), ...rubrica(m[2] || "")];
+  if (l.trim().length >= 4 && conta(l, CX) >= 3 && !conta(l, mi)) return [el("span", {class: "rub", text: l})];
+  return l.split(/(\([^()]{1,90}\))/).filter(Boolean).map(x => /^\(.*\)$/.test(x) ? el("span", {class: "dir", text: x}) : x);
+}
+function textoComLista(t) {   // linha que começa com "• " vira item de lista (recuo de verdade); o resto, parágrafo
+  const out = [];
+  let ul = null, buf = [];
+  const solta = () => { if (buf.length) { out.push(el("p", {class: "tx"}, buf.flatMap((l, k) => [k ? "\n" : null, ...rubrica(l)]))); buf = []; } };
+  for (const l of String(t || "").split("\n")) {
+    const m = /^(\s*)• (.*)$/.exec(l);
+    if (m) { solta(); if (!ul) { ul = el("ul", {class: "lista"}); out.push(ul); } ul.append(el("li", {class: m[1].length ? "sub" : null, text: m[2]})); }
+    else { if (l.trim()) ul = null; buf.push(l); }
+  }
+  solta();
+  return out;
+}
+function parteArea(p) {
+  const ls = (p.links || []).filter(l => /^https?:\/\//.test(l.url || ""));
+  return el("section", {class: "pt"}, p.nome ? el("h4", {text: p.nome}) : null, ...textoComLista(p.texto),
+    ls.length ? el("p", {class: "fontes"}, ls.map(l => el("a", {href: l.url, target: "_blank", rel: "noopener", text: l.nome || "fonte"}))) : null);
+}
+function abrirItem(art, v, rolar) {
+  const d = art.querySelector(".dentro"), t = art.querySelector(".ler-b.topo");
+  if (!d) return;
+  art.querySelectorAll(".abre,.ler-b.topo").forEach(b => b.setAttribute("aria-expanded", String(v)));
+  d.hidden = !v; art.classList.toggle("aberto", v);
+  if (t) t.textContent = v ? "fechar" : "ler tudo";
+  const a = abertos();
+  if (v) a[art.dataset.k] = 1; else delete a[art.dataset.k];
+  const ks = Object.keys(a); if (ks.length > 300) delete a[ks[0]];
+  guardaPref();
+  if (!v && rolar && art.getBoundingClientRect().top < 0) art.scrollIntoView({block: "start"});
+}
+let nItem = 0;
+function itemArea(i, ctx) {
   const top = el("div", {class: "l1"}, el("span", {class: "tit", text: i.titulo}), i.numero ? el("span", {class: "num-g", text: String(i.numero)}) : null);
   const link = /^https?:\/\//.test(i.link || "") ? el("a", {class: "ver", href: i.link, target: "_blank", rel: "noopener", text: "abrir"}) : null;
-  const data = i.quando && (typeof i.quando === "number" || /^\d{4}-/.test(i.quando)) ? hora(i.quando) : i.quando ? String(i.quando) : "";
+  const soDia = typeof i.quando === "string" && /^\d{4}-\d{2}-\d{2}$/.test(i.quando);   // só a data: sem hora inventada pelo fuso
+  const data = soDia ? i.quando.slice(8, 10) + "/" + i.quando.slice(5, 7)
+    : i.quando && (typeof i.quando === "number" || /^\d{4}-/.test(i.quando)) ? hora(i.quando) : i.quando ? String(i.quando) : "";
   const repete = data && i.linha && i.linha.includes(data.split(" ")[0]);
   const det = [i.estado && EST2[i.estado] ? el("b", {class: "est " + i.estado, text: EST2[i.estado]}) : null, i.linha || null].filter(Boolean);
-  return el("article", {class: "it" + (i.estado ? " " + i.estado : "")}, top,
-    det.length ? el("span", {class: "det"}, ...det.flatMap((d, k) => k ? ["\u00a0· ", d] : [d])) : null,
-    i.texto ? el("p", {text: i.texto}) : null,
-    data && !repete ? el("span", {class: "det", text: data + (/^\d/.test(data) || data.includes(":") ? " · " + haQuanto(i.quando) : "")}) : null,
-    i.arquivo ? el("span", {class: "arq", text: i.arquivo}) : null, link);
+  const detEl = det.length ? el("span", {class: "det"}, ...det.flatMap((d, k) => k ? [" · ", d] : [d])) : null;
+  const resumo = i.texto ? el("p", {class: "resumo", text: i.texto}) : null;
+  const pe = [data && !repete ? el("span", {class: "det", text: data + (!soDia && (/^\d/.test(data) || data.includes(":")) ? " · " + haQuanto(i.quando) : "")}) : null,
+    i.arquivo ? el("span", {class: "arq", text: i.arquivo}) : null, link];
+  const busca = semAcento([i.titulo, i.linha, i.texto, i.grupo, ...(i.partes || []).map(p => p.texto),
+    ...(i.opcoes || []).flatMap(o => [o.titulo, ...(o.partes || []).map(p => p.texto)])].join(" "));
+  if (!temDentro(i)) {
+    const art = el("article", {class: "it" + (i.estado ? " " + i.estado : "")}, top, detEl, resumo, ...pe);
+    art.dataset.busca = busca;
+    return art;
+  }
+  const k = ctx + "|" + i.titulo, id = "ar-it-" + (++nItem), aberto = !!abertos()[k];
+  const ops = i.opcoes || [];
+  const dentro = el("div", {class: "dentro", id, hidden: !aberto},
+    (i.partes || []).map(parteArea),
+    ops.length ? el("section", {class: "ops"}, el("h4", {text: (i.opcoes_nome || "Opções") + ` · ${ops.length}`}),
+      ops.map(o => el("div", {class: "op"}, el("b", {text: o.titulo}), (o.partes || []).map(parteArea)))) : null);
+  // o cabeçalho inteiro abre (alvo grande); embaixo dele, "ler tudo" e o "abrir" do link na mesma linha
+  const btn = el("button", {type: "button", class: "abre", "aria-expanded": String(aberto), "aria-controls": id}, top, detEl, resumo, pe[0], pe[1]);
+  const ler = el("button", {type: "button", class: "ler-b topo", "aria-expanded": String(aberto), "aria-controls": id, text: aberto ? "fechar" : "ler tudo"});
+  const fecharPe = el("button", {type: "button", class: "ler-b fechar-pe", text: "fechar"});
+  dentro.append(el("div", {class: "pe-fechar"}, fecharPe));
+  const art = el("article", {class: "it" + (i.estado ? " " + i.estado : "") + (aberto ? " aberto" : "")}, btn,
+    el("div", {class: "acoes-it"}, ler, link), dentro);
+  art.dataset.k = k; art.dataset.busca = busca;
+  const troca = () => abrirItem(art, ler.getAttribute("aria-expanded") !== "true", true);
+  btn.addEventListener("click", troca);
+  ler.addEventListener("click", troca);
+  fecharPe.addEventListener("click", () => { abrirItem(art, false, true); ler.focus({preventScroll: true}); });
+  return art;
+}
+function corpoDoSub(a, s) {   // lista do sub com as ferramentas de leitura: grupos, busca, abrir e fechar tudo
+  const itens = s.itens || [], ctx = a.id + "/" + s.id, pf = prefSub(ctx);
+  nItem = 0;
+  const arts = itens.map(i => itemArea(i, ctx));
+  const exp = itens.some(temDentro);
+  const lista = el("div", {class: "colunas" + (exp ? " lendo" : itens.length <= 4 ? " c2" : "")}, arts);
+  const grupos = [...new Set(itens.map(i => i.grupo).filter(Boolean))];
+  if (pf.g && !grupos.includes(pf.g)) pf.g = "";
+  if (!(grupos.length >= 2 || itens.length >= 8 || (exp && itens.length >= 2))) return [lista];
+  const vazio = el("p", {class: "vazio", hidden: true, text: "Nada com esse filtro."});
+  const conta = el("span", {class: "conta", "aria-live": "polite"});
+  const busca = itens.length >= 6 || exp ? el("input", {type: "search", class: "ar-busca", placeholder: "buscar nesta parte", "aria-label": "Buscar em " + s.nome, enterkeyhint: "search"}) : null;
+  if (busca) busca.value = pf.q || "";
+  const chips = grupos.length >= 2 ? ["", ...grupos].map(g => {
+    const n = g ? itens.filter(i => i.grupo === g).length : itens.length;
+    const b = el("button", {type: "button", class: "chip", "aria-pressed": String((pf.g || "") === g)}, (g || "Tudo") + " ", el("span", {class: "q", text: String(n)}));
+    b.addEventListener("click", () => { pf.g = g; chips.forEach(c => c.setAttribute("aria-pressed", String(c === b))); aplicar(); });
+    return b;
+  }) : [];
+  const tudo = exp ? el("button", {type: "button", class: "ler-b"}) : null;
+  const visiveis = () => arts.filter(x => !x.hidden && x.dataset.k);
+  let tudoAbre = true;
+  const rotTudo = () => { if (!tudo) return; tudoAbre = visiveis().some(x => x.querySelector(".dentro").hidden); tudo.textContent = tudoAbre ? "abrir tudo" : "fechar tudo"; };
+  if (tudo) {
+    tudo.addEventListener("click", () => { const v = tudoAbre; visiveis().forEach(x => abrirItem(x, v, false)); rotTudo(); });
+    lista.addEventListener("click", e => { if (e.target.closest(".abre,.ler-b")) setTimeout(rotTudo); });
+  }
+  function aplicar() {
+    const q = semAcento(busca ? busca.value.trim() : "");
+    if (busca) pf.q = busca.value;
+    let n = 0;
+    arts.forEach((x, k) => { const ok = (!pf.g || itens[k].grupo === pf.g) && (!q || x.dataset.busca.includes(q)); x.hidden = !ok; if (ok) n++; });
+    vazio.hidden = n > 0;
+    conta.textContent = pf.g || q ? `${n} de ${itens.length}` : "";
+    rotTudo(); guardaPref();
+  }
+  if (busca) busca.addEventListener("input", aplicar);
+  aplicar();
+  const ferr = el("div", {class: "ar-ferr"},
+    chips.length ? el("div", {class: "filtro", role: "group", "aria-label": "Filtrar " + s.nome}, chips) : null,
+    busca || tudo ? el("div", {class: "f2"}, busca, tudo, conta) : null);
+  return [ferr, lista, vazio];
 }
 function desenharAreas() {
   const A = listaAreas();
@@ -1633,6 +1811,7 @@ function desenharAreas() {
   if (s.nativo === "edicao") (MODO === "nuvem" ? lerEdicao() : desenharEdicao());
   if (ch === arChave) return;
   if (ocupado()) return;
+  if (arChave && document.activeElement && document.activeElement.classList.contains("ar-busca")) return;   // digitando na busca: não redesenha por baixo
   arChave = ch;
   const escolher = id => { arSel = id; arChave = ""; desenharAreas(); scrollTo({top: 0}); };
   $("ar-idx").replaceChildren(...A.map(x => {
@@ -1664,11 +1843,26 @@ function desenharAreas() {
     return;
   }
   const itens = s.itens || [];
+  // 07/11: dado novo chegou no mesmo sub: devolve o foco (item, chip, botão) e a rolagem depois de redesenhar
+  const mesmo = arUlt === a.id + "/" + s.id, at = document.activeElement, y = scrollY;
+  const foco = mesmo && at && corpo.contains(at) ? {k: (at.closest(".it") || {dataset: {}}).dataset.k, cls: at.className, txt: at.textContent} : null;
+  arUlt = a.id + "/" + s.id;
   corpo.replaceChildren(...[
     s.linha ? el("p", {class: "det", text: s.linha}) : null,
     s.texto ? el("p", {class: "ar-txt", text: s.texto}) : null,
-    itens.length ? el("div", {class: "colunas" + (itens.length <= 4 ? " c2" : "")}, itens.map(itemArea)) : (!s.texto ? el("p", {class: "vazio", text: "Nada aqui agora."}) : null),
+    ...(itens.length ? corpoDoSub(a, s) : [!s.texto ? el("p", {class: "vazio", text: "Nada aqui agora."}) : null]),
   ].filter(Boolean));
+  const chipOn = corpo.querySelector('.ar-ferr .chip[aria-pressed="true"]');   // o grupo ligado sempre à vista na faixa que rola
+  if (chipOn) {
+    const f = chipOn.parentElement, r = chipOn.getBoundingClientRect(), rf = f.getBoundingClientRect();
+    if (r.right > rf.right - 44) f.scrollLeft += r.left - rf.left - 8;
+  }
+  if (!mesmo) return;
+  if (foco) {
+    const alvo = [...corpo.querySelectorAll("button,a")].find(b => b.className === foco.cls && (foco.k ? (b.closest(".it") || {dataset: {}}).dataset.k === foco.k : b.textContent === foco.txt));
+    if (alvo) alvo.focus({preventScroll: true});
+  }
+  if (Math.abs(scrollY - y) > 1) scrollTo({top: y});
 }
 
 /* ---------- a faixa do Jarvis, presente em toda tela ---------- */
