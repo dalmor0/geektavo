@@ -2434,8 +2434,8 @@ $("f-login").addEventListener("submit", async ev => {
   m.textContent = "mandando…";
   if (!sb) { m.textContent = "Sem internet agora. Quando voltar, recarregue a página."; m.className = "msg erro"; return; }
   const r = await sb.auth.signInWithOtp({email, options: {emailRedirectTo: location.origin + location.pathname, shouldCreateUser: false}});
-  m.textContent = r.error ? "Não mandou: " + (/rate|seconds/i.test(r.error.message) ? "espere 1 minuto pra pedir outro." : r.error.message) : "Mandei. Digite aqui o código de 6 dígitos que está no assunto do e-mail. Sem código? Segure o dedo no link, copie e cole aqui sem tocar nele antes (tocar gasta o link).";
-  if (r.error) { m.className = "msg erro"; return; }
+  m.textContent = r.error ? "Não mandou: " + (/rate|seconds/i.test(r.error.message) ? "o Supabase só manda uns 2 e-mails por hora e esse limite estourou. Se você já tem um código (de um e-mail anterior ou gerado no PC), digite abaixo." : r.error.message) : "Mandei. Digite aqui o código de 6 dígitos que está no assunto do e-mail. Sem código? Segure o dedo no link, copie e cole aqui sem tocar nele antes (tocar gasta o link).";
+  if (r.error) { m.className = "msg erro"; if (!/rate|seconds/i.test(r.error.message)) return; }
   $("f-codigo").hidden = false; $("codigo").value = ""; $("codigo").focus();
 });
 function lerLink(v) {
