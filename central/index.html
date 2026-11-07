@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Big+Shoulders+Display:wght@700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Big+Shoulders+Display:wght@700;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Rajdhani:wght@500;600;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
 /* Central DAL MORO · repaginada de 06/11/2026 (terminal Escritorio Unico).
@@ -133,6 +133,15 @@ h2 small{font:400 14px/1.4 var(--body);color:var(--cinza);letter-spacing:0}
 .med.parado .med-cheio,.med.espera .med-cheio{background:var(--cinza)}
 .med.parado .med-pct,.med.espera .med-pct{color:var(--cinza)}
 .med.fim .med-cheio{background:var(--giz)}
+/* sem % de verdade (07/11, "por que tá tudo travado em 97%?"): agente ou pedido de 1 etapa sem previsão dada.
+   Nada de número: "trabalhando há X min" e uma faixa que vai e volta no trilho */
+.med.trabalha .med-in{grid-template-areas:"falta falta" "barra barra" "etapa etapa"}
+.med.trabalha .med-pct{display:none}
+.med.trabalha .med-falta{justify-items:start;text-align:left}
+.med.trabalha .med-seg{overflow:hidden}
+.med.trabalha .med-cheio{width:28%!important;transition:none;animation:med-vaivem 1.6s ease-in-out infinite alternate}
+@keyframes med-vaivem{from{left:0}to{left:72%}}
+@media (prefers-reduced-motion:reduce){.med.trabalha .med-cheio{animation:none;width:100%!important;background:repeating-linear-gradient(135deg,var(--ciano) 0 8px,transparent 8px 16px)}}
 .med.fim .med-pct{color:var(--cinza)}
 .med.mini .med-pct{font-size:28px}
 .med.mini .med-barra{height:10px}
@@ -548,6 +557,315 @@ body.conv-aberta{overflow:hidden}
 @supports (padding:max(0px)){ .novidade{right:max(16px,calc(env(safe-area-inset-right) + 16px))} @media (max-width:820px){ .novidade{left:max(16px,calc(env(safe-area-inset-left) + 16px))} } }
 @media (max-width:360px){ .abas-baixo button{font-size:12px;letter-spacing:-.01em} .abas-baixo button[data-c]::after{min-width:16px;padding:0 3px} }
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== PAINEL (componentes do JARVIS/painel/design.css, escopados em .pj) ===== */
+.pj{color-scheme: dark; --fundo: #03060c; --fundo-2: #060c17; --painel: #08121f; --painel-2: #0c1a2c; --trilho: #11263d; --linha: #14304c; --linha-2: #1f4669; --canto: #3fa9f5; --texto: #e3eefa; --texto-2: #a3b9d0; --texto-3: #6f8aa5; --reator: #3db8ff; --reator-claro: #9bdcff; --ciano: #45e6ff; --ambar: #ffb547; --branco: #eef6ff; --coral: #ff8a63; --desligado: #4d6177; --urgente: #ff5a6b; --normal: #ffb020; --baixo: #8db0da; --ok: #3fdc9a; --urgente-fundo: #2a0d14; --normal-fundo: #261a06; --baixo-fundo: #0f1d30; --ok-fundo: #0a2219; --f-titulo: "Rajdhani", "Bahnschrift SemiCondensed", "Bahnschrift", "Segoe UI", sans-serif; --f-texto: "Inter", "Segoe UI", system-ui, sans-serif; --f-mono: "JetBrains Mono", "Cascadia Mono", Consolas, monospace; --t-micro: 0.75rem; --t-pequeno: 0.875rem; --t-base: 1rem; --t-medio: 1.25rem; --t-grande: 1.75rem; --t-stat: 2.75rem; --t-stat-g: 3.5rem; --t-nome: 2.75rem; --e-1: 4px; --e-2: 8px; --e-3: 12px; --e-4: 16px; --e-5: 24px; --e-6: 32px; --e-7: 48px; --r-1: 2px; --r-2: 4px; --r-3: 8px; --brilho-reator: 0 0 32px rgba(61, 184, 255, 0.28); --brilho-urgente: 0 0 18px rgba(255, 90, 107, 0.4); --canto-tam: 12px; --canto-esp: 2px; --curva: cubic-bezier(0.2, 0.7, 0.3, 1); --rapido: 150ms; --medio: 280ms;}
+.pj *, .pj *::before, .pj *::after{box-sizing: border-box;}
+.pj{margin: 0; padding: 0;}
+.pj{background: var(--fundo); background-image: radial-gradient(ellipse 70% 900px at 50% 420px, #0a1a2e 0%, var(--fundo) 70%); background-repeat: no-repeat; color: var(--texto); font-family: var(--f-texto); font-size: var(--t-base); line-height: 1.4; -webkit-font-smoothing: antialiased; overflow-x: hidden;}
+.pj h1, .pj h2, .pj h3, .pj p, .pj ul, .pj ol{margin: 0; padding: 0;}
+.pj ul, .pj ol{list-style: none;}
+.pj a{color: var(--reator-claro); text-decoration: none;}
+@media (hover: hover){
+.pj a:hover{text-decoration: underline;}
+}
+.pj button{font: inherit; color: inherit;}
+.pj :focus-visible{outline: 2px solid var(--ciano); outline-offset: 2px;}
+.pj .num{font-variant-numeric: tabular-nums;}
+.pj .hud{position: relative; min-width: 0; padding: var(--e-4); border: 1px solid var(--linha); border-radius: var(--r-2); background: linear-gradient(var(--canto), var(--canto)) left top / var(--canto-tam) var(--canto-esp) no-repeat, linear-gradient(var(--canto), var(--canto)) left top / var(--canto-esp) var(--canto-tam) no-repeat, linear-gradient(var(--canto), var(--canto)) right top / var(--canto-tam) var(--canto-esp) no-repeat, linear-gradient(var(--canto), var(--canto)) right top / var(--canto-esp) var(--canto-tam) no-repeat, linear-gradient(var(--canto), var(--canto)) left bottom / var(--canto-tam) var(--canto-esp) no-repeat, linear-gradient(var(--canto), var(--canto)) left bottom / var(--canto-esp) var(--canto-tam) no-repeat, linear-gradient(var(--canto), var(--canto)) right bottom / var(--canto-tam) var(--canto-esp) no-repeat, linear-gradient(var(--canto), var(--canto)) right bottom / var(--canto-esp) var(--canto-tam) no-repeat, linear-gradient(180deg, var(--painel-2) 0%, var(--painel) 100%);}
+.pj .hud--urgente{--canto: var(--urgente); border-color: #4a1822;}
+.pj .hud-cabeca{display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 2px var(--e-3); margin-bottom: var(--e-3);}
+.pj .hud-titulo{font-family: var(--f-titulo); font-weight: 600; font-size: var(--t-pequeno); letter-spacing: 0.16em; text-transform: uppercase; color: var(--texto-2); white-space: nowrap;}
+.pj .hud-meta{white-space: nowrap; font-family: var(--f-mono); font-size: var(--t-micro); color: var(--texto-3); text-align: right; min-width: 0;}
+.pj .hud-meta--velho{color: var(--normal);}
+.pj .hud-corpo{display: flex; flex-direction: column; gap: var(--e-3);}
+.pj .stat{display: flex; flex-direction: column; gap: 2px; min-width: 0;}
+.pj .stat-numero{font-family: var(--f-titulo); font-weight: 700; font-size: var(--t-stat); line-height: 1; letter-spacing: 0.01em; font-variant-numeric: tabular-nums; color: var(--texto); white-space: nowrap;}
+.pj .stat-numero small{font-size: 0.5em; font-weight: 600; color: var(--texto-2); margin-left: 0.15em;}
+.pj .stat-rotulo{font-size: var(--t-pequeno); color: var(--texto-2);}
+.pj .stat--g .stat-numero{font-size: var(--t-stat-g);}
+.pj .stat--p .stat-numero{font-size: var(--t-grande);}
+.pj .stat--reator .stat-numero{color: var(--reator-claro);}
+.pj .stat--ok .stat-numero{color: var(--ok);}
+.pj .stat--normal .stat-numero{color: var(--normal);}
+.pj .stat--urgente .stat-numero{color: var(--urgente);}
+.pj .stat--mudo .stat-numero{color: var(--texto-2);}
+.pj .stat--apagado .stat-numero{color: var(--texto-3); font-size: var(--t-medio); font-weight: 600;}
+.pj .stats{display: grid; grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr)); gap: var(--e-3) var(--e-4);}
+.pj .stats--2{grid-template-columns: repeat(2, minmax(0, 1fr));}
+.pj .stats--3{grid-template-columns: repeat(3, auto); justify-content: space-between;}
+.pj .stat--linha{flex-direction: row; align-items: baseline; gap: var(--e-3); flex-wrap: wrap;}
+.pj .stat--linha .stat-rotulo{font-size: var(--t-base);}
+.pj .medida{display: flex; flex-direction: column; gap: 6px; min-width: 0;}
+.pj .medida-topo{display: flex; justify-content: space-between; align-items: baseline; gap: var(--e-3);}
+.pj .medida-rotulo{font-size: var(--t-pequeno); color: var(--texto-2); white-space: nowrap;}
+.pj .medida-valor{font-family: var(--f-mono); font-size: var(--t-pequeno); color: var(--texto); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; letter-spacing: 0;}
+.pj .medida--sem-dado .medida-trilho{display: none;}
+.pj .trabalho{display: flex; flex-direction: column; gap: var(--e-1);}
+.pj .trabalho + .trabalho{padding-top: var(--e-3); border-top: 1px solid var(--linha);}
+.pj .trabalho .medida-nota{margin-top: var(--e-1);}
+.pj .sub-titulo{font-family: var(--f-titulo); font-weight: 600; font-size: var(--t-micro); letter-spacing: 0.14em; text-transform: uppercase; color: var(--texto-3);}
+.pj .medida-trilho{height: 6px; background: var(--trilho); border-radius: var(--r-1); overflow: hidden;}
+.pj .medida-cheio{height: 100%; width: 0; background: var(--reator); border-radius: var(--r-1); transition: width var(--medio) var(--curva);}
+.pj .medida--ok .medida-cheio{background: var(--ok);}
+.pj .medida--normal .medida-cheio{background: var(--normal);}
+.pj .medida--urgente .medida-cheio{background: var(--urgente);}
+.pj .medida--g .medida-trilho{height: 10px;}
+.pj .medida-nota{font-size: var(--t-pequeno); color: var(--texto-3); overflow-wrap: anywhere;}
+.pj .hud-corpo > .trabalho:first-child{padding-top: 0;}
+.pj .medida--titulo .medida-rotulo{color: var(--texto); font-size: var(--t-base); white-space: normal; min-width: 0; overflow-wrap: anywhere;}
+.pj .variacao{font-family: var(--f-mono); font-size: var(--t-micro); color: var(--texto-2);}
+.pj .variacao--sobe{color: var(--ok);}
+.pj .variacao--desce{color: var(--urgente);}
+.pj .tx-urgente{color: var(--urgente);}
+.pj .tx-normal{color: var(--normal);}
+.pj .tx-ok{color: var(--ok);}
+.pj .linhas{display: flex; flex-direction: column;}
+.pj .linha{display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px var(--e-3); padding: var(--e-2) 0; border-top: 1px solid var(--linha);}
+.pj .linha--larga .linha-sub{grid-column: 1 / -1;}
+.pj .linha--larga .linha-meta{grid-row: 1;}
+.pj .linha--selo-baixo .linha-titulo{grid-column: 1 / -1;}
+.pj .linha--selo-baixo .linha-meta{grid-row: 2;}
+.pj .linha:first-child{border-top: 0; padding-top: 0;}
+.pj .linha:last-child{padding-bottom: 0;}
+.pj .linha-texto{grid-column: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0;}
+.pj .linha-texto + .linha-meta{grid-row: 1;}
+.pj .linha-titulo{font-size: var(--t-base); color: var(--texto); min-width: 0; overflow-wrap: anywhere;}
+.pj .linha-sub{grid-column: 1; font-size: var(--t-pequeno); color: var(--texto-2); min-width: 0; overflow-wrap: anywhere;}
+.pj .linha-meta{grid-column: 2; grid-row: 1 / span 2; justify-self: end; text-align: right; font-family: var(--f-mono); font-size: var(--t-pequeno); color: var(--texto-2); font-variant-numeric: tabular-nums;}
+.pj .linha-meta--grande{font-family: var(--f-titulo); font-weight: 700; font-size: var(--t-grande); color: var(--texto); line-height: 1;}
+.pj .linha-data{font-family: var(--f-mono); font-size: var(--t-pequeno); color: var(--texto-3); margin-right: var(--e-2);}
+.pj .linha-mais{font-size: var(--t-pequeno); color: var(--texto-3); padding-top: var(--e-2);}
+.pj .selo{display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border: 1px solid currentColor; border-radius: var(--r-1); font-family: var(--f-titulo); font-weight: 600; font-size: 0.8125rem; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.4; white-space: nowrap; color: var(--texto-2);}
+.pj .selo::before{content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex: none;}
+.pj .selo--trabalhando{color: var(--reator-claro);}
+.pj .selo--esperando{color: var(--normal); background: var(--normal-fundo);}
+.pj .selo--parado{color: var(--texto-2);}
+.pj .selo--caido{color: var(--urgente); background: var(--urgente-fundo);}
+.pj .selo--ok{color: var(--ok);}
+.pj .hud-alertas{display: flex; flex-direction: column;}
+.pj .hud-alerta{display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px var(--e-3); align-items: start; padding: var(--e-3) 0 var(--e-3) var(--e-3); border-left: 2px solid var(--baixo); background: transparent;}
+.pj .hud-alerta + .hud-alerta{border-top: 1px solid var(--linha);}
+.pj .hud-alerta:first-child{padding-top: var(--e-1);}
+.pj .alerta-nivel{font-family: var(--f-titulo); font-weight: 700; font-size: var(--t-micro); letter-spacing: 0.14em; text-transform: uppercase; color: var(--texto-3);}
+.pj .alerta-titulo{font-weight: 600; font-size: var(--t-base); color: var(--texto); overflow-wrap: anywhere;}
+.pj .alerta-texto{font-size: var(--t-pequeno); color: var(--texto-2); overflow-wrap: anywhere;}
+.pj .alerta-em{font-family: var(--f-mono); font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--texto-2); margin-left: var(--e-2);}
+.pj .hud-alerta .botao--texto{grid-column: 2; grid-row: 1; margin: -6px 0 0 0;}
+.pj .alerta-titulo, .pj .alerta-texto{grid-column: 1 / -1;}
+.pj .alerta--normal{border-left-color: var(--normal);}
+.pj .alerta--urgente{padding: var(--e-3); border-left: 3px solid var(--urgente); border-radius: 0 var(--r-1) var(--r-1) 0; background: var(--urgente-fundo); box-shadow: var(--brilho-urgente); animation: pj-pisca 2.4s ease-in-out infinite;}
+.pj .alerta--urgente .alerta-nivel{color: var(--urgente);}
+@keyframes pj-pisca{0%, 100% { background-color: var(--urgente-fundo); }
+  50% { background-color: #47111d; }}
+.pj .vazio-ok{color: var(--ok); font-size: var(--t-base);}
+.pj .linha-mais[hidden], .pj .linha[hidden]{display: none;}
+.pj .botao{display: inline-flex; align-items: center; justify-content: center; gap: var(--e-2); min-height: 44px; padding: var(--e-2) var(--e-4); border: 1px solid var(--linha-2); border-radius: var(--r-2); background: var(--painel-2); color: var(--texto); font-family: var(--f-titulo); font-weight: 600; font-size: var(--t-base); letter-spacing: 0.06em; line-height: 1.2; cursor: pointer; transition: background-color var(--rapido) var(--curva), border-color var(--rapido) var(--curva), transform var(--rapido) var(--curva);}
+@media (hover: hover){
+.pj .botao:hover{background: #12283f; border-color: var(--reator);}
+.pj .botao--principal:hover{background: #1a3b5c;}
+.pj .botao--texto:hover{background: transparent; color: var(--texto);}
+}
+.pj .botao:active{transform: scale(0.98);}
+.pj .botao[disabled]{opacity: 0.55; cursor: default;}
+.pj .botao--principal{min-height: 56px; padding: var(--e-3) var(--e-5); border-color: var(--reator); background: #10304d; font-size: var(--t-medio); font-weight: 700; letter-spacing: 0.04em;}
+.pj .botao--texto{min-height: 32px; padding: var(--e-1) var(--e-2); border-color: transparent; background: transparent; color: var(--texto-2); font-size: var(--t-pequeno); letter-spacing: 0.1em; text-transform: uppercase;}
+.pj #c-esteiras .hud-corpo{container-type: inline-size;}
+.pj .esteiras-grade{display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-2);}
+@container (min-width: 480px){
+.pj .esteiras-grade{grid-template-columns: repeat(5, minmax(0, 1fr));}
+}
+.pj .esteiras-grade .botao{width: 100%; white-space: nowrap;}
+.pj .botao--armado{border-color: var(--normal); color: var(--normal); background: var(--normal-fundo);}
+.pj .botao--enviado{border-color: var(--ok); color: var(--ok);}
+.pj .botao--enviado::after{content: "✓";}
+.pj .hud--antigo .stat-numero, .pj .hud--antigo .linha-meta--grande{color: var(--texto-2);}
+.pj .reator-caixa{position: relative; width: 100%; aspect-ratio: 1 / 1; margin: 0 auto;}
+.pj .reator-caixa canvas{position: absolute; left: 50%; top: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%); display: block;}
+.pj .reator-nome{font-family: var(--f-titulo); font-weight: 600; font-size: var(--t-nome); letter-spacing: 0.32em; line-height: 1; text-indent: 0.32em; color: var(--texto); text-align: center;}
+.pj .reator-estado{font-family: var(--f-titulo); font-weight: 600; font-size: var(--t-medio); letter-spacing: 0.2em; text-transform: uppercase; text-align: center; color: var(--reator-claro);}
+.pj .reator-estado[data-estado="ouvindo"]{color: var(--ciano);}
+.pj .reator-estado[data-estado="pensando"]{color: var(--ambar);}
+.pj .reator-estado[data-estado="falando"]{color: var(--branco);}
+.pj .reator-estado[data-estado="desligado"]{color: var(--texto-3);}
+.pj .reator-estado .quem{color: var(--texto-2); letter-spacing: 0.12em;}
+.pj .hud-legenda{max-width: 36rem; margin: 0 auto; min-height: 2.8em; font-size: var(--t-medio); line-height: 1.4; color: var(--texto); text-align: center; overflow-wrap: anywhere;}
+.pj .legenda--vazia{color: var(--texto-3); font-size: var(--t-base);}
+.pj .relogio{display: flex; flex-direction: column; align-items: flex-end; line-height: 1;}
+.pj .relogio-hora{font-family: var(--f-titulo); font-weight: 700; font-size: 2.25rem; font-variant-numeric: tabular-nums; letter-spacing: 0.02em;}
+.pj .relogio-seg{font-size: 0.55em; color: var(--texto-3);}
+.pj .relogio-data{font-family: var(--f-mono); font-size: var(--t-micro); color: var(--texto-2); margin-top: 4px; text-transform: lowercase;}
+.pj .sem-dado{color: var(--texto-3); font-size: var(--t-pequeno);}
+.pj .conexao{display: inline-flex; align-items: center; gap: 8px; font-family: var(--f-mono); font-size: var(--t-micro); color: var(--texto-2);}
+.pj .conexao::before{content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex: none;}
+.pj .conexao--fora{color: var(--urgente);}
+.pj .conexao--fora::before{background: var(--urgente);}
+.pj .faixa-desligado{display: none; padding: var(--e-3) var(--e-4); border: 1px solid #5a1d28; border-radius: var(--r-2); background: var(--urgente-fundo); color: var(--texto); text-align: center;}
+.pj .faixa-desligado strong{color: var(--urgente); font-family: var(--f-titulo); letter-spacing: 0.12em; text-transform: uppercase;}
+.pj .desligado .faixa-desligado{display: block;}
+.pj .aviso{position: fixed; left: 50%; top: var(--e-4); z-index: 10; max-width: calc(100% - 32px); padding: var(--e-3) var(--e-4); border: 1px solid var(--linha-2); border-radius: var(--r-2); background: var(--painel-2); color: var(--texto); font-size: var(--t-pequeno); transform: translateX(-50%); opacity: 0; pointer-events: none; transition: opacity var(--rapido) var(--curva);}
+.pj .aviso--visivel{opacity: 1;}
+@media (max-width: 699px){
+.pj .hud--vazio{display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--e-1) var(--e-3); padding: var(--e-3) var(--e-4);}
+.pj .hud--vazio .hud-cabeca{margin: 0;}
+.pj .hud--vazio .hud-meta:empty{display: none;}
+.pj .botao--texto{min-height: 44px; min-width: 44px;}
+.pj .hud-alerta .botao--texto{margin: -10px -8px -6px 0;}
+.pj .linha-meta--grande{font-size: var(--t-medio);}
+}
+@media (prefers-reduced-motion: reduce){
+.pj .alerta--urgente{animation: none;}
+.pj .medida-cheio, .pj .botao, .pj .aviso{transition: none;}
+}
+
+/* ---------- Painel (07/11): o painel do Jarvis do PC virou a tela principal da Central ----------
+   Componentes: cópia escopada em .pj do JARVIS/painel/design.css (alerta, alertas e legenda viraram
+   hud-alerta, hud-alertas e hud-legenda, que a Central já usa). Layout: o do JARVIS/painel/index.html,
+   com as faixas 1 coluna (celular), 2 (700), 3 (1100) e 5 (1600, a mesma distribuição da TV). */
+body.pj-aberto{background:#03060c}
+body.pj-aberto main{max-width:none;padding:0 0 24px}
+body.pj-aberto .velho{margin:12px 16px 0}
+.pj{display:block;min-height:calc(100svh - var(--pj-topo,65px))}
+.pj .pj-tela{display:flex;flex-direction:column;padding:var(--e-4);gap:var(--e-4)}
+.pj .pj-topo{display:flex;align-items:center;justify-content:space-between;gap:var(--e-5)}
+.pj .pj-topo-esq{min-width:0;display:flex;flex-direction:column;gap:2px}
+.pj .pj-saudacao{font-family:var(--f-titulo);font-weight:600;font-size:var(--t-grande);line-height:1.1;color:var(--texto)}
+.pj .pj-resumo{font-size:var(--t-base);color:var(--texto-2);overflow-wrap:anywhere}
+.pj .pj-topo-dir{display:flex;align-items:center;gap:var(--e-5);flex:none}
+.pj .palco{flex:1;display:grid;gap:var(--e-4);align-items:start;grid-template-columns:minmax(0,1fr);grid-template-areas:"centro" "c1";--layout:1}
+.pj .coluna{display:flex;flex-direction:column;gap:var(--e-4);min-width:0}
+.pj .coluna:empty{display:none}
+.pj .coluna[data-col="c1"]{grid-area:c1}
+.pj .coluna[data-col="c2"]{grid-area:c2}
+.pj .coluna[data-col="c3"]{grid-area:c3}
+.pj .coluna[data-col="c4"]{grid-area:c4}
+.pj .centro{grid-area:centro;display:flex;flex-direction:column;align-items:stretch;gap:var(--e-3);min-width:0}
+.pj .centro .reator-caixa{max-width:min(100%,22rem)}
+.pj .casa-esteiras{display:flex;flex-direction:column}
+.pj .casa-esteiras:empty{display:none}
+.pj .pj-acoes{display:flex;gap:var(--e-2);justify-content:center;width:100%;max-width:36rem;align-self:center}
+.pj .pj-acoes{flex-wrap:wrap}
+.pj .pj-acoes > .botao{flex:1 1 auto;min-width:max-content;white-space:nowrap}
+.pj .pj-acoes > .botao--principal{flex-grow:1.4}
+@media (min-width:1600px){ .pj .pj-acoes .botao--principal{font-size:1.125rem;padding:12px 16px} .pj .pj-acoes .pj-falar{padding:12px 14px} }
+.pj .nw{white-space:nowrap}
+.pj .pj-trab-quem,.pj .med-etapa{text-wrap:pretty}
+.pj #pj-c-dark .stat-rotulo{white-space:nowrap}
+body.pj-aberto .rodape{max-width:none;padding-left:24px;padding-right:24px}
+.pj .alerta--normal .alerta-em,.pj .alerta-nivel .alerta-em:first-child{margin-left:0}
+.pj #pj-c-dark .stats--2{grid-template-columns:repeat(3,minmax(0,1fr))}
+.pj .pj-falar{min-height:56px}
+.pj .conversa{display:flex;gap:var(--e-2);width:100%;max-width:36rem;align-self:center;margin:0}
+.pj .conversa-campo{flex:1;min-width:0;min-height:48px;padding:0 var(--e-3);border:1px solid var(--linha-2);background:#0b1a2a;color:var(--texto);font:inherit;font-size:var(--t-base);border-radius:0}
+.pj .conversa-campo::placeholder{color:var(--texto-3)}
+.pj .conversa-campo:focus{outline:2px solid var(--reator);outline-offset:1px}
+.pj .conversa-resposta{max-width:36rem;margin:0 auto;color:var(--texto-2);font-size:var(--t-base);line-height:1.4;text-align:center;overflow-wrap:anywhere}
+.pj .conversa-resposta:empty{display:none}
+.pj .conversa-resposta b{color:var(--texto);font-weight:600}
+.pj .sob-centro{display:flex;flex-direction:column;gap:var(--e-4);margin-top:var(--e-2)}
+.pj .sob-centro:empty{display:none}
+.pj .reator-caixa{cursor:default}
+/* mescla com a Central: barra ao vivo dos trabalhos, terminais trabalhando, pendências */
+.pj .pj-trab{display:grid;gap:6px}
+.pj .pj-trab + .pj-trab{padding-top:var(--e-3);border-top:1px solid var(--linha)}
+.pj .pj-trab-nome{font-size:var(--t-base);color:var(--texto);overflow-wrap:anywhere;line-height:1.3}
+.pj .pj-trab-quem{font-size:var(--t-pequeno);color:var(--texto-3);overflow-wrap:anywhere}
+.pj .med{--giz:var(--texto);--cinza:var(--texto-2);--fio:var(--trilho);--ciano:var(--reator)}
+.pj .med-pct{font-family:var(--f-titulo);font-weight:700}
+.pj .med.mini .med-pct{font-size:1.75rem}
+.pj .med-falta b{font-family:var(--f-mono);font-weight:600;font-size:var(--t-pequeno)}
+.pj .med.mini .med-falta b{font-size:var(--t-pequeno)}
+.pj .med-falta span,.pj .med-etapa{font-size:var(--t-micro)}
+.pj .med.passou .med-falta b{font-family:var(--f-titulo);font-size:1.25rem}
+.pj .pj-pend{display:grid;gap:2px;padding:var(--e-2) 0 var(--e-2) var(--e-3);border-left:2px solid var(--urgente)}
+.pj .pj-pend + .pj-pend{margin-top:var(--e-1)}
+.pj .pj-pend b{font-weight:600;color:var(--texto);overflow-wrap:anywhere}
+.pj .pj-pend span{font-size:var(--t-pequeno);color:var(--texto-2);overflow-wrap:anywhere}
+.pj .pj-ir{align-self:flex-start;min-height:44px}
+.pj .stat--espera .stat-numero{color:var(--urgente)}
+.pj .pj-trab[hidden],.pj .hud-alerta[hidden]{display:none}
+.pj .coluna > .hud.pj-solto:last-child,.pj .sob-centro > .hud.pj-solto:last-child{flex:0 0 auto}
+.pj .sob-centro:has(> .hud.pj-solto:last-child){flex:0 0 auto}
+.pj #pj-c-esteiras .hud-corpo{container-type:inline-size}
+.pj .esteiras-grade{gap:12px}
+.pj .pj-g{display:flex;flex-direction:column;gap:var(--e-2)}
+.pj .pj-trab-quem{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@media (min-width:1600px){
+  .pj.pj-denso .pj-tela{gap:8px;padding-top:10px;padding-bottom:8px}
+  .pj.pj-denso .palco,.pj.pj-denso .coluna{gap:8px}
+  .pj.pj-denso .hud{padding:10px 14px}
+  .pj.pj-denso .hud-cabeca{margin-bottom:6px}
+  .pj.pj-denso .hud-corpo{gap:8px}
+  .pj.pj-denso .linha{padding:4px 0}
+  .pj.pj-denso .stat-numero{font-size:2.25rem}
+  .pj.pj-denso .stat--g .stat-numero{font-size:2.75rem}
+  .pj.pj-denso .stat--p .stat-numero{font-size:1.5rem}
+  .pj.pj-denso .medida{gap:4px}
+  .pj.pj-denso .hud-alerta{padding-top:8px;padding-bottom:8px}
+  .pj.pj-denso .centro .reator-caixa{min-height:7rem}
+  .pj.pj-denso .centro{gap:8px}
+}
+@media (min-width:1600px){ .pj.pj-rola .centro .reator-caixa{flex:none;aspect-ratio:1/1;width:min(100%,26rem);margin:0 auto} .pj.pj-rola .pj-tela{height:auto} .pj.pj-rola .coluna{overflow:visible} .pj.pj-rola .palco{grid-template-rows:auto} }
+@media (max-width:699px){ .pj .relogio{flex-wrap:wrap;row-gap:2px} .pj .relogio-data{white-space:nowrap} }
+body.pj-aberto .topo-in{max-width:none;padding-left:16px;padding-right:16px}
+@media (min-width:1600px){ body.pj-aberto .topo-in{padding-left:24px;padding-right:24px} }
+@media (max-width:820px){ .abas-baixo button{flex:1 1 auto;min-width:48px} }
+@media (max-width:360px){ .abas-baixo{padding-left:4px;padding-right:4px} .abas-baixo button{min-width:44px;padding:0 1px;letter-spacing:-.02em} }
+.pj .pj-aviso{position:fixed;left:50%;top:calc(var(--pj-topo,65px) + 12px);z-index:25;max-width:calc(100% - 32px)}
+@media (max-width:699px){
+  .pj .pj-tela{padding:var(--e-4) var(--e-4) var(--e-6)}
+  .pj .centro .reator-caixa{max-width:min(56vw,220px)}
+  .pj .pj-topo{flex-direction:column;align-items:stretch;gap:var(--e-2)}
+  .pj .pj-topo-dir{justify-content:space-between}
+  .pj .relogio{flex-direction:row;align-items:baseline;gap:var(--e-3)}
+  .pj .relogio-hora{font-size:1.75rem}
+  .pj .pj-saudacao{font-size:var(--t-medio)}
+  .pj .pj-acoes{flex-direction:column;align-items:stretch}
+  .pj .pj-acoes > .botao{flex:none}
+  .pj .conversa-campo{font-size:16px}
+  .pj .reator-nome{font-size:2rem}
+}
+@media (min-width:700px){
+  .pj .palco{--layout:2;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"centro centro" "c1 c2";align-items:stretch}
+  .pj .coluna > .hud:last-child{flex:1}
+  .pj .centro .reator-caixa{max-width:min(100%,13rem)}
+}
+@media (min-width:1100px){
+  .pj .palco{--layout:3;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) minmax(0,1fr);grid-template-areas:"c1 centro c2";align-items:stretch}
+  .pj .centro .reator-caixa{max-width:min(100%,24rem,46svh)}
+  .pj .coluna > .hud:last-child,.pj .sob-centro > .hud:last-child{flex:1}
+  .pj .sob-centro:not(:empty){flex:1}
+}
+@media (min-width:1600px){
+  .pj .pj-tela{padding:var(--e-4) var(--e-5) var(--e-3);height:calc(100svh - var(--pj-topo,65px));gap:var(--e-3)}
+  .pj{min-height:0}
+  .pj .palco{--layout:5;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.25fr) minmax(0,1fr) minmax(0,1fr);grid-template-areas:"c1 c2 centro c3 c4";min-height:0;grid-template-rows:minmax(0,1fr)}
+  .pj .centro .reator-caixa{flex:1 1 0;min-height:12rem;max-width:none;width:100%;aspect-ratio:auto}
+  .pj .palco,.pj .coluna,.pj .sob-centro{gap:var(--e-3)}
+  .pj .hud{padding:var(--e-3) var(--e-4)}
+  .pj .hud-cabeca{margin-bottom:10px}
+  .pj .linha{padding:6px 0}
+  .pj .pj-topo{align-items:flex-end}
+  .pj .pj-topo-esq{flex-direction:row;align-items:baseline;gap:var(--e-4);flex-wrap:wrap}
+  .pj .pj-topo-dir{gap:var(--e-4)}
+  .pj .esteiras-grade .botao{min-height:40px}
+  .pj .casa-esteiras{margin-top:var(--e-2)}
+  .pj .coluna > .hud:last-child{display:flex;flex-direction:column}
+  .pj .coluna > .hud:last-child > .hud-corpo{flex:1}
+  .pj .coluna > .hud:last-child .linha-mais{margin-top:auto}
+  .pj .coluna > .hud:last-child .pj-ir{margin-top:auto}
+  .pj .coluna > .hud:last-child .hud-corpo > .pj-g:last-child{flex:1}
+  .pj .coluna > .hud--vazio:last-child > .hud-corpo{justify-content:center;align-items:center;text-align:center}
+  .pj .coluna{overflow:hidden}
+  .pj .relogio{flex-direction:row;align-items:baseline;gap:var(--e-3)}
+  .pj .relogio-hora{font-size:var(--t-grande)}
+  .pj .relogio-data{margin-top:0}
+  .pj .alerta-texto{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .pj .reator-nome{font-size:2.25rem}
+  .pj .hud-legenda{min-height:1.4em}
+}
+.pj.fora .reator-estado{color:var(--texto-3)}
+
 </style>
 </head>
 <body>
@@ -604,6 +922,49 @@ body.conv-aberta{overflow:hidden}
 </div>
 <main id="app" hidden>
   <p class="velho" id="velho" role="status" hidden></p>
+
+  <!-- PAINEL (07/11): o painel do Jarvis do PC como tela principal, mesclado com a Central -->
+  <section class="vista pj" id="v-painel" role="tabpanel" aria-labelledby="t-painel" hidden>
+    <div class="pj-tela">
+      <header class="pj-topo">
+        <div class="pj-topo-esq">
+          <p class="pj-saudacao" id="pj-saudacao" lang="en">Jarvis</p>
+          <p class="pj-resumo" id="pj-resumo">Ligando o painel.</p>
+        </div>
+        <div class="pj-topo-dir">
+          <span class="conexao" id="pj-conexao">conectando</span>
+          <div class="relogio" aria-label="hora">
+            <span class="relogio-hora num" id="pj-hora">--:--</span>
+            <span class="relogio-data" id="pj-data"></span>
+          </div>
+        </div>
+      </header>
+      <div class="palco" id="pj-palco">
+        <section class="centro" aria-label="Jarvis">
+          <div class="reator-caixa" id="pj-reator-caixa"><canvas id="pj-reator" aria-hidden="true"></canvas></div>
+          <div class="reator-nome">JARVIS</div>
+          <div class="reator-estado" id="pj-voz-estado" data-estado="dormindo">dormindo</div>
+          <p class="hud-legenda legenda--vazia" id="pj-legenda" aria-live="polite"></p>
+          <div class="pj-acoes">
+            <button class="botao botao--principal" id="pj-btn-falar" type="button">Como estão as coisas?</button>
+            <button class="botao pj-falar" type="button" data-conv>Falar com o Jarvis</button>
+          </div>
+          <form class="conversa" id="pj-conversa" autocomplete="off">
+            <input class="conversa-campo" id="pj-conversa-texto" type="text" maxlength="600" enterkeyhint="send" placeholder="Pergunte ao Jarvis" aria-label="Pergunte qualquer coisa ao Jarvis">
+            <button class="botao" type="submit">Perguntar</button>
+          </form>
+          <p class="conversa-resposta" id="pj-resposta" aria-live="polite"></p>
+          <div class="casa-esteiras" data-col="ce"></div>
+          <div class="sob-centro" data-col="sob"></div>
+        </section>
+        <div class="coluna" data-col="c1"></div>
+        <div class="coluna" data-col="c2"></div>
+        <div class="coluna" data-col="c3"></div>
+        <div class="coluna" data-col="c4"></div>
+      </div>
+    </div>
+    <div class="aviso pj-aviso" id="pj-aviso" role="status"></div>
+  </section>
 
   <!-- ESCRITÓRIO: o prédio, a porta de entrada -->
   <section class="vista escr-vista" id="v-escritorio" role="tabpanel" aria-labelledby="t-escritorio" hidden>
@@ -897,9 +1258,9 @@ function hora(s) {
 const hojeISO = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 
 /* ---------- abas (escritório único, 06/11: Pedir foi pro Jarvis, Rotinas pro Andamento) ---------- */
-const ABAS = [["escritorio", "Escritório"], ["fila", "Pendências"], ["agora", "Andamento"], ["jarvis", "Jarvis"], ["areas", "Áreas"], ["atalhos", "Atalhos"]];
-const BAIXO = ["escritorio", "fila", "jarvis", "areas"];
-let aba = "escritorio";
+const ABAS = [["painel", "Painel"], ["escritorio", "Escritório"], ["fila", "Pendências"], ["agora", "Andamento"], ["jarvis", "Jarvis"], ["areas", "Áreas"], ["atalhos", "Atalhos"]];
+const BAIXO = ["painel", "fila", "jarvis", "areas"];   // 07/11: o Painel é a porta; o Escritório foi pro Mais no celular
+let aba = "painel";
 function montarAbas() {
   const bt = (id, nome, suf) => {
     const b = el("button", {type: "button", role: "tab", id: "t-" + id + suf, "aria-controls": "v-" + id, "aria-selected": String(id === aba)},
@@ -910,7 +1271,7 @@ function montarAbas() {
   $("abas-cima").replaceChildren(...ABAS.map(([id, n]) => bt(id, n, "")));
   const maisB = el("button", {type: "button", id: "t-mais", "aria-expanded": "false", "aria-controls": "mais"}, el("span", {class: "t", text: "Mais"}));
   maisB.addEventListener("click", () => { const m = $("mais"); m.hidden = !m.hidden; maisB.setAttribute("aria-expanded", String(!m.hidden)); });
-  $("abas-baixo").replaceChildren(...ABAS.filter(([id]) => BAIXO.includes(id)).map(([id, n]) => bt(id, n, "-b")));
+  $("abas-baixo").replaceChildren(...ABAS.filter(([id]) => BAIXO.includes(id)).map(([id, n]) => bt(id, n, "-b")), maisB);   // 07/11: Mais leva o Escritório, o Andamento e os Atalhos
   $("mais").replaceChildren(...ABAS.filter(([id]) => !BAIXO.includes(id)).map(([id, n]) => {
     const b = el("button", {type: "button", text: n});
     b.addEventListener("click", () => irPara(id));
@@ -922,7 +1283,7 @@ function irPara(id) {
   if (id === "rotinas") id = "agora";
   if (id === "edicao" || id === "github" || (innerWidth <= 820 && (id === "agora" || id === "atalhos"))) { arSel = id; id = "areas"; }
   for (const v of ["v-edicao", "v-github", "v-agora", "v-atalhos"]) { const n = $(v); n.hidden = true; if (n.parentElement !== $("app")) $("app").append(n); }
-  if (!ABAS.some(([a]) => a === id)) id = "escritorio";
+  if (!ABAS.some(([a]) => a === id)) id = "painel";
   aba = id;
   try { sessionStorage.setItem("central-aba", id); } catch (e) {}
   for (const [a] of ABAS) {
@@ -932,7 +1293,8 @@ function irPara(id) {
   $("mais").hidden = true;
   const mb = $("t-mais");
   if (mb) { mb.setAttribute("aria-expanded", "false"); mb.setAttribute("aria-selected", String(!BAIXO.includes(id))); }
-  $("jfaixa").hidden = id === "jarvis" || id === "escritorio";
+  $("jfaixa").hidden = id === "jarvis" || id === "escritorio" || id === "painel";
+  if (id === "painel") PJ.mostrar(); else PJ.esconder();
   if (id === "escritorio") desenharEscritorio();
   if (id === "areas") { arChave = ""; desenharAreas(); }
   if (id === "jarvis") lerJarvis().then(() => { desenharJarvis(); desenharCara(); });
@@ -1625,6 +1987,7 @@ function desenharNovas() {
   if (MODO === "nuvem") lerJarvis();
   desenharJdiz();
   if (aba === "jarvis") desenharJarvis();
+  if (aba === "painel") PJ.desenhar();
   desenharFaixa();
   if (aba === "areas") desenharAreas();
   if (aba === "atalhos") desenharAtalhos();
@@ -1633,13 +1996,14 @@ $("jv-frame-abrir").addEventListener("click", ev => { const f = $("jv-frame"); f
 let jTick = 0;
 setInterval(async () => {
   if (MODO !== "pc" || document.hidden || $("app").hidden) return;
-  const perto = aba === "escritorio" || aba === "jarvis";
+  const perto = aba === "escritorio" || aba === "jarvis" || aba === "painel";
   jTick++;
   if (!perto && jTick % 10) return;
   await lerJarvis(jTick % 5 !== 0);
   desenharJdiz();
   desenharFaixa();
   if (aba === "jarvis") desenharJarvis();
+  if (aba === "painel") PJ.desenhar();
 }, 1000);
 setInterval(() => { if (naMesa() && !document.hidden && !$("app").hidden) lerEdicao(); }, 10000);
 
@@ -2065,11 +2429,16 @@ document.addEventListener("toggle", ev => { const d = ev.target; if (d.tagName !
    no scripts/progresso.py: com n etapas e k feitas, a etapa aberta dura d = (eta - passo_desde)/(n-k);
    sem eta, a média das fechadas (passo_desde - comeco)/k; sem nada, 10 min. A barra anda
    pct + 100/n x fração da etapa (reto, no máximo 0,97 dela), nunca volta, para em 99 até o fim.
+   Exceção (07/11): 1 etapa, nenhum % e previsão que não foi dada (agente, pedido delegado) não tem
+   % de verdade; vira "trabalhando há X min" com faixa indeterminada (estado trabalha).
    Recalcula a cada segundo aqui mesmo, sem ir na rede. ---------- */
 const PASSO_CHUTE = 600;
 const segs = v => v == null || v === "" ? null : typeof v === "number" ? v : (Date.parse(v) / 1000 || null);
 const anda = t => !t.fim && !t.parado && (t.pct > 0 || !!t.passo_desde || !!t.eta);
 const MAXVIVO = new Map();       // nome -> {k, pct}: a barra nunca anda pra trás dentro da mesma etapa
+function semPctReal(t, n, k, base) {   // mesma regra da TV (JARVIS/painel/sala.html)
+  return n === 1 && k === 0 && !(base > 0) && t.eta_fonte !== "dada";
+}
 function fracao(f) {             // reto, junto com o "faltam": em 0,97 da etapa para e espera ela fechar
   return Math.min(.97, Math.max(0, f));
 }
@@ -2095,6 +2464,10 @@ function aoVivo(t, agora = agoraS()) {
   if (t.parado) return {estado: "parado", pct: base};
   if (!n) return {estado: "fixo", pct: base};
   const desde = segs(t.passo_desde) || segs(t.atualizado) || segs(t.comeco) || agora;
+  if (semPctReal(t, n, k, base)) {   // 1 etapa, nenhum % e nenhuma previsão dada: contar 97% seria fingir
+    const ini = segs(t.comeco) || desde, eta = segs(t.eta);
+    return {estado: "trabalha", pct: 0, ha: Math.max(0, agora - ini), costuma: eta && eta > ini ? eta - ini : null};
+  }
   const comeco = segs(t.comeco), eta = segs(t.eta), resta = n - k;
   let d, fonte;
   if (eta && eta > desde) { d = (eta - desde) / resta; fonte = t.eta_fonte === "ritmo" ? "ritmo" : "eta"; }
@@ -2115,12 +2488,16 @@ function pintarMedidor(m) {
   const inteiro = v.estado === "anda" ? Math.floor(pct) : Math.round(pct);
   m.className = "med " + v.estado + (m._mini ? " mini" : "") + (v.estado === "anda" && v.falta < 0 ? " passou" : "");
   m._pct.firstChild.nodeValue = v.estado === "espera" ? "?" : String(inteiro);
-  m._cheio.style.width = pct + "%";
+  m._cheio.style.width = v.estado === "trabalha" ? "" : pct + "%";
   m._cab.style.left = pct + "%";
   m._cab.hidden = v.estado !== "anda";
-  m._barra.setAttribute("aria-valuenow", String(inteiro));
+  if (v.estado === "trabalha") m._barra.removeAttribute("aria-valuenow");   // barra indeterminada
+  else m._barra.setAttribute("aria-valuenow", String(inteiro));
   let alto, baixo;
-  if (v.estado === "anda") {
+  if (v.estado === "trabalha") {
+    alto = "trabalhando há " + duracao(v.ha);
+    baixo = v.costuma ? "costuma levar uns " + duracao(v.costuma) : "sem % pra mostrar";
+  } else if (v.estado === "anda") {
     if (v.falta >= 0 && v.fonte === "eta") { alto = "faltam " + contagem(v.falta); baixo = "lá pelas " + hora(v.fim); }
     else if (v.falta >= 0) { alto = "uns " + duracao(v.falta); baixo = v.fonte === "chute" ? "chute: nenhuma etapa fechou" : "pelo ritmo até agora"; }   // estimativa: sem segundo
     else { alto = "+" + duracao(-v.falta).replace("menos de 1 min", "1 min"); baixo = "passou da previsão"; }
@@ -2131,7 +2508,7 @@ function pintarMedidor(m) {
   if (m._alto.textContent !== alto) m._alto.textContent = alto;
   if (m._baixo.textContent !== baixo) m._baixo.textContent = baixo;
   const altoLeitor = v.estado === "anda" && v.falta >= 0 ? "faltam " + duracao(v.falta) : v.estado === "anda" ? "passou " + duracao(-v.falta) + " da previsão" : alto;   // leitor de tela: minuto, não segundo
-  const vt = [v.estado === "espera" ? "sem %" : inteiro + "%", altoLeitor, baixo].filter(Boolean).join(", ");
+  const vt = [v.estado === "espera" || v.estado === "trabalha" ? "sem %" : inteiro + "%", altoLeitor, baixo].filter(Boolean).join(", ");
   if (m._barra.getAttribute("aria-valuetext") !== vt) m._barra.setAttribute("aria-valuetext", vt);
 }
 function cortesEtapa(n) {       // os vãos entre etapas, como os capítulos na barra de um vídeo
@@ -2149,7 +2526,7 @@ function medidor(t, {mini = false, rotulo = t.nome, etapa = true} = {}) {
   const alto = el("b"), baixo = el("span");
   const n = t.total || 0, k = Math.min(t.feitos || 0, n);
   const passo = t.etapa || (t.passos || []).filter(p => !p[0]).map(p => p[1])[0] || "";
-  const linha = etapa && !t.fim && n ? el("p", {class: "med-etapa"}, `etapa ${Math.min(k + 1, n)} de ${n}`, passo ? " · " : null, passo ? el("b", {text: passo}) : null) : null;
+  const linha = etapa && !t.fim && n ? el("p", {class: "med-etapa"}, n > 1 ? `etapa ${Math.min(k + 1, n)} de ${n}` : null, n > 1 && passo ? " · " : null, passo ? el("b", {text: passo}) : null) : null;   // 1 etapa: só o que está fazendo
   const m = el("div", {class: "med", "data-vivo": ""}, el("div", {class: "med-in"}, pct, barra, el("div", {class: "med-falta"}, alto, baixo), linha));
   Object.assign(m, {_t: t, _mini: mini, _pct: pct, _cheio: cheio, _cab: cab, _barra: barra, _alto: alto, _baixo: baixo});
   pintarMedidor(m);
@@ -2876,10 +3253,14 @@ function desenharEscritorio() {
           const bw = 26 * U, bx = Math.round(cx - bw / 2), by = (p.y + 1) * U;
           ctx.fillStyle = "rgba(5,12,30,.9)"; ctx.fillRect(bx - 3, by - 3, bw + 6, U + 19);
           ctx.fillStyle = PAL.fio; ctx.fillRect(bx, by + Math.floor(U / 3), bw, Math.max(1, Math.ceil(U / 2)));
-          const vv = Math.floor(aoVivo(tr).pct);      // a mesma barra ao vivo da lista, redesenhada a cada quadro
-          ctx.fillStyle = PAL.ciano; ctx.fillRect(bx, by, Math.round(bw * vv / 100), U);
+          const av = aoVivo(tr), vv = Math.floor(av.pct);      // a mesma barra ao vivo da lista, redesenhada a cada quadro
+          ctx.fillStyle = PAL.ciano;
+          if (av.estado === "trabalha") {          // sem % de verdade: faixa que vai e volta, e o tempo
+            const fx = (Date.now() / 1600) % 2, pos = fx < 1 ? fx : 2 - fx, lw = Math.round(bw * .28);
+            ctx.fillRect(bx + Math.round((bw - lw) * pos), by, lw, U);
+          } else ctx.fillRect(bx, by, Math.round(bw * vv / 100), U);
           ctx.font = "600 condensed 12px Archivo,sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "top";
-          ctx.fillStyle = PAL.giz; ctx.fillText(vv + "%", cx, by + U + 2); ctx.textAlign = "left";
+          ctx.fillStyle = PAL.giz; ctx.fillText(av.estado === "trabalha" ? "há " + duracao(av.ha) : vv + "%", cx, by + U + 2); ctx.textAlign = "left";
         }
         const pend = pendDe(it.nome).length;
         if (pend) { const bx = (p.x + s.cel.w - 7) * U, by = (p.y + 12) * U; ctx.fillStyle = PAL.verm; ctx.fillRect(bx, by, 18, 18);
@@ -3025,6 +3406,678 @@ for (const b of document.querySelectorAll("[data-ir]")) b.addEventListener("clic
 $("trab-filtro").addEventListener("click", e => { const f = e.target.closest("[data-f]"); if (f) { filtroTrab = f.dataset.f; desenharTrabalhos(); } });
 $("res-filtro").addEventListener("click", e => { const f = e.target.closest("[data-f]"); if (f) { filtroRes = f.dataset.f; resTodos = false; desenharResultados(); } });
 $("term-filtro").addEventListener("click", e => { const f = e.target.closest("[data-f]"); if (f) { filtroTerm = f.dataset.f; desenharTerminais(); } });
+
+
+/* ---------- Painel (07/11): o painel do Jarvis do PC (JARVIS/painel/painel.js) como tela principal ----------
+   Mesmos cartões, mesma conta, mesmo reator. Dados: no PC o /jarvis/api/estado (J.estado); no celular a
+   linha central-jarvis (E.jarvis), que a ponte manda só pro login do dono. Da Central entram as barras ao
+   vivo dos trabalhos (medidor), os terminais trabalhando e as pendências. Campo que falta vira "sem dado". */
+const PJ = (() => {
+  const raiz = $("v-painel");
+  const q = s => raiz.querySelector(s);
+  const nf = new Intl.NumberFormat("pt-BR", {maximumFractionDigits: 0});
+  const nf1 = new Intl.NumberFormat("pt-BR", {maximumFractionDigits: 1});
+  const compacto = new Intl.NumberFormat("pt-BR", {notation: "compact", maximumFractionDigits: 1});
+  const brl = new Intl.NumberFormat("pt-BR", {style: "currency", currency: "BRL", maximumFractionDigits: 0});
+  const fHora = new Intl.DateTimeFormat("pt-BR", {hour: "2-digit", minute: "2-digit"});
+  const fDia = new Intl.DateTimeFormat("pt-BR", {day: "2-digit", month: "2-digit"});
+  const fData = new Intl.DateTimeFormat("pt-BR", {weekday: "long", day: "numeric", month: "long"});
+  const fMes = new Intl.DateTimeFormat("pt-BR", {month: "long"});
+  const ehNum = v => typeof v === "number" && isFinite(v);
+  const esc = v => String(v == null ? "" : v).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+  const SEM = '<span class="sem-dado">sem dado</span>';
+  const lista = v => (Array.isArray(v) ? v : null);
+  const obj = v => (v && typeof v === "object" && !Array.isArray(v) ? v : null);
+  const limita = (v, a, b) => Math.max(a, Math.min(b, v));
+  function data(v) {
+    if (v == null || v === "") return null;
+    if (typeof v === "number") return new Date(v < 1e11 ? v * 1000 : v);
+    const so = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(v));
+    if (so) return new Date(+so[1], +so[2] - 1, +so[3]);
+    const t = Date.parse(v);
+    return isNaN(t) ? null : new Date(t);
+  }
+  function idadeSeg(v) { const d = data(v); return d ? (Date.now() - d.getTime()) / 1000 : null; }
+  function relativo(v) {
+    const s = idadeSeg(v);
+    if (s == null) return v ? esc(v) : "";
+    const a = Math.abs(s), fut = s < 0;
+    let t;
+    if (a < 60) return fut ? "agora" : "agora há pouco";
+    if (a < 3600) t = Math.round(a / 60) + " min";
+    else if (a < 86400 * 2) t = Math.round(a / 3600) + " h";
+    else t = Math.round(a / 86400) + " dias";
+    return fut ? "em " + t : "há " + t;
+  }
+  function quando(v) {
+    const d = data(v);
+    if (!d) return v ? esc(v) : "";
+    const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+    const dia = new Date(d); dia.setHours(0, 0, 0, 0);
+    const dif = Math.round((dia - hoje) / 86400000);
+    const temHora = typeof v === "number" || /T\d{2}:\d{2}/.test(String(v));
+    const h = temHora ? " " + fHora.format(d) : "";
+    if (dif === 0) return "hoje" + h;
+    if (dif === 1) return "amanhã" + h;
+    if (dif === -1) return "ontem" + h;
+    return fDia.format(d) + h;
+  }
+  function nivelPct(p, alto, critico) { return !ehNum(p) ? "" : p >= critico ? "urgente" : p >= alto ? "normal" : ""; }
+  function medida(rotulo, valor, pct, nivel, extra) {
+    const w = ehNum(pct) ? limita(pct, 0, 100) : 0;
+    return '<div class="medida' + (valor == null ? " medida--sem-dado" : "") + (nivel ? " medida--" + nivel : "") + (extra ? " " + extra : "") + '">' +
+      '<div class="medida-topo"><span class="medida-rotulo">' + rotulo + '</span><span class="medida-valor">' + (valor == null ? SEM : valor) + "</span></div>" +
+      '<div class="medida-trilho"><div class="medida-cheio" style="width:' + w.toFixed(1) + '%"></div></div></div>';
+  }
+  function stat(numero, rotulo, mod) {
+    const sem = numero == null;
+    return '<div class="stat' + (sem ? " stat--apagado" : mod ? " " + mod.split(" ").map(m => "stat--" + m).join(" ") : "") + '">' +
+      '<span class="stat-numero">' + (sem ? "sem dado" : numero) + '</span><span class="stat-rotulo">' + rotulo + "</span></div>";
+  }
+  const selo = (texto, tipo) => '<span class="selo selo--' + tipo + '">' + esc(texto) + "</span>";
+  function linha(titulo, sub, meta, dica, mod) {
+    const t = '<span class="linha-titulo">' + titulo + "</span>" + (sub ? '<span class="linha-sub">' + sub + "</span>" : "");
+    return '<li class="linha' + (mod ? " linha--" + mod : "") + '"' + (dica ? ' title="' + dica.replace(/"/g, "&quot;") + '"' : "") + ">" +
+      (mod ? t : '<span class="linha-texto">' + t + "</span>") + (meta ? '<span class="linha-meta">' + meta + "</span>" : "") + "</li>";
+  }
+  const SINGULAR = {alertas: "alerta", terminais: "terminal", trabalhos: "trabalho", entradas: "entrada", rotinas: "rotina", compromissos: "compromisso", "e-mails": "e-mail", achados: "achado", pendências: "pendência"};
+  function mais(n, palavra, total) {
+    const attr = total ? ' data-total="' + total + '" data-palavra="' + palavra + '"' : "";
+    return n > 0 || total ? '<p class="linha-mais"' + attr + (n > 0 ? "" : " hidden") + ">e mais " + n + " " + (n === 1 ? SINGULAR[palavra] || palavra : palavra) + "</p>" : "";
+  }
+  const n0 = v => (ehNum(v) ? nf.format(v) : null);
+  const palco = q("#pj-palco");
+  let layoutAtual = null;
+  function caber() {
+    if (raiz.hidden) return;
+    if (!caber.dentro) { caber.dentro = true; raiz.classList.remove("pj-rola", "pj-denso"); try { caber(); } finally { caber.dentro = false; } return; }
+    /* TV de 5 colunas: Terminais guarda 4 linhas, Andando agora mostra as barras que couberem, e o resto segue a conta de sempre */
+    raiz.querySelectorAll(".pj-solto").forEach(h => h.classList.remove("pj-solto"));   // mede com o último cartão esticado
+    /* 5 colunas: toda lista começa no mínimo; depois cada uma cresce na ordem da página (Alertas antes de Rotinas) */
+    if (layoutAtual === "5") for (const ul of raiz.querySelectorAll("[data-cabe]")) {
+      const fica = ul.closest("#pj-c-terminais") ? 4 : ul.dataset.min != null ? +ul.dataset.min : 1;
+      [...ul.children].forEach((li, i) => (li.hidden = i >= fica));
+    }
+    const trabs = [...raiz.querySelectorAll("#pj-c-trabalhos .pj-trab")];
+    trabs.forEach(x => (x.hidden = false));
+    if (layoutAtual === "5" && trabs.length > 1) {
+      const col = trabs[0].closest(".coluna");
+      for (const ul of col.querySelectorAll("[data-cabe]")) {   // antes de medir: Terminais com 4 linhas, o resto da coluna (Radar) com 1
+        const fica = ul.closest("#pj-c-terminais") ? 4 : 1;
+        [...ul.children].forEach((li, i) => (li.hidden = i >= fica));
+      }
+      let n = trabs.length;
+      while (n > 1 && col.scrollHeight > col.clientHeight + 1) trabs[--n].hidden = true;
+    }
+    for (const ul of raiz.querySelectorAll("[data-cabe]")) {
+      const itens = [...ul.children];
+      itens.forEach(li => (li.hidden = false));
+      if (layoutAtual === "5") { const col0 = ul.closest(".coluna, .centro"); if (col0) for (const x of col0.querySelectorAll("[data-cabe]")) if (x !== ul && ul.compareDocumentPosition(x) & 4) [...x.children].forEach((li, i) => (li.hidden = i >= (x.closest("#pj-c-terminais") ? 4 : x.dataset.min != null ? +x.dataset.min : 1))); }
+      const rod = ul.parentElement.querySelector(".linha-mais[data-total]");
+      const tot = rod ? +rod.dataset.total : itens.length;
+      const base = Math.min(+ul.dataset.base || itens.length, itens.length);
+      let vis = itens.length;
+      const col = ul.closest(".sob-centro, .coluna, .centro") || palco;
+      const estoura = () => col.scrollHeight > col.clientHeight + 1;
+      const min = ul.dataset.min != null ? +ul.dataset.min : 1;   // data-min="0": a lista pode sumir toda e ficar só o "e mais N"
+      if (layoutAtual === "5") { while (vis > min && estoura()) itens[--vis].hidden = true; }
+      else {
+        for (let i = base; i < itens.length; i++) itens[i].hidden = true;
+        vis = base;
+        const hud = ul.closest(".hud");
+        if (layoutAtual !== "1" && hud && hud.parentElement === col && hud === col.lastElementChild) {
+          const h0 = palco.scrollHeight;
+          while (vis < itens.length) {
+            itens[vis].hidden = false;
+            if (palco.scrollHeight > h0 + 1 || estoura()) { itens[vis].hidden = true; break; }
+            vis++;
+          }
+        }
+      }
+      const rodar = () => {
+        if (!rod) return;
+        const resto = tot - vis;
+        rod.hidden = resto <= 0;
+        rod.textContent = "e mais " + resto + " " + (resto === 1 ? SINGULAR[rod.dataset.palavra] || rod.dataset.palavra : rod.dataset.palavra);
+      };
+      rodar();
+      /* o "e mais N" que acabou de aparecer também ocupa lugar: tira mais um item se estourou */
+      if (layoutAtual === "5") while (vis > min && estoura()) { itens[--vis].hidden = true; rodar(); }
+      if (layoutAtual === "5" && rod && tot - vis === 1 && vis < itens.length) {
+        itens[vis].hidden = false; rod.hidden = true;
+        if (estoura()) { itens[vis].hidden = true; rodar(); } else vis++;
+      }
+    }
+    /* o último cartão da coluna só estica enquanto ainda tem item escondido: mostrou tudo, fica do tamanho
+       dele (buraco dentro de cartão é pior que coluna mais curta) */
+    if (layoutAtual === "2" || layoutAtual === "3") for (const col of raiz.querySelectorAll(".coluna, .sob-centro")) {   // 5 colunas segue a foto: cartões batem no pé
+      const ult = [...col.children].filter(x => x.classList.contains("hud") && !x.hidden).pop();
+      if (ult && !ult.querySelector("[data-cabe] > [hidden]")) ult.classList.add("pj-solto");
+    }
+    /* 5 colunas: se mesmo cortando as listas algum cartão não cabe (monitor com a barra do navegador),
+       a página rola em vez de cortar cartão no meio */
+    /* degrau 1: mais compacto (menos respiro); degrau 2: a página rola */
+    if (layoutAtual === "5" && !raiz.classList.contains("pj-rola")) {
+      const corta = [...raiz.querySelectorAll(".pj .coluna, .pj .centro")].find(c => c.scrollHeight > c.clientHeight + 1);
+      raiz.dataset.rolou = corta ? (raiz.classList.contains("pj-denso") ? "rola " : "denso ") + (corta.dataset.col || "centro") + " +" + (corta.scrollHeight - corta.clientHeight) : "";
+      if (corta) { raiz.classList.add(raiz.classList.contains("pj-denso") ? "pj-rola" : "pj-denso"); caber(); }
+    }
+  }
+
+  /* ---------- de onde vem cada dado ---------- */
+  let TESTE = null;   // conferência: ?local=estado.json&jlocal=jarvis.json
+  const fonte = () => (MODO === "teste" ? TESTE || {} : MODO === "pc" ? J.estado || {} : E.jarvis || {});
+  const vozAgora = () => (MODO === "teste" ? {estado: new URLSearchParams(location.search).get("voz") || "dormindo"} : J.voz || (E.jarvis || {}).voz || {});
+  const noAr = () => (MODO === "teste" ? !!TESTE : jarvisModo() !== "fora" && jarvisModo() !== "dormindo");
+  const ST = {busy: "trabalhando", waiting: "esperando", idle: "parado", trabalhando: "trabalhando", esperando: "esperando", parado: "parado", caido: "caido"};
+  const ocultos = new Set();
+  const msgAlerta = {set textContent(v) { if (v && !/mandando/.test(v)) aviso(v); }};
+
+  const CARTOES = {
+    pendencias(s) {
+      const F = (E.fila || {}).lista;
+      if (!Array.isArray(F)) return null;
+      const ls = F.filter(i => precisaDeVoce(i) && !decididos.has(i.id));
+      const nossas = F.filter(i => comAGente(i) && !decididos.has(i.id)).length;
+      let html = stat(nf.format(ls.length), ls.length === 1 ? "coisa só você resolve" : "coisas só você resolve", ls.length ? "linha espera" : "linha ok");
+      html += ls.slice(0, 3).map(i => '<div class="pj-pend"><b>' + esc(i.titulo || "sem título") + "</b>" + (i.quem ? "<span>" + esc(nomeTela(i.quem)) + "</span>" : "") + "</div>").join("");
+      html += mais(ls.length - 3, "pendências");
+      if (ls.length || nossas) html += '<button class="botao pj-ir" type="button" data-pj-ir="fila">' + (ls.length ? "Resolver em Pendências" : "Ver Pendências") + "</button>";
+      return {html, meta: nossas ? nossas + " com a gente" : "", urgente: ls.length > 0};
+    },
+    alertas(s) {
+      const l = lista(s.alertas);
+      if (!l) return null;
+      const NO = {urgente: 0, normal: 1, baixo: 2};
+      const abertos = l.filter(a => a && !a.visto && a.id !== "esperando-ele" && !ocultos.has(String(a.id))).sort((a, b) => (NO[a.nivel] ?? 3) - (NO[b.nivel] ?? 3));
+      const urg = abertos.filter(a => a.nivel === "urgente").length;
+      const meta = abertos.length ? (urg ? '<span class="tx-urgente">' + urg + " urgente" + (urg > 1 ? "s" : "") + "</span> · " : "") + abertos.length + " aberto" + (abertos.length > 1 ? "s" : "") : "";
+      if (!abertos.length) return {html: '<p class="vazio-ok">Nenhum alerta aberto.</p>', meta};
+      const html = '<div class="hud-alertas" data-cabe data-base="4">' + abertos.slice(0, 6).map(a => {
+        const nv = ["urgente", "normal", "baixo"].includes(a.nivel) ? a.nivel : "baixo";
+        return '<div class="hud-alerta alerta--' + nv + '"><span class="alerta-nivel">' + (nv === "normal" ? "" : nv) + (a.em ? ' <span class="alerta-em">' + relativo(a.em) + "</span>" : "") + "</span>" +
+          (a.id != null && MODO !== "teste" ? '<button class="botao botao--texto" type="button" data-pj-visto="' + esc(a.id) + '">visto</button>' : "") +
+          '<span class="alerta-titulo">' + esc(a.titulo || "sem título") + "</span>" + (a.texto ? '<span class="alerta-texto">' + esc(a.texto) + "</span>" : "") + "</div>";
+      }).join("") + "</div>" + mais(abertos.length - 6, "alertas", abertos.length);
+      return {html, meta, urgente: urg > 0};
+    },
+    terminais(s) {
+      const T = E.terminais && Array.isArray(E.terminais.lista) ? E.terminais.lista : (obj(s.terminais) || {}).lista;
+      if (!Array.isArray(T)) return null;
+      const l = T.filter(Boolean).map(t => ({...t, st: ST[t.status] || "parado"}));
+      const trab = l.filter(t => t.st === "trabalhando"), esp = l.filter(t => t.st === "esperando"), cai = l.filter(t => t.st === "caido");
+      let html = '<div class="stats stats--3">' + stat(nf.format(trab.length), "trabalhando", "reator") +
+        stat(nf.format(esp.length), "esperando", esp.length ? "normal" : "") + stat(nf.format(cai.length), cai.length === 1 ? "caído" : "caídos", cai.length ? "urgente" : "") + "</div>";
+      const ord = [...esp, ...cai, ...trab];
+      if (ord.length) html += '<ul class="linhas" data-cabe data-base="5">' + ord.slice(0, 12).map(x =>
+        linha(esc(nomeTela(x.nome) || "sem nome"), x.titulo ? esc(x.titulo) : "", selo(x.st === "esperando" ? "esperando" : x.st === "caido" ? "caído" : "trabalhando", x.st), x.andar ? "andar " + esc(x.andar) : "", "larga")).join("") +
+        "</ul>" + mais(ord.length - 12, "terminais", ord.length);
+      else html += '<p class="sem-dado">Nenhum terminal trabalhando agora.</p>';
+      return {html, meta: nf.format(l.length) + " abertos"};
+    },
+    trabalhos(s) {
+      const W = (E.trabalhos || {}).lista;
+      if (!Array.isArray(W)) return null;
+      const vivos = W.filter(t => !t.fim && !t.parado);
+      const andando = vivos.filter(anda).sort((a, b) => b.pct - a.pct), fila = vivos.filter(t => !anda(t));
+      const meta = andando.length + " andando" + (fila.length ? " · " + fila.length + " na fila" : "");
+      if (!andando.length) return {html: '<p class="sem-dado">Nenhum trabalho com barra andando agora.</p>' + (fila.length ? '<button class="botao pj-ir" type="button" data-pj-ir="agora">Ver a fila no Andamento</button>' : ""), meta};
+      const mostra = andando.slice(0, 4);
+      const chave = JSON.stringify(mostra.map(t => [t.nome, t.terminal, t.feitos, t.total, t.pct, t.eta, t.passo_desde, t.etapa, t.agora]));
+      return {meta, chave, montar: corpo => {
+        corpo.replaceChildren(...mostra.map(t => el("div", {class: "pj-trab"},
+          el("span", {class: "pj-trab-nome", text: t.nome}),
+          medidor(t, {mini: true}),
+          (t.terminal || t.agora) ? (() => { const tx = [t.terminal ? nomeTela(t.terminal) : "", t.agora && t.agora !== t.etapa ? t.agora : ""].filter(Boolean).join(" · "); return el("span", {class: "pj-trab-quem", title: tx, text: tx}); })() : null)));
+        if (andando.length > 4 || fila.length) {
+          const b = el("button", {class: "botao pj-ir", type: "button", "data-pj-ir": "agora", text: andando.length > 4 ? `Ver os ${andando.length} no Andamento` : "Ver tudo no Andamento"});
+          corpo.append(b);
+        }
+      }};
+    },
+    pc(s) {
+      const p = obj(s.pc);
+      if (!p) return null;
+      let html = medida("CPU", ehNum(p.cpu) ? nf.format(p.cpu) + "%" : null, p.cpu, nivelPct(p.cpu, 75, 90));
+      if (ehNum(p.ram_livre_gb) && ehNum(p.ram_total_gb) && p.ram_total_gb > 0) {
+        const fr = p.ram_livre_gb / p.ram_total_gb;
+        html += medida("RAM livre", nf1.format(p.ram_livre_gb) + " de " + nf.format(p.ram_total_gb) + " GB", (1 - fr) * 100, fr < 0.12 ? "urgente" : fr < 0.22 ? "normal" : "");
+      } else html += medida("RAM livre", null, 0);
+      if (ehNum(p.vram_usada_mb) && ehNum(p.vram_total_mb) && p.vram_total_mb > 0) {
+        const pct = (p.vram_usada_mb / p.vram_total_mb) * 100;
+        html += medida("VRAM usada", nf1.format(p.vram_usada_mb / 1024) + " de " + nf1.format(p.vram_total_mb / 1024) + " GB", pct, nivelPct(pct, 85, 95));
+      } else if (ehNum(p.gpu_uso)) html += medida("GPU", nf.format(p.gpu_uso) + "%", p.gpu_uso, nivelPct(p.gpu_uso, 85, 95));
+      else html += medida("VRAM usada", null, 0);
+      const d = lista(p.discos);
+      if (d && d.length) html += d.filter(Boolean).slice(0, 4).map(x => {
+        const nome = "Disco " + esc(String(x.letra || "?").replace(/[:\\]+$/, "")) + " livre";
+        if (!ehNum(x.livre_gb) || !ehNum(x.total_gb) || x.total_gb <= 0) return medida(nome, null, 0);
+        const fr = x.livre_gb / x.total_gb;
+        return medida(nome, nf.format(x.livre_gb) + " de " + nf.format(x.total_gb) + " GB", (1 - fr) * 100, fr < 0.08 ? "urgente" : fr < 0.15 ? "normal" : "");
+      }).join("");
+      if ([p.quedas_24h, p.janelas_abertas, p.ligado_h].some(ehNum))
+        html += '<div class="stats stats--3">' + stat(n0(p.quedas_24h), "quedas 24h", ehNum(p.quedas_24h) && p.quedas_24h > 0 ? "p urgente" : "p") +
+          stat(n0(p.janelas_abertas), "janelas CMD", ehNum(p.janelas_abertas) && p.janelas_abertas > 0 ? "p normal" : "p ok") +
+          stat(ehNum(p.ligado_h) ? nf.format(p.ligado_h) + "<small>h</small>" : null, "ligado", "p") + "</div>";
+      return {html, meta: p.gpu ? esc(p.gpu) : ""};
+    },
+    dark(s) {
+      const k = obj(s.dark);
+      if (!k) return null;
+      let html = stat(n0(k.no_ar_hoje), "Shorts no ar hoje", "linha reator") + '<div class="stats stats--2">' + stat(n0(k.fila), "na fila", "p") + stat(n0(k.programados), "programados", "p") +
+        stat(n0(k.erros), "erros", ehNum(k.erros) && k.erros > 0 ? "p urgente" : "p") +
+        (ehNum(k.terminais_caidos) && k.terminais_caidos > 0 ? stat(n0(k.terminais_caidos), k.terminais_caidos === 1 ? "terminal dark caído" : "terminais dark caídos", "p urgente") : "") + "</div>";
+      const l = lista(k.lista) || (Array.isArray(DARK) && DARK.length ? DARK.map(x => ({canal: x.canal, titulo: x.titulo, estado: x.estado, alvo_dia: x.alvo_dia})) : null);
+      if (l && l.length) {
+        html += '<ul class="linhas" data-cabe data-base="3">' + l.filter(Boolean).slice(0, 10).map(x => {
+          const est = String(x.estado || "");
+          const tipo = /erro|caiu|falh/i.test(est) ? "caido" : /ar|public|post/i.test(est) ? "ok" : /render|mont|gera|subin/i.test(est) ? "trabalhando" : "esperando";
+          const sub = [x.canal, x.alvo_dia ? quando(x.alvo_dia) : ""].filter(Boolean).map(esc).join(" · ");
+          return linha(esc(x.titulo || "sem título"), sub, est ? selo(est, tipo) : "", "", "selo-baixo");
+        }).join("") + "</ul>" + mais(l.length - 10, "na lista", l.length);
+      }
+      return {html, meta: ""};
+    },
+    canais(s) {
+      const l = lista(s.canais);
+      if (!l) return null;
+      if (!l.length) return {html: '<p class="sem-dado">Nenhum canal na lista.</p>', meta: ""};
+      const html = '<ul class="linhas">' + l.filter(Boolean).slice(0, 6).map(c => {
+        let v = "";
+        if (ehNum(c.variacao)) v = '<span class="variacao variacao--' + (c.variacao > 0 ? "sobe" : c.variacao < 0 ? "desce" : "") + '">' + (c.variacao > 0 ? "+" : "") + nf1.format(c.variacao) + "%</span>";
+        const meta = '<span class="linha-meta--grande">' + (ehNum(c.numero) ? compacto.format(c.numero) : "sem dado") + "</span>" + (v ? "<br>" + v : "");
+        return linha(esc(c.nome || "sem nome"), [c.rede, c.rotulo].filter(Boolean).map(esc).join(" · "), meta);
+      }).join("") + "</ul>";
+      const qg = (obj(s.fonte_em) || {}).qg;
+      return {html, meta: "", fonte: qg};
+    },
+    dinheiro(s) {
+      const m = obj(s.dinheiro);
+      if (!m) return null;
+      if (m.oculto) return {html: '<p class="sem-dado">Oculto aqui.</p>', meta: ""};
+      const agora = new Date();
+      const esp = String(m.espelho_em || "").replace(/\s*\(.*\)$/, "").replace(" ", "T");
+      const idade = idadeSeg(esp) ?? idadeSeg((obj(s.fonte_em) || {}).qg);
+      const velho = idade != null && idade > 7 * 86400;
+      const vivo = ehNum(m.mes_total) && m.mes_total > 0 && !velho;
+      const rot = velho ? "último espelho " + relativo(esp) + ", falta " + fMes.format(agora) : "entrou em " + fMes.format(agora);
+      let html = '<div class="stats">' + stat(ehNum(m.mes_total) ? brl.format(m.mes_total) : null, rot, vivo ? "g ok" : "g mudo") + "</div>";
+      const l = lista(m.entradas);
+      if (l && l.length) {
+        const ord = l.filter(Boolean).slice().sort((a, b) => (Date.parse(b.data) || 0) - (Date.parse(a.data) || 0));
+        html += '<ul class="linhas">' + ord.slice(0, 3).map(x => linha((x.data ? '<span class="linha-data">' + quando(x.data) + "</span>" : "") + esc(x.de || "sem origem"), "", ehNum(x.valor) ? brl.format(x.valor) : "sem dado")).join("") + "</ul>" + mais(ord.length - 3, "entradas");
+      } else if (l) html += '<p class="sem-dado">Nenhuma entrada anotada este mês.</p>';
+      return {html, meta: "", fonte: esp || null};
+    },
+    rotinas(s) {
+      let r = obj(s.rotinas);
+      if (!r && E.rotinas && Array.isArray(E.rotinas.lista)) {   // celular: as rotinas da Central (Agendador do Windows)
+        const l = E.rotinas.lista.filter(x => x && x.estado !== "desligada" && DA_CASA.test(x.nome || "")).map(x => ({nome: (x.nome || "").replace(/^DAL MORO /, ""), ultima: x.ultima, proxima: x.proxima,
+          ok: x.estado === "rodando" ? true : typeof x.ok === "boolean" ? x.ok : null}));
+        r = {lista: l, falhas: l.filter(x => x.ok === false).length};
+      }
+      if (!r) return null;
+      const l = lista(r.lista) || [];
+      const falhas = ehNum(r.falhas) ? r.falhas : null;
+      const semDado = l.filter(x => x && x.ok !== true && x.ok !== false).length;
+      const rotulo = (falhas === 1 ? "falha" : "falhas") + (l.length ? " em " + nf.format(l.length) + " rotinas vigiadas" : "");
+      let html = stat(falhas == null ? null : nf.format(falhas), rotulo, falhas > 0 ? "linha urgente" : semDado ? "linha mudo" : "linha ok");
+      if (l.length) {
+        const ord = l.filter(Boolean).slice().sort((a, b) => (a.ok === false ? 0 : 1) - (b.ok === false ? 0 : 1));
+        html += '<ul class="linhas" data-cabe data-base="5">' + ord.slice(0, 13).map(x => {
+          const sub = x.ok === false ? (x.ultima ? "falhou " + quando(x.ultima) : "") + (x.proxima ? (x.ultima ? " · " : "") + "próxima " + quando(x.proxima) : "") : "";
+          const dica = [x.ultima ? "última " + quando(x.ultima) : "", x.proxima ? "próxima " + quando(x.proxima) : ""].filter(Boolean).join(" · ");
+          return linha(esc(x.nome || "sem nome"), sub, x.ok === false ? selo("falhou", "caido") : x.ok === true ? selo("ok", "ok") : selo("sem dado", "parado"), dica, "larga");
+        }).join("") + "</ul>" + mais(ord.length - 13, "rotinas", ord.length);
+      }
+      return {html, meta: falhas > 0 ? "pedindo conserto" : semDado ? nf.format(semDado) + " sem dado" : ""};
+    },
+    google(s) {
+      const ag = lista(s.agenda), em = lista(s.emails);
+      if (!ag && !em) return {html: '<p class="sem-dado">' + esc(typeof s.google_motivo === "string" && s.google_motivo.trim() ? s.google_motivo.trim() : "Google sem leitura agora.") + "</p>", meta: "", vazio: true};
+      let html = "";
+      if (ag) html += '<div class="pj-g"><p class="sub-titulo">Hoje e amanhã</p>' + (ag.length ? '<ul class="linhas" data-cabe data-base="4">' + ag.filter(Boolean).slice(0, 6).map(x => linha(esc(x.titulo || "sem título"), "", quando(x.quando))).join("") + "</ul>" + mais(ag.length - 6, "compromissos", ag.length) : '<p class="sem-dado">Nada marcado hoje nem amanhã.</p>') + "</div>";
+      if (em) {
+        const tipos = {cliente: ["cliente", "trabalhando"], dinheiro: ["dinheiro", "ok"], outro: ["outro", "parado"]};
+        html += '<div class="pj-g"><p class="sub-titulo">E-mails importantes</p>' + (em.length ? '<ul class="linhas" data-cabe data-base="3">' + em.filter(Boolean).slice(0, 5).map(x => {
+          const t = tipos[x.tipo] || tipos.outro;
+          return linha(esc(x.assunto || "sem assunto"), [x.de ? esc(x.de) : "", x.quando ? '<span class="nw">' + quando(x.quando) + "</span>" : ""].filter(Boolean).join(" · "), selo(t[0], t[1]), "", "selo-baixo");
+        }).join("") + "</ul>" + mais(em.length - 5, "e-mails", em.length) : '<p class="sem-dado">Nenhum e-mail importante.</p>') + "</div>";
+      }
+      return {html, meta: em && em.length ? em.length + (em.length > 1 ? " e-mails novos" : " e-mail novo") : ""};
+    },
+    claude(s) {
+      const u = obj(s.uso_claude);
+      if (!u) return null;
+      const w = u.semana_pct, ss = u.sessao_pct;
+      let html = '<div class="stats">' + stat(ehNum(w) ? nf.format(w) + "<small>%</small>" : null, "da semana usado", ehNum(w) && w >= 85 ? "g urgente" : ehNum(w) && w >= 70 ? "g normal" : "g reator") + "</div>" +
+        '<div class="medida medida--g' + (nivelPct(w, 70, 85) ? " medida--" + nivelPct(w, 70, 85) : "") + '"><div class="medida-trilho"><div class="medida-cheio" style="width:' + (ehNum(w) ? limita(w, 0, 100) : 0) + '%"></div></div></div>' +
+        medida("Sessão de agora", ehNum(ss) ? nf.format(ss) + "%" : null, ss, nivelPct(ss, 70, 85));
+      if (u.texto) html += '<p class="medida-nota">' + esc(u.texto) + "</p>";
+      return {html, meta: u.em ? relativo(u.em) : ""};
+    },
+    voz(s) {
+      const v = obj(s.voz_credito);
+      if (!v) return null;
+      let html = ehNum(v.hoje) && ehNum(v.teto) && v.teto > 0 ? medida("Hoje", nf.format(v.hoje) + " de " + nf.format(v.teto) + " caracteres", v.hoje / v.teto * 100, nivelPct(v.hoje / v.teto * 100, 75, 95), "medida--g") : medida("Hoje", null, 0, "", "medida--g");
+      html += ehNum(v.mes_usado) && ehNum(v.mes_limite) && v.mes_limite > 0 ? medida("Mês (com o dark)", nf1.format(v.mes_usado / 1000) + " de " + nf1.format(v.mes_limite / 1000) + " mil", v.mes_usado / v.mes_limite * 100, nivelPct(v.mes_usado / v.mes_limite * 100, 80, 95)) : medida("Mês (com o dark)", null, 0);
+      return {html, meta: ({elevenlabs: "ElevenLabs", kokoro: "Kokoro local"})[v.motor] || (v.motor ? esc(v.motor) : "")};
+    },
+    radar(s) {
+      const l = lista(s.radar);
+      if (!l || !l.length) return null;
+      const html = '<ul class="linhas" data-cabe data-base="4">' + l.filter(Boolean).slice(0, 10).map(x => {
+        const t = esc(x.titulo || "sem título");
+        const link = /^https?:\/\//.test(x.link || "") ? '<a href="' + esc(x.link) + '" target="_blank" rel="noopener noreferrer" title="' + t + '">' + t + "</a>" : '<span title="' + t + '">' + t + "</span>";
+        return linha(link, [x.fonte ? esc(x.fonte) : "", x.quando ? relativo(x.quando) : ""].filter(Boolean).join(" · "), "");
+      }).join("") + "</ul>" + mais(l.length - 10, "achados", l.length);
+      return {html, meta: ""};
+    },
+    esteiras(s) {
+      const l = lista(s.esteiras);
+      if (!l || !l.length) return null;
+      return {html: '<div class="esteiras-grade">' + l.slice(0, 12).map((x, i) => !x ? "" : '<button class="botao" type="button" data-pj-pedir="' + i + '"' + (x.gatilho ? ' title="' + esc(x.gatilho) + '"' : "") + ">" + esc(x.nome || "esteira") + "</button>").join("") + "</div>", meta: MODO === "teste" ? "" : "dois toques mandam pro central"};
+    },
+  };
+  const TITULOS = {pendencias: "Pendências", alertas: "Alertas", terminais: "Terminais", trabalhos: "Andando agora", pc: "PC", dark: "Esteira dark", canais: "Canais",
+    dinheiro: "Dinheiro do mês", rotinas: "Rotinas", google: "Agenda e e-mails", claude: "Uso do Claude", voz: "Crédito de voz", radar: "Radar", esteiras: "Esteiras"};
+  const SOME = new Set(["radar", "esteiras"]);   // sem dado nenhum, o cartão nem aparece
+  for (const nome of Object.keys(CARTOES)) {
+    const c = el("section", {class: "hud", id: "pj-c-" + nome, "data-cartao": nome},
+      el("div", {class: "hud-cabeca"}, el("h2", {class: "hud-titulo", text: TITULOS[nome]}), el("span", {class: "hud-meta", "data-meta": ""})),
+      el("div", {class: "hud-corpo", "data-corpo": ""}, el("p", {class: "sem-dado", text: "sem dado"})));
+    q('[data-col="c1"]').append(c);
+  }
+  const LAYOUTS = {
+    5: {ce: ["esteiras"], c1: ["pc", "claude", "google"], c2: ["canais", "dinheiro", "voz", "dark"], c3: ["pendencias", "alertas", "rotinas"], c4: ["terminais", "trabalhos", "radar"]},
+    3: {ce: ["esteiras"], c1: ["pendencias", "alertas", "pc", "canais", "dark"], c2: ["trabalhos", "terminais", "dinheiro", "google", "radar"], sob: ["claude", "voz", "rotinas"]},
+    2: {c1: ["pendencias", "alertas", "pc", "canais", "claude", "voz", "dark"], c2: ["trabalhos", "terminais", "esteiras", "dinheiro", "google", "radar", "rotinas"]},
+    1: {c1: ["pendencias", "alertas", "trabalhos", "terminais", "esteiras", "dark", "canais", "dinheiro", "google", "pc", "rotinas", "claude", "voz", "radar"]},
+  };
+  const ultimo = {};
+  const GUARDADO = Symbol("guardado");
+  const guarda = el("div", {hidden: true});
+  raiz.append(guarda);
+  function arrumar() {
+    const lay = getComputedStyle(palco).getPropertyValue("--layout").trim() || "1";
+    if (lay === layoutAtual) return false;
+    layoutAtual = lay;
+    const mapa = LAYOUTS[lay] || LAYOUTS[1];
+    for (const col of Object.keys(mapa)) {
+      const destino = raiz.querySelector('[data-col="' + col + '"]');
+      for (const nome of mapa[col]) { const c = $("pj-c-" + nome); if (c && destino) (c[GUARDADO] ? guarda : destino).appendChild(c); }
+    }
+    for (const k in ultimo) delete ultimo[k];
+    return true;
+  }
+  function medirTopo() {
+    const t = document.querySelector("header.topo"), v = $("velho");
+    const h = (t ? t.offsetHeight : 65) + (v && !v.hidden ? v.offsetHeight + 12 : 0);
+    document.documentElement.style.setProperty("--pj-topo", h + "px");
+  }
+
+  /* ---------- desenhar ---------- */
+  function desenhar() {
+    if (raiz.hidden) return;
+    medirTopo();
+    arrumar();
+    const s = fonte();
+    $("pj-saudacao").textContent = s.saudacao || "Jarvis";
+    $("pj-resumo").textContent = s.resumo_pt || (MODO === "nuvem" && carregou && !pcVivo() ? "O PC está sem sinal. Mostrando o último dado que chegou." : "Sem resumo do Jarvis ainda.");
+    const ok = noAr();
+    raiz.classList.toggle("fora", !ok);
+    const cx = $("pj-conexao");
+    cx.classList.toggle("conexao--fora", !ok);
+    cx.textContent = MODO === "teste" ? "conferência" : ok ? (MODO === "nuvem" ? "PC no ar" : "ligado") : JM[jarvisModo()] || "fora do ar";
+    for (const nome of Object.keys(CARTOES)) {
+      const c = $("pj-c-" + nome);
+      let r;
+      try { r = CARTOES[nome](s); } catch (err) { r = null; console.warn("painel", nome, err); }
+      const some = !r && SOME.has(nome);
+      if (some !== !!c[GUARDADO]) { c[GUARDADO] = some; layoutAtual = null; arrumar(); }
+      const corpo = c.querySelector("[data-corpo]"), metaEl = c.querySelector("[data-meta]");
+      let meta = r ? r.meta || "" : "";
+      let velho = false;
+      const idade = r && r.fonte ? idadeSeg(r.fonte) : null;
+      if (idade != null && idade > 3600) { meta = "atualizado " + relativo(r.fonte); velho = idade > 3 * 3600; }
+      c.classList.toggle("hud--antigo", idade != null && idade > 7 * 86400);
+      const chave = (r ? r.chave || r.html : "") + "|" + meta + "|" + velho + "|" + !!(r && r.urgente);
+      if (ultimo[nome] === chave) continue;
+      ultimo[nome] = chave;
+      if (r && r.montar) r.montar(corpo);
+      else corpo.innerHTML = r ? r.html : '<p class="sem-dado">sem dado</p>';
+      metaEl.innerHTML = meta;
+      metaEl.classList.toggle("hud-meta--velho", velho);
+      c.classList.toggle("hud--urgente", !!(r && r.urgente));
+      c.classList.toggle("hud--vazio", !r || !!r.vazio);
+    }
+    voz();
+    resposta();
+    caber();
+  }
+
+  /* ---------- voz e reator ---------- */
+  const NOME_ESTADO = {dormindo: "dormindo", ouvindo: "ouvindo", pensando: "pensando", falando: "falando"};
+  const NOME_QUEM = {claude: "Claude", codex: "Codex"};
+  const DICA = {dormindo: MODO === "pc" ? 'Diga "ei Jarvis" pra chamar.' : "Toque em Falar com o Jarvis pra conversar.", ouvindo: "Pode falar.", pensando: "Um momento.", falando: ""};
+  const V = {estado: "dormindo", quem: "jarvis", nivel: 0, fora: false};
+  function voz() {
+    const v = vozAgora();
+    V.fora = !noAr();
+    V.estado = NOME_ESTADO[v.estado] ? v.estado : "dormindo";
+    V.quem = v.quem === "claude" || v.quem === "codex" ? v.quem : "jarvis";
+    V.nivel = ehNum(v.nivel) ? limita(v.nivel, 0, 1) : 0;
+    const e = $("pj-voz-estado");
+    const rot = V.fora ? (MODO === "nuvem" && carregou && !pcVivo() ? "PC sem sinal" : "fora do ar") : NOME_ESTADO[V.estado] + (NOME_QUEM[V.quem] ? ' <span class="quem">· ' + NOME_QUEM[V.quem] + "</span>" : "");
+    if (e.dataset.rotulo !== rot) { e.innerHTML = rot; e.dataset.rotulo = rot; }
+    e.dataset.estado = V.fora ? "desligado" : V.estado;
+    const leg = !V.fora && typeof v.legenda === "string" && v.legenda.trim() ? v.legenda.trim() : "";
+    const l = $("pj-legenda");
+    const t = leg || (V.fora ? "" : DICA[V.estado] || "");
+    if (l.textContent !== t) l.textContent = t;
+    l.classList.toggle("legenda--vazia", !leg);
+  }
+  const reator = (() => {
+    const cv = $("pj-reator"), g = cv.getContext("2d", {alpha: true}), caixa = $("pj-reator-caixa");
+    const menos = matchMedia("(prefers-reduced-motion: reduce)");
+    let N = 0, W = 0, H = 0, dpr = 1, sx, sy, sz, gr, ga, gy, fase, tam, claro;
+    function semear(n) {
+      N = n;
+      sx = new Float32Array(N); sy = new Float32Array(N); sz = new Float32Array(N); gr = new Float32Array(N); ga = new Float32Array(N); gy = new Float32Array(N);
+      fase = new Float32Array(N); tam = new Float32Array(N); claro = new Uint8Array(N);
+      const ouro = Math.PI * (3 - Math.sqrt(5));
+      for (let i = 0; i < N; i++) {
+        const y = 1 - (2 * (i + 0.5)) / N, raio = Math.sqrt(1 - y * y), th = ouro * i;
+        const r = Math.random() < 0.6 ? 0.9 + Math.random() * 0.1 : Math.cbrt(Math.random()) * 0.88;
+        sx[i] = Math.cos(th) * raio * r; sy[i] = y * r; sz[i] = Math.sin(th) * raio * r;
+        const u = Math.random();
+        gr[i] = 0.08 + Math.pow(u, 0.7) * 0.95;
+        ga[i] = ((i % 3) * 2 * Math.PI) / 3 + (Math.random() - 0.5) * 0.55 * (1.1 - gr[i]);
+        gy[i] = (Math.random() - 0.5) * 0.08 * (1.2 - gr[i]);
+        fase[i] = Math.random() * Math.PI * 2; tam[i] = 0.7 + Math.random() * 1.1; claro[i] = Math.random() < 0.22 ? 1 : 0;
+      }
+    }
+    function medir() {
+      const w = Math.floor(Math.min(caixa.clientWidth, caixa.clientHeight || caixa.clientWidth));
+      if (!w) return;
+      cv.style.width = cv.style.height = w + "px";
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      W = Math.round(w * dpr); H = W; cv.width = W; cv.height = H;
+      const alvo = w < 320 ? 1400 : 2200;
+      if (alvo !== N) semear(alvo);
+    }
+    if ("ResizeObserver" in window) new ResizeObserver(medir).observe(caixa);
+    const COR_ESTADO = {dormindo: [61, 184, 255], ouvindo: [69, 230, 255], pensando: [255, 181, 71], falando: [214, 236, 255], desligado: [77, 97, 119]};
+    const COR_QUEM = {claude: [255, 138, 99], codex: [238, 242, 248]};
+    const GIRO = {dormindo: 0.07, ouvindo: 0.16, pensando: 0.22, falando: 0.13, desligado: 0.025};
+    const LUZ = {dormindo: 0.85, ouvindo: 1, pensando: 1, falando: 1, desligado: 0.32};
+    const cor = [61, 184, 255];
+    let mix = 0, giro = 0.07, luz = 0.72, nivelS = 0, ang = 0, angAnel = 0, t = 0, antes = 0, quadro = 0;
+    function passo(agora) {
+      quadro = requestAnimationFrame(passo);
+      if (!W) { medir(); if (!W) return; }
+      const dt = antes ? Math.min(0.05, (agora - antes) / 1000) : 0.016;
+      antes = agora;
+      const calmo = menos.matches ? 0.5 : 1;
+      t += dt * calmo;
+      const est = V.fora ? "desligado" : V.estado;
+      let alvo = COR_ESTADO[est];
+      const cq = est !== "desligado" ? COR_QUEM[V.quem] : null;
+      if (cq) alvo = [alvo[0] * 0.3 + cq[0] * 0.7, alvo[1] * 0.3 + cq[1] * 0.7, alvo[2] * 0.3 + cq[2] * 0.7];
+      const k = 1 - Math.exp(-dt * 3);
+      for (let c = 0; c < 3; c++) cor[c] += (alvo[c] - cor[c]) * k;
+      mix += ((est === "pensando" ? 1 : 0) - mix) * (1 - Math.exp(-dt * 2.2));
+      giro += (GIRO[est] - giro) * k; luz += (LUZ[est] - luz) * k;
+      const ativo = est === "ouvindo" || est === "falando";
+      nivelS += ((ativo ? V.nivel || 0.35 * (0.5 + 0.5 * Math.sin(t * 9)) : 0) - nivelS) * (1 - Math.exp(-dt * 12));
+      ang += dt * giro * calmo * 2; angAnel += dt * 0.05 * calmo;
+      const cxp = W / 2, cyp = H / 2, R = W * 0.33;
+      const escala = 1 + (est === "dormindo" ? 0.035 : 0.015) * Math.sin((t * Math.PI * 2) / 6) + nivelS * (est === "falando" ? 0.14 : 0.1);
+      const tremor = menos.matches ? 0 : nivelS * 0.06;
+      const r = cor[0] | 0, gg = cor[1] | 0, b = cor[2] | 0;
+      g.globalCompositeOperation = "source-over";
+      g.clearRect(0, 0, W, H);
+      const nucleo = g.createRadialGradient(cxp, cyp, 0, cxp, cyp, R * 1.15);
+      nucleo.addColorStop(0, "rgba(" + r + "," + gg + "," + b + "," + (0.34 * luz + nivelS * 0.2).toFixed(3) + ")");
+      nucleo.addColorStop(0.3, "rgba(" + r + "," + gg + "," + b + "," + (0.16 * luz).toFixed(3) + ")");
+      nucleo.addColorStop(0.7, "rgba(" + r + "," + gg + "," + b + "," + (0.05 * luz).toFixed(3) + ")");
+      nucleo.addColorStop(1, "rgba(" + r + "," + gg + "," + b + ",0)");
+      g.fillStyle = nucleo; g.fillRect(0, 0, W, H);
+      const TR = 72, rA = R * 1.36, rB = R * 1.43, acesos = Math.round(TR * nivelS);
+      g.lineWidth = Math.max(1, 1.5 * dpr);
+      for (let pass = 0; pass < 2; pass++) {
+        g.beginPath();
+        for (let i = 0; i < TR; i++) {
+          if ((pass === 1) !== i < acesos) continue;
+          const a = angAnel + (i / TR) * Math.PI * 2 - Math.PI / 2, c = Math.cos(a), s = Math.sin(a);
+          g.moveTo(cxp + c * rA, cyp + s * rA); g.lineTo(cxp + c * rB, cyp + s * rB);
+        }
+        g.strokeStyle = "rgba(" + r + "," + gg + "," + b + "," + (pass ? 0.9 : 0.16 * Math.max(0.5, luz)).toFixed(3) + ")";
+        g.stroke();
+      }
+      g.globalCompositeOperation = "lighter";
+      const ca = Math.cos(ang), sa = Math.sin(ang), inc = 0.32 + mix * 0.75, ci = Math.cos(inc), si = Math.sin(inc);
+      const usaEsp = mix > 0.002, giroEsp = t * 0.9;
+      const corBase = "rgb(" + r + "," + gg + "," + b + ")", corClara = "rgb(" + Math.min(255, r + 90) + "," + Math.min(255, gg + 70) + "," + Math.min(255, b + 40) + ")";
+      for (let pass = 0; pass < 2; pass++) {
+        g.fillStyle = pass ? corClara : corBase;
+        for (let i = 0; i < N; i++) {
+          if (claro[i] !== pass) continue;
+          const ex = 1 + (tremor ? tremor * Math.sin(fase[i] + t * 7) : 0);
+          let x = sx[i] * escala * ex, y = sy[i] * escala * ex, z = sz[i] * escala * ex;
+          if (usaEsp) {
+            const a = ga[i] + gr[i] * 4.6 - giroEsp * (1.25 - gr[i] * 0.7);
+            x += (Math.cos(a) * gr[i] * 1.1 - x) * mix; y += (gy[i] - y) * mix; z += (Math.sin(a) * gr[i] * 1.1 - z) * mix;
+          }
+          const x1 = x * ca + z * sa, z1 = -x * sa + z * ca, y1 = y * ci - z1 * si, z2 = y * si + z1 * ci;
+          const p = 3 / (3 + z2), px = cxp + x1 * R * p, py = cyp + y1 * R * p;
+          g.globalAlpha = Math.min(1, (0.3 + 0.7 * (1 - z2) * 0.5) * luz);
+          const sz2 = tam[i] * p * dpr * (W < 500 ? 1.15 : 1.6);
+          g.fillRect(px - sz2 / 2, py - sz2 / 2, sz2, sz2);
+        }
+      }
+      g.globalAlpha = 1;
+    }
+    return {ligar() { if (!quadro) { antes = 0; medir(); quadro = requestAnimationFrame(passo); } }, parar() { cancelAnimationFrame(quadro); quadro = 0; }, medir};
+  })();
+
+  /* ---------- relógio ---------- */
+  let timerRelogio = 0;
+  function relogio() {
+    clearTimeout(timerRelogio);
+    if (raiz.hidden) return;
+    const d = new Date();
+    $("pj-hora").innerHTML = fHora.format(d) + '<span class="relogio-seg">:' + String(d.getSeconds()).padStart(2, "0") + "</span>";
+    $("pj-data").textContent = fData.format(d);
+    timerRelogio = setTimeout(relogio, 1000 - d.getMilliseconds() + 5);
+  }
+  let timerAviso = 0;
+  function aviso(msg) {
+    const a = $("pj-aviso");
+    a.textContent = msg; a.classList.add("aviso--visivel");
+    clearTimeout(timerAviso);
+    timerAviso = setTimeout(() => a.classList.remove("aviso--visivel"), 4500);
+  }
+
+  /* ---------- perguntar: vai pelo mesmo caminho da aba Jarvis (f-conversa), a resposta aparece aqui ---------- */
+  let minhaPergunta = null;
+  function perguntar(t) {
+    if (MODO === "teste") { aviso("Na conferência a pergunta não sai daqui."); return; }
+    $("conversa").value = t;
+    $("f-conversa").requestSubmit();
+    minhaPergunta = (MINHAS[0] && MINHAS[0].pergunta === t.slice(0, 600)) ? MINHAS[0].id : null;
+    resposta();
+  }
+  function resposta() {
+    const saida = $("pj-resposta");
+    if (!minhaPergunta) { if (saida.textContent) saida.replaceChildren(); return; }
+    desenharConversa();
+    const m = MINHAS.find(x => x.id === minhaPergunta);
+    if (!m) return;
+    const texto = m.estado === "pensando" ? (m.via !== "celular" ? "O Jarvis está pensando…" : m.semSinal ? "O PC está sem sinal. A pergunta sai quando ele voltar." : "Pensando… a resposta chega aqui em até 1 min.") : m.resposta || "Ele não disse nada.";
+    const ch = m.pergunta + "|" + texto;
+    if (saida.dataset.k === ch) return;
+    saida.dataset.k = ch;
+    saida.replaceChildren(el("b", {text: m.pergunta}), el("br"), texto);
+  }
+  $("pj-conversa").addEventListener("submit", ev => {
+    ev.preventDefault();
+    const c = $("pj-conversa-texto"), t = c.value.trim();
+    if (!t) return;
+    c.value = "";
+    perguntar(t);
+  });
+  $("pj-btn-falar").addEventListener("click", ev => {
+    if (MODO === "pc") jarvisAcao("falar", "", {set textContent(v) { if (v && !/mandando/.test(v)) aviso(v.replace(/^ele vai/, "O Jarvis vai")); }}, ev.currentTarget);
+    else perguntar("Como estão as coisas?");
+  });
+
+  /* ---------- cliques dos cartões ---------- */
+  let armado = null, timerArmado = 0;
+  function desarmar() { clearTimeout(timerArmado); if (armado) { armado.classList.remove("botao--armado"); armado.removeAttribute("aria-label"); } armado = null; }
+  raiz.addEventListener("click", ev => {
+    const b = ev.target.closest("button");
+    if (!b) return;
+    if (b.dataset.pjIr) { irPara(b.dataset.pjIr); return; }
+    if (b.dataset.pjVisto != null) {
+      const id = b.dataset.pjVisto;
+      ocultos.add(id); delete ultimo.alertas; desenhar();
+      jarvisAcao("alerta/ok", id, msgAlerta, null);
+      return;
+    }
+    if (b.dataset.pjPedir != null) {
+      const est = (lista(fonte().esteiras) || [])[+b.dataset.pjPedir];
+      if (!est || !est.pedido) { aviso("Essa esteira não tem pedido cadastrado."); return; }
+      if (MODO === "teste") { aviso("Na conferência os botões não mandam nada."); return; }
+      if (armado !== b) {
+        desarmar(); armado = b; b.classList.add("botao--armado");
+        b.setAttribute("aria-label", (est.nome || "esteira") + ": toque de novo pra mandar");
+        aviso("Toque de novo em " + (est.nome || "esteira") + " pra mandar pro central.");
+        timerArmado = setTimeout(desarmar, 3000);
+        return;
+      }
+      desarmar();
+      $("pedido").value = est.pedido;
+      $("f-pedido").requestSubmit();
+      b.classList.add("botao--enviado"); setTimeout(() => b.classList.remove("botao--enviado"), 2500);
+      setTimeout(() => aviso((est.nome || "Pedido") + ": " + ($("pedido-msg").textContent || "mandado")), 1200);
+    }
+  });
+
+  let esperaArrumar = 0;
+  addEventListener("resize", () => { cancelAnimationFrame(esperaArrumar); esperaArrumar = requestAnimationFrame(() => { if (!raiz.hidden) { if (!arrumar()) caber(); else desenhar(); } }); });
+  if (document.fonts) { document.fonts.addEventListener("loadingdone", caber); document.fonts.ready.then(caber); }
+  document.addEventListener("visibilitychange", () => { if (document.hidden) reator.parar(); else if (!raiz.hidden) reator.ligar(); });
+  if (MODO === "teste") {
+    const jl = new URLSearchParams(location.search).get("jlocal");
+    if (jl) fetch(jl, {cache: "no-store"}).then(r => r.json()).then(d => { TESTE = d; for (const k in ultimo) delete ultimo[k]; desenhar(); }).catch(() => {});
+  }
+  return {
+    mostrar() { document.body.classList.add("pj-aberto"); medirTopo(); layoutAtual = null; desenhar(); reator.ligar(); relogio(); },
+    esconder() { document.body.classList.remove("pj-aberto"); reator.parar(); clearTimeout(timerRelogio); },
+    desenhar, voz,
+  };
+})();
 
 /* ---------- entrada ---------- */
 let timer = null;
