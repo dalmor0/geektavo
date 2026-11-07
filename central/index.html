@@ -478,6 +478,7 @@ select{max-width:100%;min-width:0}
     <input id="email" type="email" autocomplete="email" inputmode="email" required>
     <button class="btn" type="submit">Mandar o código</button>
   </form>
+  <button type="button" id="ja-tenho" style="background:none;border:0;padding:12px 0;color:inherit;opacity:.8;text-decoration:underline;font:inherit;cursor:pointer">Já tenho um código</button>
   <form id="f-codigo" class="ajuste" hidden>
     <label for="codigo" class="rotulo">código do e-mail, ou o link copiado</label>
     <input id="codigo" type="text" autocomplete="one-time-code" autocapitalize="off" spellcheck="false" required>
@@ -2465,6 +2466,7 @@ function lerLink(v) {
 }
 const VENCIDO = "Esse link já venceu ou já foi usado (cada link vale uma vez). Peça outro e entre com o código de 6 dígitos.";
 
+$("ja-tenho").addEventListener("click", () => { $("f-codigo").hidden = false; $("login-msg").textContent = "Digite o código mais novo. Pedir outro código invalida o anterior."; $("login-msg").className = "msg"; $("codigo").focus(); });
 $("f-codigo").addEventListener("submit", async ev => {
   ev.preventDefault();
   const m = $("login-msg"), p = lerLink($("codigo").value);
