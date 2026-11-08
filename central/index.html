@@ -63,6 +63,13 @@ button,input,textarea,select{font:inherit;color:inherit;border-radius:0}
 .pc i{width:8px;height:8px;background:var(--cinza);flex:none}
 .pc.vivo i{background:var(--giz)}
 .pc.morto{color:var(--giz)} .pc.morto i{background:var(--verm)}
+/* olho do dinheiro (07/11 noite): esconde todo valor em R$ da tela; a escolha fica neste aparelho */
+.olho{flex:none;width:44px;height:44px;margin-left:-16px;display:grid;place-items:center;background:none;border:1px solid var(--fio);color:var(--cinza);cursor:pointer;padding:0}
+@media (hover:hover){ .olho:hover{color:var(--giz);border-color:var(--cinza)} }
+.olho svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.olho .olho-fechado,.olho[aria-pressed="true"] .olho-aberto{display:none}
+.olho[aria-pressed="true"] .olho-fechado{display:block}
+.olho[aria-pressed="true"]{color:var(--ciano);border-color:var(--ciano)}
 @media (max-width:1180px){ .pc .det{display:none} }
 @media (max-width:1099px){ .topo-in{gap:24px;padding:0 24px} .abas{gap:18px} }
 .abas-baixo{display:none}
@@ -612,6 +619,25 @@ body.conv-aberta{overflow:hidden}
 .pj .medida--urgente .medida-cheio{background: var(--urgente);}
 .pj .medida--g .medida-trilho{height: 10px;}
 .pj .medida-nota{font-size: var(--t-pequeno); color: var(--texto-3); overflow-wrap: anywhere;}
+/* 07/11 noite: quando reinicia o uso do Claude e o crédito da ElevenLabs (linha central-uso, CENTRAL/uso.py) */
+.pj .pj-uso{display: flex; flex-direction: column; gap: 6px;}
+.pj .pj-uso + .pj-uso, .pj .stat + .pj-uso{padding-top: var(--e-3); border-top: 1px solid var(--linha);}
+.pj .pj-uso .medida-valor{font-size: var(--t-base); font-weight: 700; margin-left: auto;}
+.pj .pj-uso-linha{display: grid; grid-template-columns: minmax(0, 1fr) 8.75rem; align-items: center; column-gap: var(--e-4); row-gap: 4px;}
+.pj .pj-uso .medida-topo{min-width: 0; flex-wrap: wrap;}
+@media (max-width: 359px){ .pj .pj-uso-linha{grid-template-columns: minmax(0, 1fr);} .pj .pj-rei{align-items: flex-start; text-align: left;} }
+.pj .pj-uso .medida-trilho{height: 10px;}
+.pj .pj-rei{display: flex; flex-direction: column; align-items: flex-end; text-align: right; line-height: 1.25;}
+.pj .pj-rei-rot{font-size: 12px; color: var(--texto-2); white-space: nowrap;}
+.pj .pj-rei-falta{font-family: var(--f-mono); font-size: 0.9375rem; font-weight: 600; color: var(--texto); white-space: nowrap; font-variant-numeric: tabular-nums; letter-spacing: 0;}
+.pj .pj-rei-quando{font-size: 12px; color: var(--texto-2); white-space: nowrap;}
+.pj .pj-rei-sem{font-family: var(--f-texto); font-size: var(--t-pequeno); font-weight: 400; color: var(--texto-2); white-space: normal;}
+.pj .pj-rei-sem + .pj-rei-quando{white-space: normal;}
+/* sem a hora do reinício: a barra vazia sai e o texto ganha a linha inteira */
+.pj .pj-uso--sem .pj-uso-linha{grid-template-columns: minmax(0, 1fr);}
+.pj .pj-uso--sem .medida-trilho{display: none;}
+.pj .pj-uso--sem .pj-rei{align-items: flex-end;}
+@media (max-width: 360px){ .pj .uso-plano{display: none;} }
 .pj .hud-corpo > .trabalho:first-child{padding-top: 0;}
 .pj .medida--titulo .medida-rotulo{color: var(--texto); font-size: var(--t-base); white-space: normal; min-width: 0; overflow-wrap: anywhere;}
 .pj .variacao{font-family: var(--f-mono); font-size: var(--t-micro); color: var(--texto-2);}
@@ -874,6 +900,10 @@ body.pj-aberto .topo-in{max-width:none;padding-left:16px;padding-right:16px}
     <p class="marca">C<span class="lente"><b>E</b></span>NTRAL</p>
     <nav class="abas" role="tablist" aria-label="Vistas" id="abas-cima"></nav>
     <div class="pc" id="pc" title="Sinal do PC"><i></i><span id="pc-t">conectando…</span></div>
+    <button class="olho" id="olho" type="button" aria-pressed="false" title="Esconder os valores em R$" aria-label="Esconder os valores em R$">
+      <svg class="olho-aberto" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+      <svg class="olho-fechado" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.6 10.6 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-3.2 4.1M6.6 6.6C3.8 8.4 2 12 2 12s3.6 7 10 7a9.9 9.9 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+    </button>
   </div>
 </header>
 
@@ -3463,6 +3493,54 @@ const PJ = (() => {
     return fDia.format(d) + h;
   }
   function nivelPct(p, alto, critico) { return !ehNum(p) ? "" : p >= critico ? "urgente" : p >= alto ? "normal" : ""; }
+  /* contagem regressiva até um epoch (07/11 noite, do jeito que ele pediu): "41min", "2h 41min", "3 dias 4h" */
+  function falta(ep) {
+    const d = data(ep);
+    if (!d) return "";
+    const m = Math.max(0, Math.floor((d.getTime() - Date.now()) / 60000));
+    if (m < 1) return "menos de 1min";
+    if (m < 60) return m + "min";
+    if (m < 1440) return Math.floor(m / 60) + "h" + (m % 60 ? " " + (m % 60) + "min" : "");
+    const dias = Math.floor(m / 1440), h = Math.floor((m % 1440) / 60);
+    return dias + (dias === 1 ? " dia" : " dias") + (h ? " " + h + "h" : "");
+  }
+  const fSemana = new Intl.DateTimeFormat("pt-BR", {weekday: "short"});
+  function quandoRei(ep) {
+    const d = data(ep);
+    if (!d) return "";
+    const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+    const dia = new Date(d); dia.setHours(0, 0, 0, 0);
+    const dif = Math.round((dia - hoje) / 86400000);
+    const h = " às " + fHora.format(d);
+    if (d.getHours() === 0 && d.getMinutes() === 0) return dif === 1 ? "à meia-noite" : fSemana.format(d).replace(".", "") + " " + fDia.format(d) + " à meia-noite";
+    if (dif === 0) return "hoje" + h;
+    if (dif === 1) return "amanhã" + h;
+    return fSemana.format(d).replace(".", "") + " " + fDia.format(d) + h;
+  }
+  const passou = ep => ep * 1000 <= Date.now();
+  /* barra com o tempo do lado: % usado em cima, a barra, e ao lado "reinicia em 2h 41min" com a hora exata embaixo.
+     Fonte sem a hora do reinício: diz isso em vez de esconder. */
+  function barraRei(rotulo, valor, pct, nivel, ep, semHora, semHoraNota) {
+    const w = ehNum(pct) ? limita(pct, 0, 100) : 0;
+    const lado = ehNum(ep) ? '<span class="pj-rei-rot">' + (passou(ep) ? "reiniciou" : "reinicia em") + '</span><span class="pj-rei-falta" data-falta="' + ep + '">' + (passou(ep) ? "agora" : falta(ep)) + '</span><span class="pj-rei-quando">' + quandoRei(ep) + "</span>"
+      : '<span class="pj-rei-falta pj-rei-sem">' + esc(semHora || "sem a hora do reinício") + "</span>" + (semHoraNota ? '<span class="pj-rei-quando">' + esc(semHoraNota) + "</span>" : "");
+    return '<div class="pj-uso' + (nivel ? " medida--" + nivel : "") + (ehNum(ep) ? "" : " pj-uso--sem") + '"><div class="medida-topo"><span class="medida-rotulo">' + rotulo + '</span><span class="medida-valor">' + (valor == null ? SEM : valor) + "</span></div>" +
+      '<div class="pj-uso-linha"><div class="medida-trilho"><div class="medida-cheio" style="width:' + w.toFixed(1) + '%"></div></div><div class="pj-rei">' + lado + "</div></div></div>";
+  }
+  /* uma janela do limite do Claude */
+  function janelaUso(rotulo, j) {
+    if (!j) return barraRei(rotulo, "nenhuma aberta", 0, "", null, "sem a hora do reinício", "começa na próxima mensagem");
+    if (j.reiniciou) return barraRei(rotulo, "0% usado", 0, "", null, "reiniciou agora");
+    const p = ehNum(j.pct) ? j.pct : null;
+    return barraRei(rotulo, p == null ? null : nf.format(p) + "% usado", p, nivelPct(p, 70, 85), ehNum(j.reinicia) ? j.reinicia : null);
+  }
+  /* a contagem anda sozinha, sem esperar o dado novo */
+  setInterval(() => document.querySelectorAll("[data-falta]").forEach(e => {
+    const ep = +e.dataset.falta, t = passou(ep) ? "agora" : falta(ep), r = passou(ep) ? "reiniciou" : "reinicia em";
+    if (e.textContent !== t) e.textContent = t;
+    const rot = e.previousElementSibling;
+    if (rot && rot.textContent !== r) rot.textContent = r;
+  }), 15000);
   function medida(rotulo, valor, pct, nivel, extra) {
     const w = ehNum(pct) ? limita(pct, 0, 100) : 0;
     return '<div class="medida' + (valor == null ? " medida--sem-dado" : "") + (nivel ? " medida--" + nivel : "") + (extra ? " " + extra : "") + '">' +
@@ -3747,6 +3825,17 @@ const PJ = (() => {
       return {html, meta: em && em.length ? em.length + (em.length > 1 ? " e-mails novos" : " e-mail novo") : ""};
     },
     claude(s) {
+      const U = obj((E.uso || {}).claude), contas = U && Array.isArray(U.contas) ? U.contas.filter(Boolean) : [];
+      if (contas.length) {
+        let html = "";
+        for (const c of contas) {
+          if (contas.length > 1) html += '<p class="sub-titulo">' + esc(c.apelido || c.nome || "conta") + "</p>";
+          html += janelaUso("Janela de 5 h", c.sessao) + janelaUso("Semana", c.semana);
+        }
+        const c0 = contas[0];
+        const meta = contas.length === 1 ? esc(c0.apelido || c0.nome || "") : contas.length + " contas";
+        return {html, meta, fonte: c0.fonte === "barra" ? c0.lido_em : U.em};
+      }
       const u = obj(s.uso_claude);
       if (!u) return null;
       const w = u.semana_pct, ss = u.sessao_pct;
@@ -3757,7 +3846,16 @@ const PJ = (() => {
       return {html, meta: u.em ? relativo(u.em) : ""};
     },
     voz(s) {
-      const v = obj(s.voz_credito);
+      const x = obj((E.uso || {}).voz), v0 = obj(s.voz_credito);
+      if (x && ehNum(x.usado) && ehNum(x.limite) && x.limite > 0) {
+        const pct = x.usado / x.limite * 100;
+        let html = stat(ehNum(x.sobra) ? compacto.format(x.sobra) : null, "caracteres sobrando", "g " + (pct >= 95 ? "urgente" : pct >= 80 ? "normal" : "reator")) +
+          barraRei("Usado no mês", compacto.format(x.usado) + " de " + compacto.format(x.limite), pct, nivelPct(pct, 80, 95), ehNum(x.renova) ? x.renova : null);
+        if (v0 && ehNum(v0.hoje) && ehNum(v0.teto) && v0.teto > 0) { const meia = new Date(); meia.setHours(24, 0, 0, 0);     // o teto diário do Jarvis zera à meia-noite
+          html += barraRei("Hoje no Jarvis", nf.format(v0.hoje) + " de " + nf.format(v0.teto), v0.hoje / v0.teto * 100, nivelPct(v0.hoje / v0.teto * 100, 75, 95), Math.floor(meia / 1000)); }
+        return {html, meta: "ElevenLabs" + (x.plano ? '<span class="uso-plano"> · ' + esc(x.plano) + "</span>" : ""), fonte: x.em};
+      }
+      const v = v0;
       if (!v) return null;
       let html = ehNum(v.hoje) && ehNum(v.teto) && v.teto > 0 ? medida("Hoje", nf.format(v.hoje) + " de " + nf.format(v.teto) + " caracteres", v.hoje / v.teto * 100, nivelPct(v.hoje / v.teto * 100, 75, 95), "medida--g") : medida("Hoje", null, 0, "", "medida--g");
       html += ehNum(v.mes_usado) && ehNum(v.mes_limite) && v.mes_limite > 0 ? medida("Mês (com o dark)", nf1.format(v.mes_usado / 1000) + " de " + nf1.format(v.mes_limite / 1000) + " mil", v.mes_usado / v.mes_limite * 100, nivelPct(v.mes_usado / v.mes_limite * 100, 80, 95)) : medida("Mês (com o dark)", null, 0);
@@ -3792,7 +3890,7 @@ const PJ = (() => {
     5: {ce: ["esteiras"], c1: ["pc", "claude", "google"], c2: ["canais", "dinheiro", "voz", "dark"], c3: ["pendencias", "alertas", "rotinas"], c4: ["terminais", "trabalhos", "radar"]},
     3: {ce: ["esteiras"], c1: ["pendencias", "alertas", "pc", "canais", "dark"], c2: ["trabalhos", "terminais", "dinheiro", "google", "radar"], sob: ["claude", "voz", "rotinas"]},
     2: {c1: ["pendencias", "alertas", "pc", "canais", "claude", "voz", "dark"], c2: ["trabalhos", "terminais", "esteiras", "dinheiro", "google", "radar", "rotinas"]},
-    1: {c1: ["pendencias", "alertas", "trabalhos", "terminais", "esteiras", "dark", "canais", "dinheiro", "google", "pc", "rotinas", "claude", "voz", "radar"]},
+    1: {c1: ["pendencias", "claude", "voz", "alertas", "trabalhos", "terminais", "esteiras", "dark", "canais", "dinheiro", "google", "pc", "rotinas", "radar"]},
   };
   const ultimo = {};
   const GUARDADO = Symbol("guardado");
@@ -4077,6 +4175,100 @@ const PJ = (() => {
     esconder() { document.body.classList.remove("pj-aberto"); reator.parar(); clearTimeout(timerRelogio); },
     desenhar, voz,
   };
+})();
+
+/* ---------- olho do dinheiro (07/11 noite, pedido do Gustavo) ----------
+   Fechado, todo valor em R$ da tela (entradas, custos, acordos, metas, o que vier no texto de pendência,
+   conversa ou área) vira "R$ ••••". Vale pro que já está na tela e pro que chegar depois (observador).
+   A escolha fica neste aparelho; numa TV (navegador de Smart TV) o padrão é fechado. */
+const OLHO = (() => {
+  const CHAVE = "central-dinheiro-oculto";
+  const TV = /SMART-TV|SmartTV|Tizen|Web0S|webOS|NetCast|HbbTV|BRAVIA|CrKey/i.test(navigator.userAgent);
+  /* número: 3.500 · 21.500,00 · 10 mil (sem engolir a vírgula ou o ponto que fecha a frase) */
+  const NUM = String.raw`[-+]?\d(?:[\d.,]*\d)?(?:[\s ]*(?:mil|milhões|milhão|mi|bi|k)(?![\p{L}]))?`;
+  const RE = new RegExp(String.raw`R\$[\s ]*` + NUM + "|" + NUM + String.raw`[\s ]*(?:reais|real)(?![\p{L}])`, "giu");
+  const COMECO = new RegExp("^([\\s\\u00a0]*)" + NUM, "u");      // valor que vem no nó seguinte a um "R$" sozinho
+  const TAPA = "R$ ••••";
+  const ATRIBUTOS = ["title", "aria-label", "alt", "placeholder"];
+  const orig = new WeakMap();      // nó -> {o: texto original, m: texto tapado}
+  let tocados = [];
+  let oculto = TV;
+  try { const v = localStorage.getItem(CHAVE); if (v === "1" || v === "0") oculto = v === "1"; } catch (e) {}
+  const pula = n => { const p = n.parentElement; return !p || /^(SCRIPT|STYLE|TEXTAREA|NOSCRIPT)$/.test(p.tagName) || p.isContentEditable || p.closest("#olho"); };
+  const temValor = t => { RE.lastIndex = 0; return RE.test(t); };
+  function trocarTexto(n, novo) {
+    if (novo === n.nodeValue) return;
+    orig.set(n, {o: n.nodeValue, m: novo});
+    tocados.push(n);
+    n.nodeValue = novo;
+  }
+  function tapar(raiz) {
+    if (!raiz) return;
+    if (raiz.nodeType === 3) raiz = raiz.parentElement;     // texto solto: confere o elemento inteiro (valor partido)
+    if (!raiz || raiz.nodeType !== 1) return;
+    const w = document.createTreeWalker(raiz, NodeFilter.SHOW_TEXT);
+    let antes = null;
+    for (let n = w.nextNode(); n; n = w.nextNode()) {
+      const t = n.nodeValue;
+      if (!t || pula(n)) continue;
+      let novo = temValor(t) ? t.replace(RE, TAPA) : t;
+      if (antes && /R\$[\s ]*$/.test(antes) && COMECO.test(novo)) novo = novo.replace(COMECO, "$1••••");   // "R$ <b>3.500</b>"
+      trocarTexto(n, novo);
+      if (t.trim()) antes = t.replace(RE, "•");     // o que sobra do original: termina em "R$" só se o valor veio partido
+    }
+    for (const e of [raiz, ...raiz.querySelectorAll("[title],[aria-label],[alt],[placeholder]")]) {
+      if (e.id === "olho") continue;
+      for (const a of ATRIBUTOS) {
+        const t = e.getAttribute(a);
+        if (!t || !temValor(t)) continue;
+        e.setAttribute("data-din-" + a, t);
+        e.setAttribute(a, t.replace(RE, TAPA));
+      }
+    }
+  }
+  function destapar() {
+    /* só volta o texto que ainda está como o olho deixou (se o app já escreveu outro por cima, vale o novo) */
+    for (const n of tocados) { const r = orig.get(n); if (r && n.isConnected && n.nodeValue === r.m) n.nodeValue = r.o; }
+    tocados = [];
+    for (const a of ATRIBUTOS) document.querySelectorAll("[data-din-" + a + "]").forEach(e => { e.setAttribute(a, e.getAttribute("data-din-" + a)); e.removeAttribute("data-din-" + a); });
+  }
+  const obs = new MutationObserver(ms => {
+    if (!oculto) return;
+    /* só o que mudou: o nó novo (com o pai quando é texto solto ou vem logo depois de um "R$"), o texto alterado
+       e o atributo alterado; alvo dentro de outro alvo é varrido uma vez só */
+    const alvos = new Set();
+    for (const m of ms) {
+      if (m.type === "attributes") { alvos.add(m.target); continue; }
+      if (m.type === "characterData") { if (m.target.parentElement) alvos.add(m.target.parentElement); continue; }
+      for (const n of m.addedNodes) {
+        const ant = n.previousSibling;
+        if (n.nodeType === 3 || (ant && /R\$[\s ]*$/.test(ant.textContent || ""))) alvos.add(m.target);
+        else if (n.nodeType === 1) alvos.add(n);
+      }
+    }
+    const lista = [...alvos].filter(e => e.isConnected);
+    for (const e of lista) if (!lista.some(o => o !== e && o.contains(e))) tapar(e);
+    if (tocados.length > 4000) tocados = tocados.filter(n => n.isConnected);   // nó que saiu da tela não precisa voltar
+  });
+  const botao = $("olho");
+  function aplicar() {
+    document.documentElement.classList.toggle("dinheiro-oculto", oculto);
+    if (botao) {
+      botao.setAttribute("aria-pressed", oculto ? "true" : "false");   // o rótulo fica fixo; o estado vai no aria-pressed
+      botao.title = oculto ? "Valores em R$ escondidos (tocar mostra)" : "Esconder os valores em R$";
+    }
+    if (oculto) tapar(document.body); else destapar();
+  }
+  function trocar(v) {
+    oculto = v;
+    try { localStorage.setItem(CHAVE, v ? "1" : "0"); } catch (e) {}
+    aplicar();
+  }
+  if (botao) botao.addEventListener("click", () => trocar(!oculto));
+  addEventListener("storage", ev => { if (ev.key === CHAVE) { oculto = ev.newValue === "1"; aplicar(); } });   // outra aba do mesmo aparelho
+  obs.observe(document.body, {childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ATRIBUTOS});
+  aplicar();
+  return {oculto: () => oculto, trocar};
 })();
 
 /* ---------- entrada ---------- */
