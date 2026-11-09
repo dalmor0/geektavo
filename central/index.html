@@ -17,6 +17,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Big+Shoulders+Display:wght@700;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Rajdhani:wght@500;600;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<link rel="stylesheet" href="andar.css">
+<script src="andar.js"></script>
+<script>try{const t=localStorage.getItem("central-tema");if(t==="claro"||t==="escuro")document.documentElement.dataset.theme=t==="claro"?"light":"dark";}catch(e){}</script>
 <style>
 /* Central DAL MORO · repaginada de 06/11/2026 (terminal Escritorio Unico).
    Conceito: o prédio da empresa em corte, com o Jarvis no telhado, e uma edição da noite em volta.
@@ -146,7 +149,7 @@ h2 small{font:400 14px/1.4 var(--body);color:var(--cinza);letter-spacing:0}
 .med.trabalha .med-pct{display:none}
 .med.trabalha .med-falta{justify-items:start;text-align:left}
 .med.trabalha .med-seg{overflow:hidden}
-.med.trabalha .med-cheio{width:28%!important;transition:none;animation:med-vaivem 1.6s ease-in-out infinite alternate}
+.med.trabalha .med-cheio{display:none}   /* 09/11 (banca): sem %, sem barra de mentira; fica o "trabalhando há X min" */
 @keyframes med-vaivem{from{left:0}to{left:72%}}
 @media (prefers-reduced-motion:reduce){.med.trabalha .med-cheio{animation:none;width:100%!important;background:repeating-linear-gradient(135deg,var(--ciano) 0 8px,transparent 8px 16px)}}
 .med.fim .med-pct{color:var(--cinza)}
@@ -892,6 +895,178 @@ body.pj-aberto .topo-in{max-width:none;padding-left:16px;padding-right:16px}
 }
 .pj.fora .reator-estado{color:var(--texto-3)}
 
+/* ===== Andar 47 (09/11/2026, terminal Central Andar 47) =====
+   Pedido do Gustavo: a Central do PC e do celular com a cara do escritório da TV (v6 mix).
+   Paleta do Andar 47 (tinta, roxo noite, giz lavanda), letreiro em Jersey 15 (OFL, a mesma da TV),
+   texto em Archivo. Ciano segue sendo só o que anda, vermelho só o que espera ele. Claro e escuro:
+   o do aparelho por padrão, a troca fica lembrada (botão Tema). */
+:root{
+  --noite:#0b0a14; --ceu:#0b0a14; --parede:#141327; --sup:#141327; --fio:#36346a; --giz:#e6e8f6; --cinza:#a3abd4;
+  --ciano:#5ff2f0; --verm:#ff5a5a; --ambar:#ffc85a; --borda:#4a4a86;
+  --display:"Jersey 15","Archivo",sans-serif; color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --noite:#eceef8; --ceu:#dfe2f0; --parede:#dfe2f0; --sup:#ffffff; --fio:#b4bad6; --giz:#141327; --cinza:#4a4f72;
+  --ciano:#0f7f92; --verm:#c8283c; --ambar:#8a5a00; --borda:#868cb2; color-scheme:light;
+}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){
+  --noite:#eceef8; --ceu:#dfe2f0; --parede:#dfe2f0; --sup:#ffffff; --fio:#b4bad6; --giz:#141327; --cinza:#4a4f72;
+  --ciano:#0f7f92; --verm:#c8283c; --ambar:#8a5a00; --borda:#868cb2; color-scheme:light; } }
+body{background:var(--noite);color:var(--giz)}
+h2{font:400 34px/1 var(--display);letter-spacing:.02em}
+.marca{font:400 34px/1 var(--display);letter-spacing:.04em}
+.topo-bt{flex:none;min-height:44px;padding:0 12px;background:none;border:1px solid var(--fio);color:var(--cinza);font:600 14px var(--body);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.topo-bt[aria-expanded="true"]{color:var(--giz);border-color:var(--giz)}
+@media (hover:hover){ .topo-bt:hover{color:var(--giz);border-color:var(--cinza)} }
+.olho{margin-left:0}
+@media (max-width:820px){ .topo-in{gap:8px} .topo-bt{padding:0 10px} .pc #pc-t{font-size:13px} }
+@media (max-width:460px){ .pc #pc-t{display:none} .marca{font-size:30px} .topo-bt{padding:0 8px} .olho{width:40px} }
+@media (max-width:360px){ .topo-in{gap:6px;padding:0 12px} .marca{font-size:26px} .topo-bt{padding:0 6px;font-size:13px} .olho{width:36px}
+  .abas-baixo{padding-left:4px;padding-right:4px} .abas-baixo button{font-size:13px;padding:0 1px} }
+@media (max-width:700px){ .a47-legenda{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)} .a47-torre-acoes{gap:0 20px} .a47-espera .a47-nada{font-size:15px} }
+
+/* a porta */
+main:has(#v-andar:not([hidden])){max-width:1840px}
+.a47{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:32px;align-items:start}
+@media (min-width:1700px){ .a47{grid-template-columns:minmax(0,1fr) 420px} }
+@media (max-width:1099px){ .a47{grid-template-columns:minmax(0,1fr)} .a47-lado{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px} }
+@media (max-width:700px){ .a47-lado{grid-template-columns:minmax(0,1fr);gap:24px} .a47{gap:24px} }
+.a47-torre{position:relative;width:100%;aspect-ratio:16/9;background:#0b0a14;overflow:hidden;box-shadow:inset 0 0 0 2px var(--fio)}
+.a47-torre #andar{position:absolute;inset:0}
+.a47-carrega{position:absolute;inset:0;display:grid;place-items:center;margin:0;color:#a3abd4;font:400 28px var(--display)}
+.a47-legenda{margin:8px 0 0;font-size:14px;color:var(--cinza)}
+.a47-torre-acoes{display:flex;flex-wrap:wrap;gap:0 24px}
+.a47-mesas{list-style:none;margin:0;padding:0;border-top:1px solid var(--fio)}
+.a47-mesas li{padding:12px 0;border-bottom:1px solid var(--fio);display:grid;gap:2px}
+.a47-mesas b{font:600 16px var(--body)} .a47-mesas span{font-size:14px;color:var(--cinza)}
+@media (max-width:700px){ .a47-torre{aspect-ratio:1780/810} .a47-torre-col{margin:0 -16px} .a47-legenda,.a47-torre-acoes,.a47-mesas{padding:0 16px} }
+.a47-lado{display:grid;gap:32px;align-content:start}
+.a47-tit{font:400 34px/1 var(--display);margin:0 0 12px}
+.a47-espera{border-top:4px solid var(--fio);padding-top:16px}
+.a47-espera.tem{border-top-color:var(--verm)}
+.a47-espera.tem .a47-tit{color:var(--verm)}
+.a47-espera .card{border:0;padding:0;background:none}
+.a47-nada{margin:0;color:var(--cinza)}
+.a47-term{display:grid;gap:4px;padding:12px 0;border-top:1px solid var(--fio)} .a47-term:first-child{border-top:0;padding-top:0}
+.a47-term b{font:600 18px/1.3 var(--body)}
+.a47-falar{border-top:4px solid var(--giz);padding-top:16px}
+.a47-form{display:grid;gap:12px}
+.a47-form textarea{width:100%;min-height:96px;resize:vertical;background:var(--sup);border:1px solid var(--borda);padding:12px;font:400 16px/1.5 var(--body);color:var(--giz)}
+.a47-botoes{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px}
+.a47-msg{margin:0;font-size:14px;color:var(--cinza);min-height:1.5em}
+.a47-resp{margin:0;padding:12px 0 0;border-top:1px solid var(--fio)}
+@media (max-width:700px){ .a47-botoes .btn{flex:1 1 auto} }
+.a47-tela{position:fixed;inset:0;z-index:60;background:#0b0a14;display:grid}
+.a47-tela-palco{position:absolute;inset:0}
+.a47-tela-palco #andar{position:absolute;inset:0}
+.a47-tela.deitar .a47-tela-palco{overflow-x:auto;overflow-y:hidden;top:72px}
+.a47-tela.deitar .a47-tela-palco #andar{position:relative;inset:auto;height:calc(100dvh - 72px);width:calc((100dvh - 72px) * 16 / 9)}
+.a47-tela-dica{position:absolute;left:16px;top:max(16px,env(safe-area-inset-top));margin:0;color:#a3abd4;font-size:14px;max-width:60%}
+.a47-tela-fechar{position:absolute;right:max(16px,env(safe-area-inset-right));top:max(16px,env(safe-area-inset-top));z-index:2}
+
+.ped .tx1{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ped .l2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ped-mais summary{cursor:pointer;min-height:36px;display:flex;align-items:center;color:var(--cinza);font-size:14px}
+.ped-mais .l2{-webkit-line-clamp:unset;display:block;font-size:14px;color:var(--cinza)}
+@media (max-width:360px){ #jf-estado{display:none} }
+.a47-term b{text-wrap:balance}
+#nossas-lista > .card{max-width:680px}
+.a47-term .det{font-size:13px;color:var(--cinza)}
+body:has(#v-andar:not([hidden])) .topo-in,body:has(#v-andar:not([hidden])) .rodape{max-width:1840px}
+.conv-abrir{background:none!important;color:var(--giz)!important;border:2px solid var(--giz)!important}
+.jf-verbos button,.verbos button{text-transform:none}
+.envio{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.envio .falar-msg{flex:1 1 100%}
+#f-conversa{display:grid;gap:12px}
+#conversa{width:100%;min-height:44px;background:var(--sup);border:1px solid var(--borda);padding:0 12px;color:var(--giz)}
+@media (max-width:700px){ .envio .btn{flex:1 1 auto} .a47-espera.tem .a47-tit{font-size:26px} .jv-cara{display:none} .pc{display:none} }
+.card h3{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-wrap:pretty}
+:root{font-synthesis:none}
+.jv-estado{font-weight:400}
+#nossas > summary h2{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:0 16px}
+#nossas > summary h2::after{margin-top:-.05em;margin-left:0}
+.card > p:not(.perg){display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.med-pct,.med.passou .med-falta b{font-family:var(--body);font-weight:700;letter-spacing:-.01em}
+#fila-lista > .vazio,#fila-lista > .ja-res{column-span:all}
+.med.trabalha .med-barra{display:none}
+.ctx{grid-template-columns:64px minmax(60px,120px) auto;justify-content:start}
+.jf-verbos button,.verbos button{letter-spacing:0}
+.jf-mais{position:relative}
+.jf-mais:not([open]) .jf-mais-in{display:none}
+@media (max-width:820px){ .jf-mais,.jf-pedir{display:none!important} .jf-verbos{flex-wrap:nowrap;min-width:0} }
+.jf-mais summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font:600 15px var(--body);color:var(--cinza)}
+.jf-mais[open] .jf-mai{display:flex}
+.jf-mais-in{position:absolute;right:0;top:100%;z-index:25;background:var(--noite);border:1px solid var(--fio);padding:8px 16px;display:grid;gap:0;min-width:200px}
+#nossas > summary{cursor:pointer;list-style:none}
+#nossas > summary::-webkit-details-marker{display:none}
+#nossas > summary h2::after{content:"+";margin-left:auto;font:400 34px/1 var(--display);color:var(--cinza)}
+#nossas[open] > summary h2::after{content:"–"}
+@media (max-width:360px){ #abas-baixo.abas-baixo{padding-left:8px;padding-right:8px;gap:4px} #abas-baixo button{padding:0 4px;font-size:13px} .topo-in{gap:8px}
+  .envio .falar{padding-inline:12px} .envio .btn{flex:1 1 auto;padding:0 12px;font-size:14px;white-space:nowrap} .envio .lnk{flex-basis:100%} #abas-baixo{padding-inline:8px} }
+article.it .l1 > .num-g{flex:none;min-width:max-content}   /* 09/11 (Numeros Canal): número não passa da coluna com título de 2 linhas */
+article.it .l1 > .tit{flex:1 1 auto}
+.grupo-trab{border-bottom:1px solid var(--fio);padding:8px 0;break-inside:avoid}
+.grupo-trab summary{cursor:pointer;min-height:44px;display:flex;align-items:center;flex-wrap:wrap;gap:0 4px}
+.grupo-trab summary b{font:600 20px var(--body)} .grupo-trab summary span{color:var(--cinza);font-size:14px}
+.vista{gap:48px}
+/* seções que abrem e fecham (o título vira botão; o estado fica lembrado neste aparelho) */
+.dobra-bt{all:unset;box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:0 16px;width:100%;min-height:44px;cursor:pointer;font:inherit;color:inherit}
+.dobra-t{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 16px;min-width:0}
+@media (max-width:700px){ .dobra-t small{display:block;width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} }
+.dobra-bt:focus-visible{outline:3px solid var(--giz);outline-offset:3px}
+.dobra-bt::after{content:"+";font:400 34px/1 var(--display);color:var(--cinza);width:24px;text-align:center}
+.dobra-bt[aria-expanded="true"]::after{content:"–"}
+.secao.fechada > :not(h2){display:none!important}
+.secao.fechada{gap:0}
+
+/* botão Falar em toda caixa */
+.falar{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;background:none;border:2px solid var(--giz);color:var(--giz);font:800 15px var(--body);cursor:pointer;white-space:nowrap}
+.falar::before{content:"";width:10px;height:10px;background:currentColor;flex:none}
+.falar[aria-pressed="true"]{background:var(--verm);border-color:var(--verm);color:var(--noite)}
+.falar[aria-pressed="true"]::before{animation:pisca 1s steps(2) infinite}
+.falar.ocupado{border-color:var(--fio);color:var(--cinza);cursor:progress}
+@keyframes pisca{50%{opacity:.2}}
+@media (prefers-reduced-motion:reduce){ .falar[aria-pressed="true"]::before{animation:none} }
+.falar-lin{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.falar-msg{font-size:14px;color:var(--cinza);margin:0}
+
+/* contexto de cada terminal: barra fina, calma */
+.ctx{display:grid;grid-template-columns:auto minmax(60px,1fr) auto;align-items:center;gap:8px;margin-top:6px;font-size:13px;color:var(--cinza)}
+.ctx i{display:block;height:4px;background:var(--fio);position:relative}
+.ctx i b{position:absolute;left:0;top:0;bottom:0;background:var(--cinza)}
+.ctx.cheio i b{background:var(--ambar)} .ctx.cheio{color:var(--giz)}
+.ctx-acao{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 16px;align-items:center}
+
+/* avisos no canto, no jeito da caixa de diálogo do Jarvis na TV */
+.notas{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:24px;z-index:50;display:grid;gap:12px;width:min(420px,calc(100% - 32px));pointer-events:none}
+@media (max-width:820px){ .notas{bottom:auto;top:calc(64px + env(safe-area-inset-top));left:16px;right:16px;width:auto} }
+.nota{pointer-events:auto;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;align-items:start;padding:12px 14px 12px 12px;background:#141327;color:#e6e8f6;
+  box-shadow:inset 0 0 0 3px #5ff2f0,inset 0 0 0 6px #0b0a14;cursor:pointer;text-align:left;border:0;font:inherit;width:100%;
+  clip-path:polygon(4px 0,calc(100% - 4px) 0,calc(100% - 4px) 4px,100% 4px,100% calc(100% - 4px),calc(100% - 4px) calc(100% - 4px),calc(100% - 4px) 100%,4px 100%,4px calc(100% - 4px),0 calc(100% - 4px),0 4px,4px 4px);
+  transform:translateY(8px);opacity:0;transition:transform .25s steps(4),opacity .25s steps(4)}
+.nota.on{transform:none;opacity:1}
+.nota.espera{box-shadow:inset 0 0 0 3px #ff5a5a,inset 0 0 0 6px #0b0a14}
+.nota.pronto{box-shadow:inset 0 0 0 3px #ffc85a,inset 0 0 0 6px #0b0a14}
+.nota canvas{width:44px;height:44px;image-rendering:pixelated;grid-row:1/3}
+.nota .q{font:400 22px/1 "Jersey 15",var(--body);letter-spacing:.06em;color:#5ff2f0;display:flex;gap:10px;align-items:baseline}
+.nota.espera .q{color:#ff5a5a} .nota.pronto .q{color:#ffc85a}
+.nota .q small{font:400 18px/1 "Jersey 15",var(--body);color:#a3abd4;letter-spacing:.02em}
+.nota .f{font:600 15px/1.35 var(--body);color:#e6e8f6}
+@media (prefers-reduced-motion:reduce){ .nota{transition:none} }
+.avisos{position:fixed;right:0;left:auto;top:0;z-index:55;width:min(440px,100%);max-height:min(640px,80dvh);background:var(--noite);border:2px solid var(--giz);border-top:0;padding:max(12px,env(safe-area-inset-top)) 20px 16px;overflow:auto;display:grid;align-content:start;gap:12px}
+@media (max-width:820px){ .avisos{max-height:70dvh;border-left:0;border-right:0} }
+.avisos-cab h2{font-size:28px}
+.ja-res{border-top:1px solid var(--fio);padding-top:8px;break-inside:avoid}
+.ja-res summary{cursor:pointer;min-height:44px;display:flex;align-items:center;color:var(--cinza);font:600 15px var(--body)}
+.avisos-cab{display:flex;align-items:center;justify-content:space-between}
+.avisos-lista{list-style:none;margin:0;padding:0}
+.avisos-lista li{border-bottom:1px solid var(--fio)}
+.avisos-lista button{all:unset;box-sizing:border-box;display:grid;gap:2px;width:100%;padding:12px 0;cursor:pointer}
+.avisos-lista button:focus-visible{outline:3px solid var(--giz)}
+.avisos-lista b{font:600 15px/1.4 var(--body)} .avisos-lista span{font-size:13px;color:var(--cinza)}
+.avisos-perm{border-top:4px solid var(--ciano);padding-top:12px;display:grid;gap:12px}
+.avisos-perm p{margin:0}
+.avisos-perm-bt{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
 </style>
 </head>
 <body>
@@ -900,6 +1075,8 @@ body.pj-aberto .topo-in{max-width:none;padding-left:16px;padding-right:16px}
     <p class="marca">C<span class="lente"><b>E</b></span>NTRAL</p>
     <nav class="abas" role="tablist" aria-label="Vistas" id="abas-cima"></nav>
     <div class="pc" id="pc" title="Sinal do PC"><i></i><span id="pc-t">conectando…</span></div>
+    <button class="topo-bt" id="avisos-bt" type="button" aria-expanded="false" aria-controls="avisos">Avisos<span class="n" id="avisos-n"></span></button>
+    <button class="topo-bt" id="tema-bt" type="button" title="Trocar entre claro, escuro e o do aparelho">Tema</button>
     <button class="olho" id="olho" type="button" aria-pressed="false" title="Esconder os valores em R$" aria-label="Esconder os valores em R$">
       <svg class="olho-aberto" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
       <svg class="olho-fechado" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.6 10.6 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-3.2 4.1M6.6 6.6C3.8 8.4 2 12 2 12s3.6 7 10 7a9.9 9.9 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
@@ -952,6 +1129,42 @@ body.pj-aberto .topo-in{max-width:none;padding-left:16px;padding-right:16px}
 </div>
 <main id="app" hidden>
   <p class="velho" id="velho" role="status" hidden></p>
+
+  <!-- ANDAR 47 (09/11): a porta. A torre da TV com gente trabalhando, o que espera você e onde falar -->
+  <section class="vista a47-vista" id="v-andar" role="tabpanel" aria-labelledby="t-andar" hidden>
+    <div class="a47">
+      <div class="a47-torre-col">
+        <div class="a47-torre" id="a47-torre">
+          <p class="a47-carrega" id="a47-carrega">Abrindo o andar…</p>
+        </div>
+        <p class="a47-legenda" id="a47-legenda"></p>
+        <div class="a47-torre-acoes">
+          <button class="lnk" type="button" id="a47-cheia">Tela cheia</button>
+          <button class="lnk" type="button" id="a47-quem">Quem está em cada mesa</button>
+        </div>
+        <ul class="a47-mesas" id="a47-mesas" hidden></ul>
+      </div>
+      <div class="a47-lado">
+        <section class="a47-espera" id="a47-espera" aria-live="polite">
+          <h2 class="a47-tit" id="a47-espera-tit">Espera você</h2>
+          <div id="a47-espera-item"></div>
+          <button class="lnk a47-todas" type="button" id="a47-todas" hidden>Ver todas as pendências</button>
+        </section>
+        <section class="a47-falar" id="a47-falar">
+          <h2 class="a47-tit">Fale com a Central</h2>
+          <form id="a47-form" class="a47-form" autocomplete="off">
+            <label class="sr" for="a47-txt">O que você quer: um pedido pros terminais ou uma pergunta pro Jarvis</label>
+            <textarea id="a47-txt" maxlength="2000" rows="3" placeholder="Fale ou escreva. Ex.: faz a capa do longo do Chucky com 5 versões"></textarea>
+            <div class="a47-botoes envio">
+              <button class="btn" type="submit" id="a47-pedir">Mandar pros terminais</button>
+              <button class="lnk" type="button" id="a47-perguntar">Perguntar ao Jarvis</button>
+            </div>
+            <p class="a47-msg" id="a47-msg" role="status"></p>
+          </form>
+        </section>
+      </div>
+    </div>
+  </section>
 
   <!-- PAINEL (07/11): o painel do Jarvis do PC como tela principal, mesclado com a Central -->
   <section class="vista pj" id="v-painel" role="tabpanel" aria-labelledby="t-painel" hidden>
@@ -1051,7 +1264,7 @@ body.pj-aberto .topo-in{max-width:none;padding-left:16px;padding-right:16px}
 
   <!-- ANDAMENTO -->
   <section class="vista" id="v-agora" role="tabpanel" aria-labelledby="t-agora" hidden>
-    <p class="linha-n" id="placar"></p>
+    <p class="linha-n" id="placar" hidden></p>
     <section class="secao">
       <h2>Resultados <small id="res-sub">o que cada trabalho virou, em uma linha</small></h2>
       <div class="filtro" id="res-filtro">
@@ -1103,11 +1316,11 @@ body.pj-aberto .topo-in{max-width:none;padding-left:16px;padding-right:16px}
       <canvas class="jv-cara" id="jv-cara" aria-hidden="true"></canvas>
     </div>
     <section class="secao" id="jv-conversa">
-      <h2>Pergunte qualquer coisa</h2>
+      <h2>Perguntar ao Jarvis</h2>
       <div class="duas">
         <form class="pedir" id="f-conversa">
-          <label for="conversa" class="rotulo">Pergunta livre, o Jarvis responde aqui por escrito. Trabalho pros terminais vai pelo Pedir, logo abaixo.</label>
-          <div class="perg-lin"><input id="conversa" type="text" required maxlength="600" autocomplete="off" enterkeyhint="send" placeholder="ex.: quanto espaço tem no disco C?"><button class="btn" type="submit">Perguntar</button></div>
+          <label for="conversa" class="rotulo">Pergunta livre, o Jarvis responde aqui por escrito. Trabalho pros terminais vai em Mandar pros terminais, logo abaixo.</label>
+          <input id="conversa" type="text" required maxlength="600" autocomplete="off" enterkeyhint="send" placeholder="ex.: quanto espaço tem no disco C?"><div class="perg-lin envio"><button class="btn" type="submit">Perguntar ao Jarvis</button></div>
           <span class="msg" id="conversa-msg" role="status"></span>
         </form>
         <div class="jv-resp" id="jv-resp"></div>
@@ -1136,11 +1349,11 @@ body.pj-aberto .topo-in{max-width:none;padding-left:16px;padding-right:16px}
     </section>
     <div class="duas">
       <section class="secao">
-        <h2>Pedir</h2>
+        <h2>Mandar pros terminais</h2>
         <form class="pedir" id="f-pedido">
           <label for="pedido" class="rotulo">O pedido vai pro terminal central, que distribui. Você vê aqui do lado pra quem foi.</label>
           <textarea id="pedido" required placeholder="ex.: faz a capa do longo do Chucky com 5 versões"></textarea>
-          <div class="lin"><button class="btn" type="submit">Mandar</button><span class="msg" id="pedido-msg" role="status"></span></div>
+          <div class="lin envio"><button class="btn" type="submit">Mandar pros terminais</button><span class="msg" id="pedido-msg" role="status"></span></div>
         </form>
         <p class="rotulo" id="est-rot" hidden>Começar uma esteira (enche o pedido, você manda):</p>
         <div class="esteiras" id="jv-esteiras"></div>
@@ -1213,6 +1426,20 @@ body.pj-aberto .topo-in{max-width:none;padding-left:16px;padding-right:16px}
 <nav class="mais" id="mais" aria-label="Mais vistas" hidden></nav>
 <nav class="abas abas-baixo" role="tablist" aria-label="Vistas" id="abas-baixo" hidden></nav>
 <button class="novidade btn" id="novidade" type="button" hidden>Chegou novidade · toque pra atualizar</button>
+<div class="notas" id="notas" aria-live="polite" aria-label="Avisos"></div>
+<aside class="avisos" id="avisos" aria-label="Últimos avisos" hidden>
+  <div class="avisos-cab"><h2>Últimos avisos</h2><button class="lnk" type="button" id="avisos-fechar">Fechar</button></div>
+  <div class="avisos-perm" id="avisos-perm" hidden>
+    <p>Quer os avisos também na tela do celular, como notificação? Eles chegam enquanto a Central estiver aberta ou em segundo plano. De madrugada só o urgente.</p>
+    <div class="avisos-perm-bt"><button class="btn" type="button" id="avisos-sim">Quero receber</button><button class="lnk" type="button" id="avisos-nao">Agora não</button></div>
+  </div>
+  <ol class="avisos-lista" id="avisos-lista"></ol>
+</aside>
+<div class="a47-tela" id="a47-tela" hidden role="dialog" aria-modal="true" aria-label="O andar em tela cheia">
+  <div class="a47-tela-palco" id="a47-tela-palco"></div>
+  <p class="a47-tela-dica" id="a47-tela-dica" hidden>Arraste pro lado pra ver o andar inteiro, ou deite o celular.</p>
+  <button class="btn a47-tela-fechar" type="button" id="a47-tela-fechar">Fechar</button>
+</div>
 <footer class="rodape" id="rodape" hidden><span id="atualizado"></span><button type="button" id="sair">sair</button></footer>
 
 <script>
@@ -1288,9 +1515,10 @@ function hora(s) {
 const hojeISO = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 
 /* ---------- abas (escritório único, 06/11: Pedir foi pro Jarvis, Rotinas pro Andamento) ---------- */
-const ABAS = [["painel", "Painel"], ["escritorio", "Escritório"], ["fila", "Pendências"], ["agora", "Andamento"], ["jarvis", "Jarvis"], ["areas", "Áreas"], ["atalhos", "Atalhos"]];
-const BAIXO = ["painel", "fila", "jarvis", "areas"];   // 07/11: o Painel é a porta; o Escritório foi pro Mais no celular
-let aba = "painel";
+const ABAS = [["andar", "Andar 47"], ["fila", "Pendências"], ["agora", "Andamento"], ["jarvis", "Jarvis"], ["areas", "Áreas"], ["atalhos", "Atalhos"]];   // 09/11: a torre da TV é a porta
+const EXTRAS = [["painel", "Painel de cartões do Jarvis"], ["escritorio", "Prédio em corte"]];   // vistas que abrem de dentro (Jarvis e Andamento) e pelo Mais
+const BAIXO = ["andar", "fila", "jarvis", "areas"];
+let aba = "andar";
 function montarAbas() {
   const bt = (id, nome, suf) => {
     const b = el("button", {type: "button", role: "tab", id: "t-" + id + suf, "aria-controls": "v-" + id, "aria-selected": String(id === aba)},
@@ -1302,7 +1530,7 @@ function montarAbas() {
   const maisB = el("button", {type: "button", id: "t-mais", "aria-expanded": "false", "aria-controls": "mais"}, el("span", {class: "t", text: "Mais"}));
   maisB.addEventListener("click", () => { const m = $("mais"); m.hidden = !m.hidden; maisB.setAttribute("aria-expanded", String(!m.hidden)); });
   $("abas-baixo").replaceChildren(...ABAS.filter(([id]) => BAIXO.includes(id)).map(([id, n]) => bt(id, n, "-b")), maisB);   // 07/11: Mais leva o Escritório, o Andamento e os Atalhos
-  $("mais").replaceChildren(...ABAS.filter(([id]) => !BAIXO.includes(id)).map(([id, n]) => {
+  $("mais").replaceChildren(...ABAS.filter(([id]) => !BAIXO.includes(id)).concat(EXTRAS).map(([id, n]) => {
     const b = el("button", {type: "button", text: n});
     b.addEventListener("click", () => irPara(id));
     return b;
@@ -1313,17 +1541,18 @@ function irPara(id) {
   if (id === "rotinas") id = "agora";
   if (id === "edicao" || id === "github" || (innerWidth <= 820 && (id === "agora" || id === "atalhos"))) { arSel = id; id = "areas"; }
   for (const v of ["v-edicao", "v-github", "v-agora", "v-atalhos"]) { const n = $(v); n.hidden = true; if (n.parentElement !== $("app")) $("app").append(n); }
-  if (!ABAS.some(([a]) => a === id)) id = "painel";
+  if (!ABAS.concat(EXTRAS).some(([a]) => a === id)) id = "andar";
   aba = id;
   try { sessionStorage.setItem("central-aba", id); } catch (e) {}
-  for (const [a] of ABAS) {
+  for (const [a] of ABAS.concat(EXTRAS)) {
     $("v-" + a).hidden = a !== id;
     for (const b of document.querySelectorAll(`#t-${a},#t-${a}-b`)) b.setAttribute("aria-selected", String(a === id));
   }
   $("mais").hidden = true;
   const mb = $("t-mais");
   if (mb) { mb.setAttribute("aria-expanded", "false"); mb.setAttribute("aria-selected", String(!BAIXO.includes(id))); }
-  $("jfaixa").hidden = id === "jarvis" || id === "escritorio" || id === "painel";
+  $("jfaixa").hidden = id === "jarvis" || id === "escritorio" || id === "painel" || id === "andar";
+  if (window.A47) A47.mostrar(id === "andar");
   if (id === "painel") PJ.mostrar(); else PJ.esconder();
   if (id === "escritorio") desenharEscritorio();
   if (id === "areas") { arChave = ""; desenharAreas(); }
@@ -1355,7 +1584,7 @@ async function lerJarvis(soVoz) {
 function pcVivo() { const m = E.maquina || {}; return !!m.batida && agoraS() - m.batida < 120; }
 function jarvisModo() {
   if (carregou && !pcVivo()) return "dormindo";
-  if (!J.ok) return "fora";
+  if (J.ok === false) return "fora";      // 09/11: antes da primeira leitura (null) não é "fora do ar"
   const e = (J.voz || {}).estado;
   return ["falando", "ouvindo", "pensando"].includes(e) ? e : "vigiando";
 }
@@ -1433,7 +1662,7 @@ function desenharConversa() {
   convChave = ch;
   $("jv-resp").replaceChildren(...(ls.length ? ls.map(x => el("article", {class: "jv-r"},
     el("p", {class: "p"}, "Você: ", el("b", {text: x.pergunta})),
-    el("p", {class: "r" + (x.estado === "pensando" ? " pensa" : x.estado === "erro" ? " erro" : ""), text: x.estado === "pensando" ? (x.via !== "celular" ? "O Jarvis está pensando…" : x.semSinal ? "O PC está sem sinal. A pergunta fica guardada e sai quando ele voltar." : "Pensando… a pergunta foi pro PC, a resposta chega aqui em até 1 min.") : x.resposta || "Ele não disse nada."}),
+    el("p", {class: "r" + (x.estado === "pensando" ? " pensa" : x.estado === "erro" ? " erro" : ""), text: x.estado === "pensando" ? (x.via !== "celular" ? "O Jarvis está pensando…" : x.semSinal ? "O PC está sem sinal. A pergunta fica guardada e sai quando ele voltar." : "Pensando… a pergunta foi pro PC, a resposta chega aqui em até 1 min.") : String(x.resposta || "").replace(/\s*\(pedido mandado pro[\s\S]*$/i, "") || "Ele não disse nada."}),
     el("p", {class: "q", text: [x.estado === "pensando" ? null : "Jarvis", haQuanto(x.em), x.velocidade === "trabalho" ? "virou pedido pros terminais" : null].filter(Boolean).join(" · ")})))
     : [el("p", {class: "vazio", text: "Nada perguntado ainda. A resposta aparece aqui."})]));
 }
@@ -1781,7 +2010,8 @@ const conversa = (() => {
   });
   document.querySelectorAll("[data-conv]").forEach(b => b.addEventListener("click", abrir));
   if (window.speechSynthesis) speechSynthesis.getVoices();
-  return {abrir, fechar, conferir: {estado, aviso}};   // conferir: só pra conferência visual mostrar os estados
+  async function perguntar(t) { destravar(); await abrir(); S.auto = false; if (t) mandar(t); }   // 09/11: a caixa da porta pergunta por aqui
+  return {abrir, fechar, perguntar, ouvidoDoPC: (blob, prazo) => chamar("/ouvir", blob, blob.type, prazo || 25000), conferir: {estado, aviso}};   // conferir: só pra conferência visual mostrar os estados
 })();
 /* ---------- senhas faladas (07/11): só o dono, direto no PC pelo Funnel; o texto nunca fica na página ---------- */
 const senhas = (() => {
@@ -1857,7 +2087,7 @@ function desenharJarvis() {
   const pc = s.pc || {}, u = s.uso_claude || {}, vc = s.voz_credito || {}, dk = s.dark || {};
   const linhas = [
     pc.cpu != null ? ["Processador", `${pc.cpu}% em uso`] : null,
-    pc.ram_total_gb ? ["Memória", `${String(pc.ram_livre_gb).replace(".", ",")} GB livres de ${pc.ram_total_gb}`] : null,
+    pc.ram_total_gb ? ["Memória", `${String(pc.ram_livre_gb).replace(".", ",")} GB livres de ${pc.ram_total_gb}`] : null,
     pc.gpu ? ["Placa de vídeo", `${pc.gpu}${pc.gpu_uso != null ? ` · ${pc.gpu_uso}%` : ""}`] : null,
     ...(pc.discos || []).map(d => [`Disco ${d.letra}`, `${d.livre_gb} GB livres de ${d.total_gb}`]),
     u.semana_pct != null ? ["Uso do Claude na semana", `${u.semana_pct}%`] : null,
@@ -2268,14 +2498,16 @@ function desenharFaixa() {
   e.className = ["falando", "ouvindo"].includes(m) ? "on" : "";
   $("jf-fala").textContent = f.texto === "…" ? "" : "· " + f.texto;
   const box = $("jf-verbos");
-  verbos(box, $("jf-msg"));
+  let mais = box.querySelector(".jf-mais");     // 09/11 (banca): Resumo no PC, Calar, Ouvir e Vigiar ficam a um toque
+  if (!mais) { mais = el("details", {class: "jf-mais"}, el("summary", {text: "Mais do Jarvis"}), el("div", {class: "jf-mais-in"})); box.append(mais); }
+  verbos(mais.querySelector(".jf-mais-in"), $("jf-msg"));
   if (!box.querySelector(".jf-pedir")) {
-    const p = el("button", {type: "button", class: "jf-pedir", text: "Pedir"});
+    const p = el("button", {type: "button", class: "jf-pedir", text: "Mandar pros terminais"});
     p.addEventListener("click", () => { irPara("jarvis"); setTimeout(() => $("pedido").focus(), 80); });
     box.prepend(p);
   }
   if (!box.querySelector(".jf-conv")) {   // 07/11: no celular só os dois primeiros aparecem; conversar vem antes
-    const c = el("button", {type: "button", class: "jf-conv", title: "falar com o Jarvis e ouvir a resposta aqui", text: "Conversar"});
+    const c = el("button", {type: "button", class: "jf-conv", title: "falar com o Jarvis e ouvir a resposta aqui", text: "Perguntar ao Jarvis"});
     c.addEventListener("click", () => conversa.abrir());
     box.prepend(c);
   }
@@ -2377,7 +2609,7 @@ function desenhar() {
   const semRede = MODO === "nuvem" && !navigator.onLine;
   $("pc").className = "pc " + (idade < 120 && !semRede && !copia ? "vivo" : "morto");
   $("pc-t").replaceChildren(semRede ? "sem internet" : copia ? "sem leitura" : idade < 120 ? "PC no ar" : "PC sem sinal", m.batida ? el("span", {class: "det", text: " · " + haQuanto(m.batida)}) : "");
-  $("atualizado").textContent = m.batida ? `Atualizado ${hora(m.batida)} · ${MODO === "nuvem" ? "a página relê a cada 15 s" : "tela do PC, relê sozinha"}` : "";
+  $("atualizado").textContent = m.batida ? `Atualizado às ${hora(m.batida)}` : "";
 
   const T = E.terminais || {lista: []}, W = E.trabalhos || {lista: []}, R = E.rotinas || {lista: []}, F = E.fila || {lista: []};
   const esperandoFila = (F.lista || []).filter(i => precisaDeVoce(i) && !decididos.has(i.id)).length;
@@ -2401,6 +2633,7 @@ function desenhar() {
   desenharTrabalhos(); desenharTerminais(); desenharFila(); desenharPedidos(); desenharRotinas();
   if (rascunhos) devolverRascunhos(rascunhos);
   if (aba === "escritorio") { baixoChave = ""; desenharBaixo(); }
+  if (window.A47) A47.desenhar();
 }
 let listasChave = "", listasPendentes = false, forcar = false;
 function guardarRascunhos() {
@@ -2436,14 +2669,23 @@ function tile(v, r, cls, fn) {
 }
 
 function desenharTrabalhos() {
-  const W = (E.trabalhos || {}).lista || [];
+  // 09/11 (banca): quem diz "parado" no agora, ou agente que começou há mais de 12 h, vai pros Parados
+  const W = ((E.trabalhos || {}).lista || []).map(t => !t.fim && !t.parado && (/^parado\b/i.test(t.agora || "") ||
+    (t.origem === "cartao" && t.comeco && agoraS() - Date.parse(t.comeco) / 1000 > 12 * 3600)) ? {...t, parado: true} : t);
   const ls = W.filter(t => filtroTrab === "ativos" ? !t.fim && !t.parado : filtroTrab === "feitos" ? t.fim : t.parado);
   const vivos = W.filter(t => !t.fim && !t.parado);
   $("trab-sub").textContent = `${vivos.filter(anda).length} andando · ${vivos.filter(t => !anda(t)).length} na fila · ${W.filter(t => t.fim).length} terminados · ${W.filter(t => t.parado).length} parados`;
   for (const b of $("trab-filtro").children) b.setAttribute("aria-pressed", String(b.dataset.f === filtroTrab));
   if (filtroTrab === "ativos" && ls.length) {
     const andando = ls.filter(anda).sort((a, b) => b.pct - a.pct), zero = ls.filter(t => !anda(t));
-    const blocos = andando.map(cartaoTrabalho);
+    // 09/11: 3 ou mais da mesma rodada (mesmo terminal, mesmo começo antes do ":") viram um item que abre
+    const grupos = new Map();
+    for (const t of andando) { const k = (t.terminal || "") + "|" + (t.nome.includes(":") ? t.nome.split(":")[0].trim() : t.nome); if (!grupos.has(k)) grupos.set(k, []); grupos.get(k).push(t); }
+    const blocos = [];
+    for (const [k, g] of grupos) {
+      if (g.length < 3) { blocos.push(...g.map(cartaoTrabalho)); continue; }
+      blocos.push(el("details", {class: "grupo-trab"}, el("summary", {}, el("b", {text: k.split("|")[1]}), el("span", {text: ` · ${g.length} ao mesmo tempo · ${nomeTela(g[0].terminal || "")}`})), ...g.map(cartaoTrabalho)));
+    }
     if (zero.length) blocos.push(el("details", {class: "eb-fila", open: innerWidth >= 820 ? true : null},
       el("summary", {text: `Na fila, ainda não começaram (${zero.length})`}),
       el("div", {class: "fila0"}, zero.map(t => el("div", {class: "f0"}, el("b", {text: t.nome}), el("span", {text: [t.terminal, t.agora || t.etapa].filter(Boolean).join(" · ")}))))));
@@ -2590,7 +2832,8 @@ function desenharTerminais() {
     el("i", {class: "st " + t.status, title: NOMES_ST[t.status] || t.status}),
     el("div", {class: "t1"}, el("b", {text: nomeTela(t.nome)}), el("span", {text: [t.andar && t.andar !== "Térreo" ? t.andar : null, (NOMES_ST[t.status] || t.status) + " " + haQuanto(t.desde)].filter(Boolean).join(" · ")})),
     t.titulo ? el("div", {class: "tt", text: t.titulo}) : null,
-    t.ultima && t.status !== "idle" ? el("div", {class: "ul", text: "“" + t.ultima + "”"}) : null))
+    t.ultima && t.status !== "idle" ? el("div", {class: "ul", text: "“" + t.ultima + "”"}) : null,
+    window.A47 ? A47.ctxBarra(t) : null))
     : [el("p", {class: "vazio", text: "Nenhum terminal trabalhando agora."})]));
 }
 
@@ -2604,8 +2847,8 @@ function desenharFila() {
   const resolvidos = F.filter(i => i.estado !== "esperando" && i.estado !== "info" && i.classe !== "cartao").slice(0, 6);
   const nDec = esperando.filter(i => !decididos.has(i.id)).length;
   $("fila-sub").textContent = nDec ? `${nDec} pra decidir` : "nada pra decidir agora";
-  $("fila-lista").replaceChildren(...(esperando.length || resolvidos.length ? [...esperando, ...resolvidos].map(cartaoFila)
-    : [el("p", {class: "vazio", text: "Quando um terminal termina algo que precisa do seu ok, aparece aqui com o botão."})]));
+  const jaRes = resolvidos.length ? el("details", {class: "ja-res"}, el("summary", {text: "Já resolvidas, as últimas " + resolvidos.length}), ...resolvidos.map(cartaoFila)) : null;   // 09/11: fora do "pra decidir"
+  $("fila-lista").replaceChildren(...(esperando.length ? esperando.map(cartaoFila) : [el("p", {class: "vazio", text: "Quando um terminal termina algo que precisa do seu ok, aparece aqui com o botão."})]), ...(jaRes ? [jaRes] : []));
   const nossas = F.filter(comAGente);
   const dob = $("nossas");
   if (!dob.dataset.mexeu) dob.open = innerWidth >= 820;
@@ -2625,10 +2868,13 @@ function desenharFila() {
 }
 const ROTULO = {alerta: "alerta de disparo", entrega: "entrega", roteiro: "roteiro", pauta: "pauta"};
 const FEITO = {aprovar: "aprovado", ajuste: "ajuste pedido", recusar: "recusado", sim: "você disse sim", nao: "você disse não", editar: "texto novo mandado", excluir: "resolvido"};
+const br = t => String(t || "").replace(/(\d)\.(\d+)\s?(GB|MB|TB|mil|%)/g, "$1,$2 $3").replace(/\bhá (\d+) (min|h|s)\b/g, "há $1 $2");   // 0.3 GB -> 0,3 GB (sem quebrar)
 function caixaTexto(rotulo, valor, botao) {
   const t = el("textarea", {"aria-label": rotulo, placeholder: rotulo});
   if (valor) t.value = valor;
-  return el("div", {class: "ajuste", hidden: true}, t, el("button", {class: "btn", type: "button", text: botao}));
+  const cx = el("div", {class: "ajuste", hidden: true}, t, el("button", {class: "btn", type: "button", text: botao}));
+  if (window.FALAR) FALAR.ligar(t);      // 09/11: botão Falar em toda caixa (logo embaixo do texto, dentro da caixa)
+  return cx;
 }
 function cartaoFila(i) {
   const local = decididos.get(i.id);
@@ -2641,9 +2887,9 @@ function cartaoFila(i) {
   const quem = nomeTela(i.quem || i.origem);
   const card = el("article", {"data-item": i.id, class: "card" + (pend && !i.pergunta ? " pend" : "") + (i.estado === "feito" ? " ok" : decidido ? " dec" : "") + (!decidido && precisaDeVoce(i) ? " espera" : "")},
     el("span", {class: "tipo", text: tipo + (quem && quem !== tipo ? " · " + quem : "") + " · " + haQuanto(i.criado_ts)}),
-    el("h3", {text: i.titulo}),
+    el("h3", {text: br(i.titulo)}),
     i.pergunta ? el("p", {class: "perg", text: i.pergunta}) : null,
-    i.oque || i.resumo ? el("p", {text: i.oque || i.resumo}) : null,
+    i.oque || i.resumo ? el("p", {text: br(i.oque || i.resumo)}) : null,
     i.editado_ts ? el("span", {class: "ed", text: `você reescreveu ${haQuanto(i.editado_ts)}; ${i.quem || "o terminal"} está refazendo`}) : null,
     i.link ? el("a", {class: "ver", href: i.link, target: "_blank", rel: "noopener", text: "ver relatório"}) : null);
   if (decidido) {
@@ -2880,20 +3126,26 @@ function cartaoDark(l) {
 }
 
 /* pedidos */
-const ETAPAS = [["novo", "mandado"], ["entregue", "chegou na central"], ["distribuido", "distribuído"], ["feito", "feito"]];
+const ETAPAS = [["novo", "mandado"], ["entregue", "na central"], ["distribuido", "distribuído"], ["feito", "feito"]];
+let pedTodos = false;   // 09/11: os 5 mais novos; o resto a um toque
 function desenharPedidos() {
   const P = ((E.pedidos || {}).lista || []);
   enviados = enviados.filter(e => !P.some(p => p.texto === e.texto));
   const todos = [...enviados.map(e => ({...e, estado: "novo", historico: [[e.criado_ts, "saiu do celular"]]})), ...P];
-  $("ped-lista").replaceChildren(...(todos.length ? todos.map(p => {
+  const ver = pedTodos ? todos : todos.slice(0, 3);
+  const mais = todos.length > 3 ? el("button", {class: "lnk", type: "button", text: pedTodos ? "Mostrar só os 3 mais novos" : `Mostrar os ${todos.length - 3} mais antigos`}) : null;
+  if (mais) mais.addEventListener("click", () => { pedTodos = !pedTodos; desenharPedidos(); });
+  $("ped-lista").replaceChildren(...(ver.length ? ver.map(p => {
     const n = ETAPAS.findIndex(([k]) => k === p.estado);
+    const limpo = String(p.texto || "").replace(/^(\s*\[[^\]]*\]\s*)+/, "").trim();
     return el("article", {class: "ped"},
-      el("div", {class: "tx", text: p.texto}),
+      el("div", {class: "tx tx1", text: limpo || p.texto, title: p.texto}),
       el("div", {class: "passos"}, ETAPAS.map(([, nome], k) => el("span", {class: k <= n ? "on" : null, text: nome}))),
       p.destino && p.destino !== "TERMMINAL CENTRAL" ? el("p", {class: "l2"}, "foi pra ", el("b", {text: p.destino}), p.resposta ? " · " + p.resposta : "") :
         p.resposta ? el("p", {class: "l2", text: p.resposta}) : null,
-      el("ul", {class: "hist"}, (p.historico || []).slice(-4).map(([t, h]) => el("li", {text: `${hora(t)} ${h}`}))));
-  }) : [el("p", {class: "vazio", text: "Nenhum pedido ainda."})]));
+      (p.historico || []).length ? el("details", {class: "ped-mais"}, el("summary", {text: "o caminho do pedido"}),
+        el("p", {class: "l2", text: p.texto}), el("ul", {class: "hist"}, (p.historico || []).slice(-4).map(([t, h]) => el("li", {text: `${hora(t)} ${h}`})))) : null);
+  }).concat(mais ? [mais] : []) : [el("p", {class: "vazio", text: "Nenhum pedido ainda. O que você mandar pelo Pedir aparece aqui, com pra quem foi."})]));
 }
 $("f-pedido").addEventListener("submit", async ev => {
   ev.preventDefault();
@@ -4390,5 +4642,492 @@ if ("serviceWorker" in navigator && MODO !== "teste" && (location.protocol === "
     if (dono && $("app").hidden) abrir();
     else if (!dono && !$("app").hidden) porta(s ? "Este aparelho trocou pro e-mail " + s.user.email + ". Entre de novo com o do dono." : "");
   });
+})();
+</script>
+<script>
+/* ===== Andar 47 (09/11/2026, terminal Central Andar 47) =====
+   Pedido do Gustavo: a Central inteira no jeito do escritório da TV. Aqui moram as peças novas, por cima
+   do script de sempre (que chama estas pelo window.* quando elas existem):
+   - A47: a porta (a torre da TV com dado ao vivo, o que espera você, a caixa de falar) e a barra de contexto;
+   - FALAR: o botão Falar de toda caixa (PC: grava e o servidor transcreve; celular: ditado do navegador
+     ou grava e o PC transcreve pelo Funnel; sem nada disso, o guia do microfone do teclado);
+   - seções que abrem e fecham, lembrando o que ficou aberto; o tema claro, escuro ou do aparelho;
+   - NOTAS: os avisos no canto, no jeito da caixa de diálogo do Jarvis na TV, com histórico e notificação. */
+(() => {
+"use strict";
+const LS = {
+  ler(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  gravar(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+};
+const estreito = () => innerWidth <= 700;
+
+/* ---------------- tema ---------------- */
+const TEMAS = ["sistema", "claro", "escuro"], NOME_TEMA = {sistema: "Tema auto", claro: "Tema claro", escuro: "Tema escuro"};
+let tema = "sistema";
+try { tema = localStorage.getItem("central-tema") || "sistema"; } catch (e) {}
+function aplicarTema() {
+  if (tema === "sistema") delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = tema === "claro" ? "light" : "dark";
+  const b = $("tema-bt");
+  b.textContent = NOME_TEMA[tema];
+  b.setAttribute("aria-label", "Tema " + (tema === "sistema" ? "igual ao do aparelho" : tema) + ". Toque pra trocar");
+  b.title = "Tema: " + (tema === "sistema" ? "igual ao do aparelho" : tema) + " (toque pra trocar)";
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.content = getComputedStyle(document.documentElement).getPropertyValue("--noite").trim() || "#0b0a14";
+}
+$("tema-bt").addEventListener("click", () => {
+  tema = TEMAS[(TEMAS.indexOf(tema) + 1) % TEMAS.length];
+  try { localStorage.setItem("central-tema", tema); } catch (e) {}
+  aplicarTema();
+});
+if (window.matchMedia) matchMedia("(prefers-color-scheme: light)").addEventListener("change", aplicarTema);
+aplicarTema();
+
+/* ---------------- seções que abrem e fecham ---------------- */
+const DOBRA_K = "central-dobras";
+const dobras = LS.ler(DOBRA_K, {});
+const ABERTAS = new Set(["v-fila:0", "v-agora:1", "v-agora:2", "v-jarvis:0", "v-jarvis:2", "v-jarvis:3", "v-edicao:0", "v-github:0"]);
+function abrirSecao(s, on) {
+  s.classList.toggle("fechada", !on);
+  const b = s.querySelector(":scope > h2 > .dobra-bt");
+  if (b) b.setAttribute("aria-expanded", String(on));
+}
+function montarDobras() {
+  for (const v of ["v-fila", "v-agora", "v-jarvis", "v-edicao", "v-github"]) {
+    const vista = $(v);
+    if (!vista) continue;
+    [...vista.querySelectorAll("section.secao")].filter(s => s.closest(".vista") === vista).forEach((s, k) => {
+      const h = s.querySelector(":scope > h2");
+      if (!h || h.querySelector(".dobra-bt")) return;
+      const chave = v + ":" + k;
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "dobra-bt";
+      const t = document.createElement("span"); t.className = "dobra-t";
+      for (const f of [...h.childNodes]) if (!(f.querySelector && f.querySelector("a"))) t.append(f);   // link fica fora do botão
+      b.append(t); h.prepend(b);
+      abrirSecao(s, chave in dobras ? dobras[chave] : ABERTAS.has(chave));
+      b.addEventListener("click", () => {
+        const on = s.classList.contains("fechada");
+        abrirSecao(s, on);
+        dobras[chave] = on; LS.gravar(DOBRA_K, dobras);
+      });
+    });
+  }
+  const hn = document.querySelector("#nossas > summary h2");
+  if (hn && !hn.querySelector(".dobra-t")) { const t = document.createElement("span"); t.className = "dobra-t"; t.append(...hn.childNodes); hn.append(t); }
+  // quem pula pra uma lista (o placar do Andamento, por exemplo) abre a seção dela antes
+  const antes = Element.prototype.scrollIntoView;
+  Element.prototype.scrollIntoView = function (...a) {
+    const s = this.closest && this.closest("section.secao.fechada");
+    if (s) abrirSecao(s, true);
+    return antes.apply(this, a);
+  };
+}
+
+/* ---------------- botão Falar ---------------- */
+window.FALAR = (() => {
+  const instalado = navigator.standalone === true || (window.matchMedia && matchMedia("(display-mode: standalone)").matches);
+  const Rec = instalado ? null : (window.SpeechRecognition || window.webkitSpeechRecognition);   // no app instalado o iPhone não reconhece fala
+  const podeGravar = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+  let ativo = null;
+  const GUIA = "Use o microfone do teclado: toque na caixa e no microfone que aparece no teclado do celular.";
+  function juntar(campo, txt) {
+    txt = (txt || "").trim();
+    if (!txt) return;
+    const v = campo.value;
+    campo.value = (v && !/\s$/.test(v) ? v + " " : v) + txt;
+    campo.dispatchEvent(new Event("input", {bubbles: true}));
+    try { campo.focus({preventScroll: true}); campo.setSelectionRange(campo.value.length, campo.value.length); } catch (e) {}
+  }
+  function pronto(b) { b.setAttribute("aria-pressed", "false"); b.classList.remove("ocupado"); b.disabled = false; b.textContent = "Falar"; ativo = null; }
+  function motivoMic(e) {
+    const n = (e && (e.name || e.error || e.message)) || "";
+    if (/NotAllowed|not-allowed|Permission|service-not-allowed/i.test(n)) return "O microfone está bloqueado pra esta página. Libere no cadeado ao lado do endereço e toque em Falar de novo, ou escreva.";
+    if (/NotFound|audio-capture|DevicesNotFound/i.test(n)) return "Não achei microfone ligado neste aparelho. Ligue um ou escreva.";
+    if (/NotSupported|NotReadable|TypeError/i.test(n)) return "Este navegador não deixou gravar agora. Escreva, ou use o microfone do teclado.";
+    return "O microfone não abriu (" + (n || "motivo desconhecido") + "). Toque em Falar de novo ou escreva.";
+  }
+  async function gravar(b, msg) {
+    const fluxo = await navigator.mediaDevices.getUserMedia({audio: true});
+    const tipo = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"].find(t => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t));
+    const g = tipo ? new MediaRecorder(fluxo, {mimeType: tipo}) : new MediaRecorder(fluxo), pedacos = [];
+    const ctx = new (window.AudioContext || window.webkitAudioContext)(), an = ctx.createAnalyser();
+    ctx.createMediaStreamSource(fluxo).connect(an);
+    const buf = new Float32Array(an.fftSize);
+    let falou = false, quieto = 0;
+    const t0 = Date.now();
+    const vigia = setInterval(() => {
+      an.getFloatTimeDomainData(buf);
+      const rms = Math.sqrt(buf.reduce((a, x) => a + x * x, 0) / buf.length);
+      if (rms > 0.02) { falou = true; quieto = 0; } else if (falou) quieto += 100;
+      msg.textContent = falou ? "Gravando. Pare de falar ou toque de novo pra terminar." : "Pode falar.";
+      if ((falou && quieto > 1800) || Date.now() - t0 > 90000) { if (g.state === "recording") g.stop(); }
+    }, 100);
+    const fim = new Promise(ok => { g.ondataavailable = e => pedacos.push(e.data); g.onstop = ok; });
+    ativo = {b, parar: () => { if (g.state === "recording") g.stop(); }};
+    g.start();
+    await fim;
+    clearInterval(vigia); fluxo.getTracks().forEach(t => t.stop()); ctx.close().catch(() => {});
+    return falou ? new Blob(pedacos, {type: g.mimeType || tipo || "audio/webm"}) : null;
+  }
+  async function transcrever(blob) {
+    if (MODO === "pc") {
+      const r = await fetch("/api/transcrever", {method: "POST", headers: {"Content-Type": blob.type || "audio/webm"}, body: blob,
+        signal: AbortSignal.timeout ? AbortSignal.timeout(90000) : undefined});
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.erro || "a transcrição do PC respondeu " + r.status);
+      return d.texto || "";
+    }
+    if (typeof conversa === "undefined" || !conversa.ouvidoDoPC) throw new Error("sem caminho até o PC");
+    const d = await conversa.ouvidoDoPC(blob, 30000);
+    return d.texto || "";
+  }
+  function ditado(campo, b, msg) {
+    return new Promise((ok, nao) => {
+      const r = new Rec();
+      r.lang = "pt-BR"; r.interimResults = true; r.continuous = false; r.maxAlternatives = 1;
+      let fim = "", vivo = "";
+      r.onresult = ev => {
+        vivo = "";
+        for (const x of ev.results) { if (x.isFinal) fim += x[0].transcript; else vivo += x[0].transcript; }
+        msg.textContent = (fim + " " + vivo).trim() || "Pode falar.";
+      };
+      r.onerror = ev => { (ev.error === "no-speech" || ev.error === "aborted") ? ok("") : nao(ev); };
+      r.onend = () => ok((fim || vivo).trim());
+      ativo = {b, parar: () => { try { r.stop(); } catch (e) {} }};
+      r.start();
+      msg.textContent = "Pode falar.";
+    });
+  }
+  async function tocar(campo, b, msg) {
+    if (ativo) { if (ativo.b === b) ativo.parar(); return; }
+    if (MODO === "teste") { msg.textContent = "Na conferência o microfone não grava."; return; }
+    ativo = {b, parar() {}};       // até o microfone abrir (o navegador pode estar pedindo a permissão)
+    b.setAttribute("aria-pressed", "true"); b.textContent = "Ouvindo · toque pra parar";
+    try {
+      let texto = "";
+      if (MODO === "nuvem" && Rec) {
+        texto = await ditado(campo, b, msg);
+      } else if (podeGravar && (MODO === "pc" || pcVivo())) {
+        const blob = await gravar(b, msg);
+        if (blob) {
+          b.setAttribute("aria-pressed", "false"); b.classList.add("ocupado"); b.disabled = true; b.textContent = "Escrevendo…";
+          msg.textContent = MODO === "pc" ? "O PC está passando a sua fala pra texto." : "O PC está passando a sua fala pra texto. Leva uns segundos.";
+          texto = await transcrever(blob);
+        }
+      } else {
+        pronto(b);
+        msg.textContent = MODO === "nuvem" && !pcVivo() ? "O PC está sem sinal, então ele não transcreve agora. " + GUIA : GUIA;
+        return;
+      }
+      if (texto) { juntar(campo, texto); msg.textContent = "Pronto. Confira o texto e mande."; }
+      else msg.textContent = "Não ouvi nada. Toque em Falar e fale perto do microfone.";
+    } catch (e) {
+      const m = motivo(e);
+      msg.textContent = e && (e instanceof DOMException || e.error) ? motivoMic(e) : (/[.!]$/.test(m) ? m : "Não deu pra transcrever: " + m + ".") + (MODO === "nuvem" ? " " + GUIA : "");
+    }
+    pronto(b);
+  }
+  function ligar(campo, depoisDe, linha) {   // linha: a fileira do botão de mandar (o Falar entra na frente dele)
+    if (!campo || campo.dataset.falar) return;
+    campo.dataset.falar = "1";
+    const b = el("button", {type: "button", class: "falar", "aria-pressed": "false", "aria-label": "Falar em vez de escrever", text: "Falar"});
+    const msg = el("p", {class: "falar-msg", role: "status"});
+    b.addEventListener("click", () => { tocar(campo, b, msg).catch(() => pronto(b)); });
+    if (linha) { linha.prepend(b); linha.append(msg); return; }
+    (depoisDe || campo).after(el("div", {class: "falar-lin"}, b, msg));
+  }
+  return {ligar};
+})();
+
+/* ---------------- a porta: Andar 47 ---------------- */
+window.A47 = (() => {
+  let andar = null, falhou = false, visivel = false, esperaChave = "", mesasAbertas = false, quietoK = "", quietoT = 0;
+  const RECORTE_CEL = [0, 96, 1780, 810];
+  const recorte = () => estreito() ? RECORTE_CEL : [0, 0, 1920, 1080];
+  const STATUS = {busy: "trabalhando", waiting: "esperando", idle: "parado"};
+  function criar() {
+    if (andar || falhou) return;
+    if (!window.Andar) {
+      falhou = true;
+      $("a47-carrega").textContent = "A torre não carregou agora. O resto da Central funciona normal.";
+      return;
+    }
+    try {
+      andar = Andar.criar({dentro: $("a47-torre"), recorte: recorte(), agora: () => Date.now()});
+      $("a47-carrega").hidden = true;
+    } catch (e) {
+      falhou = true;
+      $("a47-carrega").textContent = "A torre não carregou (" + motivo(e) + "). O resto da Central funciona normal.";
+    }
+  }
+  // 1P e 2P da TV são os canais dele (o de cliente, como o do Sargentim, fica fora do placar)
+  const proprios = cs => { const m = cs.filter(c => /dal ?moro|geektavo/i.test(JSON.stringify(c))); return m.length ? m : cs; };
+  function paraAndar() {   // o mesmo formato do /api/estado do Jarvis que a TV lê, montado com o dado da Central
+    const base = (MODO === "pc" && J.estado) || E.jarvis || {};
+    const F = ((E.fila || {}).lista || []);
+    return {
+      agora: base.agora, pc: base.pc || {}, uso_claude: base.uso_claude || {}, canais: proprios(base.canais || []), dark: base.dark || {},
+      alertas: (base.alertas || []).filter(a => a.id !== "terminais-esperando"),   // isso mora no "Espera você" da porta
+      terminais: {lista: ((E.terminais || {}).lista || []).map(t => ({nome: nomeTela(t.nome), andar: t.andar, status: STATUS[t.status] || "parado", titulo: t.titulo}))},
+      trabalhos: ((E.trabalhos || {}).lista || []).filter(t => !t.fim).map(t => ({nome: t.nome, pct: t.pct, etapa: t.etapa, eta: t.eta,
+        quem: nomeTela(t.terminal || t.quem || ""), parado: !!t.parado, estado: t.parado ? "parado" : "rodando", passo_desde: t.passo_desde})),
+      esperando_ele: F.filter(i => precisaDeVoce(i) && !decididos.has(i.id)).length,
+    };
+  }
+  function mostrar(on) {
+    visivel = on;
+    if (on) { criar(); if (andar) { andar.encaixar(recorte()); andar.ligar(); } desenhar(); }
+    else if (andar && $("a47-tela").hidden) andar.parar();
+  }
+  function urgencia(i) { return (i.urgente || i.nivel === "urgente" ? 0 : 1) * 1e10 + (i.criado_ts || 0); }
+  function desenharEspera() {
+    const F = ((E.fila || {}).lista || []).filter(i => precisaDeVoce(i) && !decididos.has(i.id)).sort((a, b) => urgencia(a) - urgencia(b));
+    const caixa = $("a47-espera-item");
+    if (caixa.contains(document.activeElement) && document.activeElement.matches("textarea,input")) return;   // não redesenha embaixo de quem está escrevendo
+    if ([...caixa.querySelectorAll(".ajuste")].some(a => !a.hidden)) return;
+    const i = F[0];
+    const esperam = ((E.terminais || {}).lista || []).filter(t => t.status === "waiting");   // pedindo licença no terminal (Maestri)
+    const chave = JSON.stringify([carregou, i && [i.id, i.estado, i.titulo, i.oque], F.length > 1, esperam.map(t => t.id)]);
+    if (chave === esperaChave) return;
+    esperaChave = chave;
+    $("a47-espera").classList.toggle("tem", !!i || esperam.length > 0);
+    $("a47-todas").hidden = F.length < 2;
+    if (!carregou) { $("a47-espera-tit").textContent = "Espera você"; caixa.replaceChildren(el("p", {class: "a47-nada", text: "Lendo o que chegou…"})); return; }
+    const doTerminal = esperam.map(t => el("div", {class: "a47-term"}, t.titulo ? el("span", {class: "det", text: t.titulo}) : null,
+      el("b", {text: nomeTela(t.nome) + " está esperando sua aprovação"}),
+      el("p", {class: "a47-nada", text: "Ele pediu licença no terminal dele. Aprove lá no Maestri."})));
+    if (!i && doTerminal.length) {
+      $("a47-espera-tit").textContent = "Espera você";
+      caixa.replaceChildren(...doTerminal);
+      return;
+    }
+    if (!i) {
+      $("a47-espera-tit").textContent = "Nada espera você";
+      caixa.replaceChildren(el("p", {class: "a47-nada", text: "Quando um terminal precisar de um sim, de uma escolha ou de um ajuste seu, aparece aqui com o botão pra resolver."}));
+      return;
+    }
+    $("a47-espera-tit").textContent = "Espera você";
+    caixa.replaceChildren(cartaoFila(i), ...doTerminal);
+  }
+  function desenharMesas() {
+    const ul = $("a47-mesas");
+    ul.hidden = !mesasAbertas;
+    $("a47-quem").textContent = mesasAbertas ? "Esconder a lista" : "Quem está em cada mesa";
+    $("a47-quem").setAttribute("aria-expanded", String(mesasAbertas));
+    if (!mesasAbertas) return;
+    const ls = ((E.terminais || {}).lista || []).filter(t => t.status !== "idle");
+    ul.replaceChildren(...(ls.length ? ls.map(t => el("li", {}, el("b", {text: nomeTela(t.nome)}),
+      el("span", {text: (t.status === "waiting" ? "esperando você" : "trabalhando") + (t.titulo ? " · " + t.titulo : "")}))) :
+      [el("li", {}, el("span", {text: "Ninguém trabalhando agora. Quem dorme fica no mezanino."}))]));
+  }
+  function desenhar() {
+    desenharEspera();
+    if (!visivel) return;
+    if (andar) {
+      const d = paraAndar();
+      try { andar.estado(d); andar.voz(J.voz || {}, Date.now() / 1000); } catch (e) {}
+      if (REDUZ) {      // menos movimento: a torre pinta o quadro novo quando o dado muda e para
+        const k = JSON.stringify([d.terminais, d.trabalhos, d.esperando_ele]);
+        if (k !== quietoK) { quietoK = k; andar.ligar(); clearTimeout(quietoT); quietoT = setTimeout(() => andar.parar(), 1200); }
+      }
+    }
+    const T = (E.terminais || {}).lista || [];
+    $("a47-legenda").textContent = !carregou ? "Lendo o andar…" : !pcVivo() && MODO === "nuvem" ? "O PC está sem sinal: o andar mostra o último retrato que chegou." :
+      "Quem trabalha senta no térreo com a barra em cima da mesa. Quem dorme fica no mezanino. O Jarvis faz a ronda servindo café.";
+    if (mesasAbertas) desenharMesas();
+  }
+  // a torre em tela cheia (celular: deitado fica do tamanho da TV)
+  function telaCheia(on) {
+    if (!andar) return;
+    $("a47-tela").hidden = !on;
+    const deitar = on && innerHeight > innerWidth;       // celular em pé: a TV inteira na altura da tela, rolando de lado
+    $("a47-tela").classList.toggle("deitar", deitar);
+    $("a47-tela-dica").hidden = !deitar;
+    (on ? $("a47-tela-palco") : $("a47-torre")).append(andar.host);
+    andar.encaixar(on ? [0, 0, 1920, 1080] : recorte());
+    document.body.style.overflow = on ? "hidden" : "";
+    if (on) $("a47-tela-fechar").focus(); else $("a47-cheia").focus();
+  }
+  $("a47-cheia").addEventListener("click", () => { criar(); telaCheia(true); });
+  $("a47-tela-fechar").addEventListener("click", () => telaCheia(false));
+  addEventListener("keydown", ev => { if (ev.key === "Escape" && !$("a47-tela").hidden) telaCheia(false); });
+  $("a47-torre").addEventListener("click", () => { if (estreito()) { criar(); telaCheia(true); } });
+  $("a47-quem").addEventListener("click", () => { mesasAbertas = !mesasAbertas; desenharMesas(); });
+  $("a47-todas").addEventListener("click", () => irPara("fila"));
+  let largura = estreito();
+  addEventListener("resize", () => { if (!$("a47-tela").hidden && $("a47-tela").classList.contains("deitar") !== (innerHeight > innerWidth)) telaCheia(true);
+    if (estreito() !== largura) { largura = estreito(); if (andar && $("a47-tela").hidden) andar.encaixar(recorte()); } });
+  document.addEventListener("visibilitychange", () => { if (!andar) return; if (document.hidden) andar.parar(); else if (visivel || !$("a47-tela").hidden) andar.ligar(); });
+
+  // a caixa de falar da porta: pedido vai pelo mesmo Pedir da aba Jarvis; pergunta abre a conversa
+  const txt = $("a47-txt"), msg = $("a47-msg");
+  $("a47-form").addEventListener("submit", ev => {
+    ev.preventDefault();
+    const t = txt.value.trim();
+    if (!t) { msg.textContent = "Fale ou escreva o pedido primeiro."; txt.focus(); return; }
+    if (MODO === "teste") { msg.textContent = "Na conferência o pedido não sai daqui."; return; }
+    $("pedido").value = t;
+    msg.textContent = "Mandando…";
+    $("f-pedido").requestSubmit();
+    const olha = setInterval(() => {
+      const m = $("pedido-msg").textContent;
+      if (/^mandado/.test(m)) { clearInterval(olha); txt.value = ""; msg.textContent = (MODO === "pc" ? "Mandado. Chega no terminal central em segundos." : "Mandado. Chega na central em até 20 s.") + " Você acompanha em Jarvis, Seus pedidos."; }
+      else if (/^não foi/.test(m)) { clearInterval(olha); msg.textContent = "Não foi: " + m.replace(/^não foi:\s*/, "") + ". O texto continua aqui, é só mandar de novo."; }
+    }, 300);
+    setTimeout(() => clearInterval(olha), 30000);
+  });
+  $("a47-perguntar").addEventListener("click", () => {
+    const t = txt.value.trim();
+    if (MODO === "teste") { msg.textContent = "Na conferência a pergunta não sai daqui."; return; }
+    txt.value = "";
+    msg.textContent = t ? "A resposta aparece na conversa com o Jarvis." : "";
+    conversa.perguntar(t.slice(0, 600));
+  });
+
+  // contexto de cada terminal (o quanto da conversa dele já está cheio)
+  const renovados = new Map();
+  function ctxBarra(t) {
+    if (t.ctx == null) return null;
+    const p = Math.max(0, Math.min(100, Math.round(t.ctx))), cheio = p >= 80;
+    const b = el("b"); b.style.width = p + "%";
+    const box = el("div", {class: "ctx" + (cheio ? " cheio" : ""), title: "Quanto da conversa deste terminal já está ocupado"},
+      el("span", {text: "contexto"}), el("i", {}, b), el("span", {class: "num", text: p + "%"}));
+    if (cheio) {
+      const bt = el("button", {class: "lnk", type: "button", text: renovados.get(t.id) || "Pedir pra renovar"});
+      bt.addEventListener("click", () => {
+        if (renovados.has(t.id)) return;
+        if (!bt.classList.contains("armado")) { bt.classList.add("armado"); bt.textContent = "Toque de novo pra pedir"; setTimeout(() => { if (!renovados.has(t.id)) { bt.classList.remove("armado"); bt.textContent = "Pedir pra renovar"; } }, 4000); return; }
+        $("pedido").value = `Renovar o terminal ${nomeTela(t.nome)}: o contexto dele está em ${p}%. Fechar e reabrir com a ficha de onde parou, sem perder o trabalho.`;
+        $("f-pedido").requestSubmit();
+        renovados.set(t.id, "Pedido mandado pro central"); bt.textContent = "Pedido mandado pro central";
+      });
+      box.append(el("div", {class: "ctx-acao"}, el("span", {text: "Quase cheio: ele pode esquecer o começo da conversa."}), bt));
+    }
+    return box;
+  }
+  return {mostrar, desenhar, ctxBarra};
+})();
+
+/* ---------------- avisos no canto ---------------- */
+window.NOTAS = (() => {
+  const K = "central-avisos", KV = "central-avisos-vistos", KP = "central-avisos-perm";
+  const FORCAR = new URLSearchParams(location.search).get("avisos") === "sempre";
+  let hist = LS.ler(K, []), vistos = LS.ler(KV, {}), base = Object.keys(vistos).length > 0, naoLidos = 0, ultimaVoz = "";
+  const madrugada = () => { const h = new Date().getHours(); return !FORCAR && h < 7; };
+  const PX = {k: "#0b0a14", m: "#4a4a86", l: "#9aa3cf", c: "#5ff2f0", r: "#ff5a5a", a: "#ffc85a"};
+  const CARA = ["..mmmmmmm..", ".mlllllllm.", ".mlkkkkklm.", ".mlkcklcklm".slice(0, 11), ".mlkkkkklm.", ".mlkcccklm.", ".mlllllllm.", "..mmmmmmm..", "....mlm....", "...mmmmm...", "..mm...mm.."];
+  function cara(cv, tipo) {
+    const g = cv.getContext("2d"), cor = tipo === "espera" ? PX.r : tipo === "pronto" ? PX.a : PX.c;
+    cv.width = 11; cv.height = 11; g.clearRect(0, 0, 11, 11);
+    CARA.forEach((l, y) => [...l].forEach((ch, x) => { if (ch === ".") return; g.fillStyle = ch === "c" ? cor : PX[ch]; g.fillRect(x, y, 1, 1); }));
+  }
+  function ir(a) {
+    $("avisos").hidden = true; $("avisos-bt").setAttribute("aria-expanded", "false");
+    irPara(a.ir || "andar");
+  }
+  function mostrar(a) {
+    const pilha = $("notas");
+    const cv = el("canvas", {"aria-hidden": "true"});
+    cara(cv, a.tipo);
+    const n = el("button", {type: "button", class: "nota " + (a.tipo || ""), "aria-label": a.f + ". Toque pra abrir"},
+      cv, el("span", {class: "q"}, a.q || "JARVIS", a.sobre ? el("small", {text: "sobre: " + a.sobre}) : null), el("span", {class: "f", text: a.f}));
+    n.addEventListener("click", () => { n.remove(); ir(a); });
+    pilha.append(n);
+    while (pilha.children.length > 3) pilha.firstElementChild.remove();
+    requestAnimationFrame(() => requestAnimationFrame(() => n.classList.add("on")));
+    setTimeout(() => { n.classList.remove("on"); setTimeout(() => n.remove(), 400); }, a.urgente ? 20000 : 8000);
+  }
+  function noAparelho(a) {
+    if (!("Notification" in window) || Notification.permission !== "granted" || !document.hidden || !navigator.serviceWorker) return;
+    navigator.serviceWorker.ready.then(r => r.showNotification(a.q === "JARVIS" ? "Jarvis" : "Central", {body: a.f, tag: a.id, icon: "icone-192.png", badge: "icone-192.png", data: {ir: a.ir}})).catch(() => {});
+  }
+  function contar() { $("avisos-n").textContent = naoLidos ? String(naoLidos) : ""; }
+  function novo(id, a) {
+    if (vistos[id]) return;
+    vistos[id] = Date.now();
+    if (!base) return;              // primeira leitura deste aparelho: só marca o que já existe
+    a.id = id; a.em = Date.now();
+    hist.unshift(a); hist = hist.slice(0, 40); LS.gravar(K, hist);
+    const quieto = madrugada() && !a.urgente;
+    if (!quieto) { naoLidos++; contar(); mostrar(a); noAparelho(a); }
+    if ($("avisos") && !$("avisos").hidden) desenharLista();
+  }
+  const curto = (s, n = 90) => { s = String(s || "").replace(/\s+/g, " ").trim(); return s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s; };
+  function varrer() {
+    if (!carregou) return;
+    const F = (E.fila || {}).lista || [];
+    for (const i of F) {
+      if (precisaDeVoce(i)) novo("p:" + i.id, {q: "PENDÊNCIA", sobre: nomeTela(i.quem || i.origem || ""), f: curto(nomeTela(i.quem || "Um terminal") + " precisa de você: " + i.titulo), tipo: "espera", ir: "fila", urgente: !!(i.urgente || i.nivel === "urgente")});
+      if (i.classe === "cartao" && i.fase === "concluido") {
+        const nota = /\b(\d{1,2}[,.]\d)\b/.exec(String(i.veredito || ""));
+        novo("c:" + i.id + ":" + (i.atualizado_ts || ""), {q: "PRONTO", sobre: nomeTela(i.quem || ""), f: curto(nomeTela(i.quem || "Um terminal") + " terminou " + i.titulo + (nota ? ": nota " + nota[1].replace(".", ",") : "")), tipo: "pronto", ir: "agora"});
+      }
+    }
+    for (const t of (E.trabalhos || {}).lista || []) {
+      if (t.fim && t.origem !== "cartao") novo("t:" + t.nome + ":" + (t.comeco || ""), {q: "PRONTO", sobre: nomeTela(t.terminal || ""), f: curto(nomeTela(t.terminal || "Um terminal") + " terminou " + t.nome), tipo: "pronto", ir: "agora"});
+    }
+    for (const p of (E.pedidos || {}).lista || []) {
+      const assunto = curto(p.texto, 50);
+      if (p.estado === "distribuido" && p.destino) novo("pd:" + p.id, {q: "PEDIDO", sobre: assunto, f: curto("Seu pedido foi pra " + nomeTela(p.destino)), ir: "jarvis"});
+      if (p.estado === "feito") novo("pf:" + p.id, {q: "PEDIDO", sobre: assunto, f: curto("Pedido feito" + (p.resposta ? ": " + p.resposta : "")), tipo: "pronto", ir: "jarvis"});
+    }
+    for (const t of (E.terminais || {}).lista || []) {
+      if (t.status === "waiting") novo("w:" + t.id + ":" + t.desde, {q: "TERMINAL", sobre: nomeTela(t.nome), f: nomeTela(t.nome) + " está esperando você", tipo: "espera", ir: "agora"});
+    }
+    const v = J.voz || {}, cena = v.cena || {};
+    const frase = cena.frase_pt || (v.estado === "falando" ? v.legenda : "");
+    if (frase && frase !== ultimaVoz) {
+      ultimaVoz = frase;
+      novo("j:" + (cena.ate || "") + ":" + frase.slice(0, 60), {q: "JARVIS", sobre: cena.termo || "", f: curto(frase, 120), ir: "jarvis"});
+    }
+    if (!base) base = true;
+    const velho = Date.now() - 4 * 864e5;
+    for (const [k, t] of Object.entries(vistos)) if (t < velho) delete vistos[k];
+    LS.gravar(KV, vistos);
+  }
+  function quando(ms) { const d = new Date(ms); return d.toLocaleString("pt-BR", {day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit"}).replace(",", " às"); }
+  function desenharLista() {
+    const ol = $("avisos-lista");
+    ol.replaceChildren(...(hist.length ? hist.map(a => {
+      const b = el("button", {type: "button"}, el("b", {text: a.f}), el("span", {text: (a.q === "JARVIS" ? "Jarvis" : a.q.charAt(0) + a.q.slice(1).toLowerCase()) + " · " + quando(a.em)}));
+      b.addEventListener("click", () => ir(a));
+      return el("li", {}, b);
+    }) : [el("li", {}, el("p", {class: "vazio", text: "Nenhum aviso ainda. Pendência nova, terminal que terminou e o que o Jarvis fizer aparecem aqui."}))]));
+    const pode = MODO === "nuvem" && "Notification" in window && Notification.permission === "default" && !LS.ler(KP, false);
+    $("avisos-perm").hidden = !pode;
+  }
+  $("avisos-bt").addEventListener("click", () => {
+    const d = $("avisos"), on = d.hidden;
+    d.hidden = !on; $("avisos-bt").setAttribute("aria-expanded", String(on));
+    if (on) { naoLidos = 0; contar(); desenharLista(); $("avisos-fechar").focus(); }
+  });
+  $("avisos-fechar").addEventListener("click", () => { $("avisos").hidden = true; $("avisos-bt").setAttribute("aria-expanded", "false"); $("avisos-bt").focus(); });
+  addEventListener("keydown", ev => { if (ev.key === "Escape" && !$("avisos").hidden) $("avisos-fechar").click(); });
+  document.addEventListener("click", ev => { const d = $("avisos"); if (!d.hidden && !d.contains(ev.target) && !$("avisos-bt").contains(ev.target)) { d.hidden = true; $("avisos-bt").setAttribute("aria-expanded", "false"); } });
+  $("avisos-sim").addEventListener("click", async () => {
+    LS.gravar(KP, true);
+    try { await Notification.requestPermission(); } catch (e) {}
+    desenharLista();
+  });
+  $("avisos-nao").addEventListener("click", () => { LS.gravar(KP, true); desenharLista(); });
+  if (navigator.serviceWorker) navigator.serviceWorker.addEventListener("message", ev => { if (ev.data && ev.data.central === "ir") irPara(ev.data.ir); });
+  return {varrer, mostrar, desenharLista};
+})();
+
+/* ---------------- ligar tudo ---------------- */
+montarDobras();
+FALAR.ligar($("a47-txt"), null, $("a47-falar").querySelector(".a47-botoes"));
+FALAR.ligar($("pedido"), null, $("f-pedido").querySelector(".envio"));
+FALAR.ligar($("conversa"), null, $("f-conversa").querySelector(".envio"));
+if ($("pj-conversa-texto")) FALAR.ligar($("pj-conversa-texto"), $("pj-conversa"));
+// do Jarvis pro painel de cartões, do Andamento pro prédio em corte (as vistas antigas continuam a um toque)
+const irBt = (txt, id) => { const b = el("button", {class: "lnk", type: "button", text: txt}); b.addEventListener("click", () => irPara(id)); return b; };
+$("v-jarvis").querySelector(".jv-txt").append(irBt("Abrir o painel de cartões do Jarvis", "painel"));
+$("term-lista").before(irBt("Ver os terminais no prédio em corte", "escritorio"));
+const ir = new URLSearchParams(location.search).get("ir");
+if (ir && !$("app").hidden) irPara(ir);
+A47.mostrar(aba === "andar" && !$("app").hidden);
+setInterval(() => { if (!$("app").hidden) { NOTAS.varrer(); A47.desenhar(); } }, 3000);
 })();
 </script>

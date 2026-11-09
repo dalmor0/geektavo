@@ -2,9 +2,9 @@
    Página: rede primeiro, cópia guardada se cair. Ícones e manifesto: guardados.
    Dados (Supabase, /estado.json, Jarvis, Edição) nunca passam por aqui: a página guarda o último
    estado no próprio navegador e mostra com o aviso de dado velho. */
-const CAIXA = "central-v3";
+const CAIXA = "central-v4";   // 09/11: a torre do Andar 47 (andar.js, andar.css, fonte) também abre sem rede
 const FORA = ["cdn.jsdelivr.net", "fonts.googleapis.com", "fonts.gstatic.com"];   // biblioteca do banco e fontes: guardadas pra abrir sem rede
-const CASCA = ["./", "manifest.webmanifest", "icone-192.png", "icone-512.png", "icone-180.png"];
+const CASCA = ["./", "manifest.webmanifest", "icone-192.png", "icone-512.png", "icone-180.png", "andar.js", "andar.css", "jersey15.woff2"];
 const LIB = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js";
 self.addEventListener("install", e => { e.waitUntil(caches.open(CAIXA).then(c => c.addAll(CASCA).then(() => c.add(LIB).catch(() => {}))).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CAIXA).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
@@ -28,4 +28,14 @@ self.addEventListener("fetch", e => {
     if (r.ok && (!pagina || html)) { const cp = r.clone(); caches.open(CAIXA).then(c => c.put(pagina ? "./" : e.request, cp)); }
     return r;
   }).catch(() => caches.match(pagina ? "./" : e.request).then(r => r || (pagina ? caches.match("./") : Response.error()))));
+});
+
+/* avisos (09/11): tocar na notificação abre a Central (ou traz pra frente a que já está aberta) */
+self.addEventListener("notificationclick", e => {
+  e.notification.close();
+  const ir = (e.notification.data && e.notification.data.ir) || "andar";
+  e.waitUntil(self.clients.matchAll({type: "window", includeUncontrolled: true}).then(cs => {
+    for (const c of cs) { c.postMessage({central: "ir", ir}); if ("focus" in c) return c.focus(); }
+    return self.clients.openWindow("./?ir=" + encodeURIComponent(ir));
+  }));
 });

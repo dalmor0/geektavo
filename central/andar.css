@@ -1,0 +1,127 @@
+/* CÓPIA PRA CENTRAL gerada pelo CENTRAL/site/andar_da_tv.py a partir do JARVIS/painel/andar.css (não editar aqui). */
+@font-face{font-family:"Jersey 15";src:url(jersey15.woff2) format("woff2");font-weight:400;font-display:swap}
+/* GERADO por CENTRAL/repaginada/tv-ideias-2026-11-07/andar47-variacoes/v6-mix/fonte/para_tv.py a partir do v6 (Andar 47 mix). */
+#andar{position:relative;width:100%;height:100%;background:#0b0a14;overflow:hidden}
+#andar[hidden]{display:none}
+#andar *{box-sizing:content-box}
+#andar{
+  --ink:#0b0a14;--n1:#141327;--n2:#1d1b38;--n3:#282650;--n4:#36346a;--n5:#4a4a86;--n6:#6a6fa8;--n7:#9aa3cf;--n8:#e6e8f6;
+  --c1:#0f4f62;--c2:#1a9bb0;--c3:#5ff2f0;--p1:#5a1a4c;--p2:#c0307c;--p3:#ff6fb0;
+  --a1:#6a3a12;--a2:#d0801c;--a3:#ffc85a;--r1:#5c1420;--r2:#c8283c;--r3:#ff5a5a;
+  --g1:#1d5a3a;--g2:#3cba5a;--g3:#9cf06a;--b1:#1a3a7a;--b2:#3a78d8;--b3:#8cc8ff;--v1:#3a1f5c;--v2:#7a3fb0;
+}
+#andar #a6-stage.noite{--n8:#cfc8e0;--n7:#8a92bc}
+#andar #a6-stage.noite #a6-top,#andar #a6-stage.noite #a6-bot{filter:brightness(.82)}
+#andar #a6-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--ink);overflow:hidden}
+#andar #a6-world{position:absolute;left:0;top:0;width:1920px;height:1080px;image-rendering:pixelated;image-rendering:crisp-edges}
+#andar #a6-hud{position:absolute;inset:0;font-family:'Jersey 15',monospace;color:var(--n8);-webkit-font-smoothing:none}
+#andar #a6-hud canvas{image-rendering:pixelated;display:block}
+#andar .o{text-shadow:3px 0 0 var(--ink),-3px 0 0 var(--ink),0 3px 0 var(--ink),0 -3px 0 var(--ink),3px 3px 0 var(--ink),-3px 3px 0 var(--ink),3px -3px 0 var(--ink),-3px -3px 0 var(--ink)}
+#andar .pn{position:absolute;background:var(--n1);box-shadow:inset 0 0 0 4px var(--bc,var(--n5)),inset 0 0 0 8px var(--ink);
+  clip-path:polygon(4px 0,calc(100% - 4px) 0,calc(100% - 4px) 4px,100% 4px,100% calc(100% - 4px),calc(100% - 4px) calc(100% - 4px),calc(100% - 4px) 100%,4px 100%,4px calc(100% - 4px),0 calc(100% - 4px),0 4px,4px 4px)}
+#andar .hd{position:absolute;font-size:28px;letter-spacing:4px;line-height:1}
+/* topo */
+#andar #a6-top{position:absolute;left:0;top:0;width:1920px;height:96px;background:var(--ink);box-shadow:inset 0 -4px 0 var(--n3)}
+#andar .score{position:absolute;top:8px}
+#andar .score .who{font-size:28px;color:var(--n7);display:flex;align-items:center;gap:12px;line-height:1}
+#andar .score .who b{font-weight:400;font-size:26px;letter-spacing:2px;color:var(--ink);padding:3px 8px 2px;background:var(--k)}
+#andar .score .num{font-size:60px;line-height:.9;margin-top:4px;color:var(--k)}
+#andar .score .num small{font-size:28px;color:var(--n6);margin-left:12px;letter-spacing:2px}
+#andar #a6-clock{position:absolute;left:470px;top:6px;width:260px;text-align:center}
+#andar #a6-clock .h{font-size:62px;line-height:.9}
+#andar #a6-clock .d{font-size:26px;color:var(--n7);margin-top:2px;line-height:1;display:flex;justify-content:center;align-items:center;gap:10px;white-space:nowrap}
+#andar #a6-clock .d canvas{width:28px;height:28px}
+#andar #a6-boss{position:absolute;left:790px;top:10px;width:610px}
+#andar #a6-boss .t{font-size:28px;display:flex;justify-content:space-between;line-height:1;color:var(--n7)}
+#andar #a6-boss .t span:first-child{color:var(--n8)}
+#andar #a6-boss .t em{font-style:normal;font-size:26px;letter-spacing:3px;color:var(--a3);margin-right:12px;vertical-align:3px}
+#andar #a6-boss .row{display:flex;align-items:center;gap:14px;margin-top:10px}
+#andar #a6-boss .pct{font-size:46px;color:var(--a3);line-height:.8;width:90px;text-align:right}
+#andar .bar{position:relative;height:24px;background:var(--n2);box-shadow:inset 0 0 0 4px var(--ink);flex:1}
+#andar .bar>i{position:absolute;left:4px;top:4px;bottom:4px;background:var(--f);box-shadow:inset 0 4px 0 var(--fl)}
+#andar .bar::after{content:"";position:absolute;inset:4px;background:repeating-linear-gradient(90deg,transparent 0 16px,var(--ink) 16px 20px)}
+#andar .bar.big{height:30px}
+/* placas dos andares (fora da torre, à esquerda) */
+#andar .andar{position:absolute;left:4px;width:148px;height:44px;background:var(--ink);box-shadow:inset 0 0 0 3px var(--n4);text-align:center;font-size:30px;letter-spacing:2px;line-height:46px;color:var(--n7)}
+#andar .andar::before{content:"";position:absolute;right:-10px;top:17px;width:10px;height:4px;background:var(--n4)}
+#andar .andar b{font-weight:400;color:var(--n8)}
+/* placas das salas de cima (quem dorme) */
+#andar .sala{position:absolute;font-size:28px;line-height:1;padding:3px 10px 4px 12px;background:rgba(11,10,20,.84);box-shadow:inset 4px 0 0 var(--k,var(--n6));color:var(--n8);white-space:nowrap}
+#andar .sala span{color:var(--n7)}
+#andar .sala.on{box-shadow:inset 4px 0 0 var(--c3),inset 0 0 0 3px var(--c3)}
+/* placas das mesas do Térreo */
+#andar .tag{position:absolute;width:236px;top:626px;height:138px;display:flex;flex-direction:column;padding:8px 12px 10px;box-sizing:border-box;background:rgba(11,10,20,.88);box-shadow:inset 0 4px 0 var(--k),inset 0 0 0 4px var(--n3)}
+#andar .tag::before,#andar .tag::after{content:"";position:absolute;top:-10px;width:4px;height:10px;background:var(--n5)}
+#andar .tag::before{left:20px}
+#andar .tag::after{right:20px}
+#andar .tag .nm{font-size:31px;line-height:.9;color:var(--k);white-space:nowrap}
+#andar .tag .tt{font-size:27px;line-height:1;color:var(--n8);margin-top:3px;white-space:nowrap}
+#andar .tag .hp{display:flex;align-items:center;gap:8px;margin-top:6px}
+#andar .tag .hp.sm,#andar .tag .sub{margin-top:auto}
+#andar .tag .hp b{font-weight:400;font-size:34px;width:64px;text-align:right;line-height:.8;color:var(--n8)}
+#andar .tag .hp.sm .bar{height:18px}
+#andar .tag .hp.sm b{font-size:27px;color:var(--n7)}
+#andar .tag .hp.sm span{font-size:26px;color:var(--n7);white-space:nowrap;line-height:1}
+#andar .tag .sub{font-size:26px;color:var(--n7);line-height:1;margin-top:4px;white-space:nowrap}
+#andar #a6-pend{transition:opacity .5s}
+#andar #a6-pend.calado{opacity:.45}
+#andar .tag.on{box-shadow:inset 0 4px 0 var(--k),inset 0 0 0 4px var(--c3)}
+#andar .pin{display:none;position:absolute;right:12px;top:12px;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:14px solid var(--c3)}
+#andar .on>.pin{display:block}
+#andar #a6-pend{position:absolute;left:1540px;top:622px;width:200px;padding:6px 0 8px;text-align:center;background:#120c1e;box-shadow:inset 0 0 0 4px var(--r2)}
+#andar #a6-pend .n{font-size:72px;color:var(--r3);line-height:.85}
+#andar #a6-pend .w{font-size:36px;color:var(--r3);line-height:.9;letter-spacing:1px}
+#andar #a6-pend .s{font-size:25px;color:var(--n8);line-height:1;margin-top:3px}
+#andar #a6-jtag{position:absolute;font-size:28px;background:var(--ink);padding:3px 10px 2px;line-height:1;white-space:nowrap;color:var(--c3);transform:translateX(-50%);display:flex;align-items:center;gap:8px;box-shadow:inset 0 0 0 2px var(--n3)}
+#andar #a6-jtag i{display:inline-block;width:10px;height:10px;background:var(--c3)}
+#andar #a6-jtag span{color:var(--n7)}
+/* rodapé */
+#andar #a6-bot{position:absolute;left:0;top:904px;width:1920px;height:176px;background:var(--ink)}
+#andar #a6-mis{left:24px;top:12px;width:872px;height:152px;--bc:var(--a2)}
+#andar #a6-mis .hd{left:28px;top:22px;color:var(--a3)}
+#andar #a6-mis ul{position:absolute;left:28px;top:56px;right:20px;margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;row-gap:12px;column-gap:20px}
+#andar #a6-mis li{font-size:31px;line-height:1;height:32px;display:flex;align-items:center;gap:12px;white-space:nowrap}
+#andar #a6-mis li canvas{flex:none}
+#andar #a6-itens{left:912px;top:12px;width:476px;height:152px;--bc:var(--c2)}
+#andar #a6-itens .hd{left:28px;top:22px;color:var(--c3)}
+#andar #a6-itens .hd b{font-weight:400;color:var(--n8)}
+#andar #a6-itens .slots{position:absolute;left:28px;top:54px;display:flex;gap:16px}
+#andar #a6-itens .slot{width:64px;height:64px;background:var(--n2);box-shadow:inset 0 0 0 4px var(--n4);display:flex;align-items:center;justify-content:center;position:relative}
+#andar #a6-itens .slot small{position:absolute;top:66px;left:-10px;right:-10px;text-align:center;font-size:28px;color:var(--n7);line-height:1}
+#andar #a6-pc{left:1404px;top:12px;width:492px;height:152px;--bc:var(--g2)}
+#andar #a6-pc .hd{left:28px;top:22px;color:var(--g3)}
+#andar #a6-pc .hd2{position:absolute;right:26px;top:18px;font-size:26px;color:var(--n7);line-height:1}
+#andar #a6-pc .en{position:absolute;left:28px;right:26px;top:54px;display:flex;align-items:center;gap:10px}
+#andar #a6-pc .en span{font-size:28px;color:var(--n7);line-height:1}
+#andar #a6-pc .en b{font-weight:400;font-size:38px;line-height:.8;width:66px;text-align:right}
+#andar #a6-pc .rows{position:absolute;left:28px;right:26px;top:102px;font-size:28px;line-height:1;display:flex;justify-content:space-between}
+#andar #a6-pc .rows div{gap:10px}
+#andar #a6-pc .rows div{display:flex;justify-content:space-between}
+#andar #a6-pc .rows span{color:var(--n7)}
+/* diálogo de RPG */
+#andar #a6-dlg{position:absolute;left:24px;top:908px;width:1872px;height:160px;background:var(--n1);
+  box-shadow:inset 0 0 0 4px var(--n8),inset 0 0 0 8px var(--ink),inset 0 0 0 12px var(--c2),inset 0 0 0 16px var(--ink);
+  clip-path:polygon(4px 0,calc(100% - 4px) 0,calc(100% - 4px) 4px,100% 4px,100% calc(100% - 4px),calc(100% - 4px) calc(100% - 4px),calc(100% - 4px) 100%,4px 100%,4px calc(100% - 4px),0 calc(100% - 4px),0 4px,4px 4px);
+  transform:translateY(200px);transition:transform .5s steps(6)}
+#andar #a6-dlg.on{transform:translateY(0)}
+#andar #a6-dlg .pt{position:absolute;left:24px;top:16px;width:128px;height:128px;background:var(--ink);box-shadow:inset 0 0 0 4px var(--n5)}
+#andar #a6-dlg .pt canvas{position:absolute;left:4px;top:4px;width:120px;height:120px}
+#andar #a6-dlg .nm{position:absolute;left:180px;top:22px;font-size:30px;color:var(--c3);line-height:1;letter-spacing:4px}
+#andar #a6-dlg .sb{position:absolute;left:330px;top:22px;font-size:30px;line-height:1;color:var(--n7)}
+#andar #a6-dlg .sb b{font-weight:400;color:var(--n8)}
+#andar #a6-dlg .fr{position:absolute;left:180px;top:60px;right:90px;font-size:50px;line-height:1;white-space:nowrap;overflow:hidden}
+#andar #a6-dlg .wv{position:absolute;left:180px;top:122px;width:1580px;height:24px}
+#andar #a6-dlg .ar{position:absolute;right:40px;bottom:28px;width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:18px solid var(--n8)}
+/* TV: nome e trabalho de verdade podem ser longos; corta com reticências */
+#andar .tag .nm,#andar .tag .tt,#andar .tag .sub{overflow:hidden;text-overflow:ellipsis;max-width:100%}
+#andar .tag .hp.sm span{overflow:hidden;text-overflow:ellipsis;min-width:0;flex:0 1 auto;max-width:90px}
+#andar #a6-mis li{min-width:0}
+#andar #a6-mis li span{overflow:hidden;text-overflow:ellipsis}
+#andar #a6-mis.um ul{grid-template-columns:1fr}
+#andar .sala[hidden],#andar .tag[hidden],#andar #a6-pend[hidden],#andar #a6-boss[hidden],#andar .score[hidden]{display:none}
+#andar #a6-itens .vazio{position:absolute;left:28px;top:70px;font-size:31px;color:var(--n7)}
+/* fala: 2 linhas que rolam de linha em linha; a onda sobe pra linha do nome */
+#andar #a6-dlg .sb{max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#andar #a6-dlg .wv{left:660px;top:28px;width:1185px;height:18px}
+#andar #a6-dlg .fr{top:58px;height:88px;font-size:44px;line-height:44px;white-space:normal;overflow:hidden}
+#andar #a6-dlg .rolo .sep{color:var(--n6);font-size:34px}
