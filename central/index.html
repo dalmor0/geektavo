@@ -1030,6 +1030,102 @@ article.it .l1 > .tit{flex:1 1 auto}
 .falar-lin{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
 .falar-msg{font-size:14px;color:var(--cinza);margin:0}
 
+/* aba Ao vivo (09/11): o trabalho visual sendo montado, quadro leve por mudança, palpite no meio */
+main:has(#v-aovivo:not([hidden])){max-width:1840px}
+body:has(#v-aovivo:not([hidden])) .topo-in,body:has(#v-aovivo:not([hidden])) .rodape{max-width:1840px}
+.av{display:grid;grid-template-columns:320px minmax(0,1fr);gap:48px;align-items:start}
+.av-lado{display:grid;gap:16px;min-width:0}
+.av-lado h2{margin:0}
+.av-lista{list-style:none;margin:0;padding:0;border-top:2px solid var(--giz)}
+.av-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--fio)}
+.av-item b{font:600 17px/1.3 var(--body);overflow-wrap:anywhere}
+.av-item span{grid-column:1;font-size:14px;color:var(--cinza);overflow-wrap:anywhere}
+.av-item.fim b{color:var(--cinza)}
+.av-bt,.av-liga,.av-seg button{min-height:44px;padding:0 16px;background:none;border:2px solid var(--borda);color:var(--giz);font:700 14px var(--body);cursor:pointer;white-space:nowrap}
+.av-liga{grid-column:2;grid-row:1 / span 2;min-width:96px}
+.av-bt[aria-pressed="true"],.av-liga[aria-pressed="true"],.av-seg button[aria-pressed="true"]{background:var(--giz);border-color:var(--giz);color:var(--noite)}
+.av-bt:disabled{opacity:.5;cursor:default}
+.av-bt:focus-visible,.av-liga:focus-visible,.av-seg button:focus-visible,.av-q:focus-visible{outline:3px solid var(--giz);outline-offset:3px}
+@media (hover:hover){ .av-bt:hover,.av-liga:hover,.av-seg button:hover{border-color:var(--giz)} }
+.av-tipos{display:grid;gap:8px}
+.av-tipos h3{font:600 15px var(--body);margin:0}
+.av-tipos-bt{display:flex;flex-wrap:wrap;gap:8px}
+.av-janelas{display:grid;gap:56px;min-width:0}
+.av-jan{border-top:2px solid var(--giz);padding-top:16px;display:grid;gap:20px;min-width:0}
+.av-cab{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:12px 24px}
+.av-cab > div:first-child{display:grid;gap:6px;min-width:0}
+.av-cab .av-acoes .av-bt{min-width:176px}
+.av-nome{font:400 34px/1 var(--display);letter-spacing:.02em;margin:0;overflow-wrap:anywhere}
+.av-prog{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;font-size:14px;color:var(--cinza)}
+.av-prog i{display:block;height:6px;background:var(--fio)}
+.av-prog i b{display:block;height:100%;background:var(--ciano)}
+.av-prog span{grid-column:1 / -1}
+.av-prog strong{color:var(--giz);font:700 15px var(--body)}
+.av-corpo{display:grid;gap:24px;min-width:0;align-content:start;align-items:start}
+.av-vista{display:grid;gap:12px;min-width:0;align-content:start}
+.av-barra-q{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.av-seg{display:inline-flex}
+.av-seg button + button{border-left:0}
+.av-palco{display:grid;gap:16px;min-width:0}
+.av-palco.cmp{grid-template-columns:repeat(2,minmax(0,1fr))}
+.av-quadro{margin:0;display:grid;gap:8px;min-width:0}
+.av-quadro figcaption{font-size:14px;color:var(--cinza)}
+.av-quadro figcaption b{color:var(--giz);font-weight:600}
+.av-rola{max-height:min(72vh,780px);overflow:auto;background:var(--sup);box-shadow:inset 0 0 0 1px var(--fio)}
+.av-rola img{display:block;width:100%;height:auto}
+.av-rola.m img{width:min(100%,390px);margin:0 auto}
+.av-texto{margin:0;padding:16px;max-height:min(72vh,780px);overflow:auto;background:var(--sup);box-shadow:inset 0 0 0 1px var(--fio);font:400 15px/1.6 ui-monospace,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+.av-aviso{margin:0;padding:16px;background:var(--sup);box-shadow:inset 0 0 0 1px var(--fio);color:var(--cinza)}
+.av-tempo{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}
+.av-tempo.av-tem-mais{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent)}
+.av-q{scroll-snap-align:start}
+.av-rola-cx{position:relative;min-width:0}
+.av-rola-cx:has(.av-rola.av-tem-mais)::after{content:"";position:absolute;left:1px;right:1px;bottom:1px;height:48px;background:linear-gradient(transparent,var(--sup));pointer-events:none}
+@media (max-width:1099px){ .av:has(.av-jan) .av-lado{order:2} }
+@media (max-width:360px){ .av-q img{width:72px;height:45px} }
+@media (max-width:420px){ .av-cab .av-acoes .av-bt{white-space:normal;line-height:1.15;font-size:13px;padding:4px 6px;text-wrap:balance} }
+/* banca, rodada 2 (09/11) */
+.av-tipos-bt{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.av-tipos-bt .av-bt{white-space:normal;line-height:1.2;padding:6px 10px;text-align:center}
+@media (min-width:900px) and (max-width:1199px){ .av-corpo{grid-template-columns:minmax(0,1fr) 280px;gap:24px} }
+/* até 1099 px, com janela ligada: o título fica em cima, as janelas no meio e a lista no fim */
+@media (max-width:1099px){ .av:has(.av-jan) .av-lado{display:contents} .av:has(.av-jan) .av-lado > h2{order:0} .av:has(.av-jan) .av-janelas{order:1} .av:has(.av-jan) .av-lado > :not(h2){order:2} }
+/* aviso é fio à esquerda, não caixa: ciano pro que está andando, vermelho pro que pede você */
+.av-aviso{background:none;box-shadow:none;padding:4px 0 4px 12px;border-left:3px solid var(--ciano);color:var(--giz)}
+.av-aviso.pede{border-left-color:var(--verm)}
+.av-q{flex:none;display:grid;gap:4px;justify-items:start;padding:4px;min-height:44px;white-space:nowrap;background:none;border:2px solid transparent;color:var(--cinza);font:600 13px var(--body);cursor:pointer}
+.av-q img{width:96px;height:60px;object-fit:cover;object-position:top;display:block;background:var(--sup);box-shadow:inset 0 0 0 1px var(--fio)}
+.av-q[aria-pressed="true"]{border-color:var(--giz);color:var(--giz)}
+.av-lateral{display:grid;gap:16px;align-content:start;min-width:0}
+.av-lateral h4{font:600 18px var(--body);margin:0}
+.av-form{display:grid;gap:12px;align-content:start}
+.av-form .a47-msg:empty{display:none}
+.av-form textarea{width:100%;min-height:88px;resize:vertical;background:var(--sup);border:1px solid var(--borda);padding:12px;font:400 16px/1.5 var(--body);color:var(--giz)}
+.av-form .envio .btn{white-space:nowrap}
+.av-pal{list-style:none;margin:0;padding:0;display:grid}
+.av-pal li{padding:12px 0;border-top:1px solid var(--fio);display:grid;gap:8px;justify-items:start}
+.av-pal p{margin:0;overflow-wrap:anywhere}
+.av-resp{padding-left:12px;border-left:3px solid var(--ciano)}
+.av-acoes{display:flex;flex-wrap:wrap;gap:12px}
+.av-vazio{margin:0;padding:24px 0;color:var(--cinza);max-width:56ch}
+/* com a aba Ao vivo o topo tem 7 abas: entre 821 e 1180 px aperta os vãos e o estado do PC fica só no ponto */
+@media (min-width:821px) and (max-width:1180px){ .topo-in{gap:16px} .topo .abas{gap:14px} .pc #pc-t{display:none} }
+/* banca (09/11): o palpite fica ao lado do quadro já no notebook; a lista aperta pra sobrar quadro */
+@media (min-width:1200px){ .av-corpo{grid-template-columns:minmax(0,1fr) 320px;gap:32px} }
+@media (min-width:1100px) and (max-width:1499px){ .av{grid-template-columns:260px minmax(0,1fr);gap:32px} }
+@media (min-width:1500px){ .av-corpo{grid-template-columns:minmax(0,1fr) 380px;gap:40px} }
+@media (min-width:1100px){ .av-janelas > .av-jan:first-child{border-top:0;padding-top:0} }
+.av-item span{text-wrap:pretty}
+/* tipo ligado: contorno e fio embaixo; o cheio fica só pra Ligado, Na TV e Mandar palpite */
+.av-tipos-bt .av-bt[aria-pressed="true"]{background:none;color:var(--giz);border-color:var(--borda);box-shadow:inset 0 -3px 0 var(--giz)}
+.av-tipos-bt .av-bt[aria-pressed="false"]{color:var(--cinza);border-style:dashed}
+/* modo Celular: a caixa tem a largura do celular, encostada à esquerda */
+.av-rola-cx:has(.av-rola.m){width:min(100%,390px)}
+.av-rola.m{background:transparent}
+@media (max-width:1099px){ .av{grid-template-columns:minmax(0,1fr);gap:32px} }
+@media (max-width:700px){ .av-cab .av-acoes{width:100%;flex-wrap:nowrap} .av-cab .av-acoes .av-bt{flex:1 1 0;min-width:0;padding:0 8px}
+  .av-palco.cmp{grid-template-columns:minmax(0,1fr)} .av-nome{font-size:28px} .av-form .envio .btn{flex:1 1 auto} .av-janelas{gap:40px} }
+
 /* contexto de cada terminal: barra fina, calma */
 .ctx{display:grid;grid-template-columns:auto minmax(60px,1fr) auto;align-items:center;gap:8px;margin-top:6px;font-size:13px;color:var(--cinza)}
 .ctx i{display:block;height:4px;background:var(--fio);position:relative}
@@ -1302,6 +1398,19 @@ article.it .l1 > .tit{flex:1 1 auto}
     </section>
   </section>
 
+  <!-- AO VIVO (09/11): o trabalho visual sendo montado -->
+  <section class="vista" id="v-aovivo" role="tabpanel" aria-labelledby="t-aovivo" hidden>
+    <div class="av">
+      <aside class="av-lado" aria-label="Trabalhos visuais abertos">
+        <h2>Ao vivo</h2>
+        <p class="det" id="av-sub">Ligue o que você quer ver sendo montado. Desligado não gasta nada do PC.</p>
+        <ul class="av-lista" id="av-lista"></ul>
+        <div class="av-tipos" id="av-tipos" hidden></div>
+      </aside>
+      <div class="av-janelas" id="av-janelas"></div>
+    </div>
+  </section>
+
   <!-- JARVIS -->
   <section class="vista" id="v-jarvis" role="tabpanel" aria-labelledby="t-jarvis" hidden>
     <div class="jv-topo">
@@ -1515,7 +1624,7 @@ function hora(s) {
 const hojeISO = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 
 /* ---------- abas (escritório único, 06/11: Pedir foi pro Jarvis, Rotinas pro Andamento) ---------- */
-const ABAS = [["andar", "Andar 47"], ["fila", "Pendências"], ["agora", "Andamento"], ["jarvis", "Jarvis"], ["areas", "Áreas"], ["atalhos", "Atalhos"]];   // 09/11: a torre da TV é a porta
+const ABAS = [["andar", "Andar 47"], ["fila", "Pendências"], ["agora", "Andamento"], ["aovivo", "Ao vivo"], ["jarvis", "Jarvis"], ["areas", "Áreas"], ["atalhos", "Atalhos"]];   // 09/11: a torre da TV é a porta
 const EXTRAS = [["painel", "Painel de cartões do Jarvis"], ["escritorio", "Prédio em corte"]];   // vistas que abrem de dentro (Jarvis e Andamento) e pelo Mais
 const BAIXO = ["andar", "fila", "jarvis", "areas"];
 let aba = "andar";
@@ -1553,6 +1662,7 @@ function irPara(id) {
   if (mb) { mb.setAttribute("aria-expanded", "false"); mb.setAttribute("aria-selected", String(!BAIXO.includes(id))); }
   $("jfaixa").hidden = id === "jarvis" || id === "escritorio" || id === "painel" || id === "andar";
   if (window.A47) A47.mostrar(id === "andar");
+  if (window.AOVIVO) AOVIVO.mostrar(id === "aovivo");
   if (id === "painel") PJ.mostrar(); else PJ.esconder();
   if (id === "escritorio") desenharEscritorio();
   if (id === "areas") { arChave = ""; desenharAreas(); }
@@ -5113,6 +5223,278 @@ window.NOTAS = (() => {
   $("avisos-nao").addEventListener("click", () => { LS.gravar(KP, true); desenharLista(); });
   if (navigator.serviceWorker) navigator.serviceWorker.addEventListener("message", ev => { if (ev.data && ev.data.central === "ir") irPara(ev.data.ir); });
   return {varrer, mostrar, desenharLista};
+})();
+
+/* ---------------- aba Ao vivo (09/11) ----------------
+   Cada trabalho visual em andamento é uma janela que ele liga ou desliga (lembrado neste aparelho).
+   PC: lê /aovivo/estado a cada 2,5 s com a aba aberta (ler é a batida de quem assiste; o capturador do
+   servidor só tira retrato do que está ligado e só quando a fonte muda). Celular: a lista vem na linha
+   central-aovivo, a batida e o palpite vão por votos (tipo central-aovivo) e o quadro vem de
+   central-aovivo-q-<slug>. Palpite fica preso ao quadro que estava na tela. */
+window.AOVIVO = (() => {
+  const K = "central-aovivo";
+  const pref = Object.assign({ligados: [], ocultos: [], vista: {}}, LS.ler(K, {}));
+  let ap = LS.ler(K + "-ap", null);
+  if (!ap) { ap = (MODO === "nuvem" ? "cel" : "pc") + Math.random().toString(36).slice(2, 8); LS.gravar(K + "-ap", ap); }
+  let S = null, visivel = false, erro = "", lendo = false, batida = 0, kLista = "";
+  const J = new Map();          // slug -> janela montada
+  const Q = new Map();          // celular: slug -> {agora, antes} com o JPEG em base64
+  const salvar = () => LS.gravar(K, pref);
+  const hms = ts => ts ? new Date(ts * 1000).toLocaleTimeString("pt-BR", {hour: "2-digit", minute: "2-digit", second: "2-digit"}) : "";
+  const bt = (cls, txt, at = {}) => el("button", {type: "button", class: cls, text: txt, ...at});
+  const TIPO = {edicao: "edição", video: "vídeo", site: "site", pagina: "página", artifact: "artifact", app: "app", deck: "deck", prancha: "prancha", thumb: "thumb", texto: "texto"};
+  const nomeTipo = t => TIPO[t] || t;
+
+  function src(slug, q, tela) {
+    if (MODO !== "nuvem") return `/aovivo/quadro/${slug}/${q.ts}-${tela}.jpg`;
+    const c = Q.get(slug) || {};
+    const p = [c.agora, c.antes].find(x => x && x.ts === q.ts);
+    return p && p[tela] ? "data:image/jpeg;base64," + p[tela] : "";
+  }
+  async function votar(id, veredito, corpo) {
+    const {error} = await comTempo(sb.from("votos").upsert({id, dia: hojeISO(), tipo: "central-aovivo", n: 0, veredito, logline: JSON.stringify(corpo)}));
+    if (error) throw error;
+  }
+  async function ler() {
+    if (lendo) return;
+    lendo = true;
+    try {
+      if (MODO === "pc") {
+        const ver = visivel ? pref.ligados.join(",") : "";
+        const r = await fetch(`/aovivo/estado?ap=${ap}&ver=${encodeURIComponent(ver)}`, {cache: "no-store", signal: comPrazo()});
+        if (!r.ok) throw new Error("a tela do PC respondeu " + r.status);
+        S = await r.json();
+      } else {
+        S = E.aovivo || (carregou ? {lista: []} : null);
+        if (MODO === "nuvem" && visivel && S) {
+          if (Date.now() - batida > 30000) { batida = Date.now(); await votar("central-av-" + ap, "assistir", {slugs: pref.ligados, ts: agoraS()}); }
+          for (const i of S.lista) {
+            const u = i.quadros[i.quadros.length - 1];
+            if (!u || !pref.ligados.includes(i.slug) || ((Q.get(i.slug) || {}).agora || {}).ts === u.ts) continue;
+            const {data} = await comTempo(sb.from("dark_dados").select("dados").eq("data", "2000-01-02").eq("canal", "central-aovivo-q-" + i.slug).maybeSingle());
+            if (data && data.dados) Q.set(i.slug, data.dados);
+          }
+        }
+      }
+      erro = "";
+    } catch (e) { erro = motivo(e); }
+    finally { lendo = false; }
+    desenhar();
+  }
+
+  /* ---- a lista: liga e desliga, e os tipos que aparecem ---- */
+  function alternar(slug, on) {
+    pref.ligados = pref.ligados.filter(s => s !== slug);
+    if (on) pref.ligados.unshift(slug);
+    salvar(); batida = 0; kLista = "";
+    ler();
+  }
+  function desenharLista() {
+    const todos = S ? S.lista : [];
+    const ver = todos.filter(i => !pref.ocultos.includes(i.tipo));
+    const tipos = [...new Set(todos.map(i => i.tipo).concat(pref.ocultos))].sort();
+    const k = JSON.stringify([ver.map(i => [i.slug, i.nome, i.quem, i.fechado, i.quadros.length, pref.ligados.includes(i.slug)]), tipos, pref.ocultos, !!S, erro]);
+    if (k === kLista) return;
+    kLista = k;
+    $("av-lista").replaceChildren(...ver.map(i => {
+      const on = pref.ligados.includes(i.slug);
+      const b = bt("av-liga", on ? "Ligado" : "Ligar", {"aria-pressed": String(on), "aria-label": (on ? "Desligar a janela de " : "Ligar a janela de ") + i.nome});
+      b.addEventListener("click", () => alternar(i.slug, !on));
+      return el("li", {class: "av-item" + (i.fechado ? " fim" : "")}, el("b", {text: i.nome}), b,
+        el("span", {text: [nomeTipo(i.tipo), nomeTela(i.quem).trim().toLowerCase() === i.nome.trim().toLowerCase() ? null : nomeTela(i.quem), i.fechado ? "terminou " + haQuanto(i.fechado) : i.modo === "texto" ? "texto ao vivo" : i.quadros.length ? null : "sem quadro ainda"].filter(Boolean).join(" · ")}));
+    }));
+    if (!ver.length) $("av-lista").replaceChildren(el("li", {class: "av-vazio", text: !S ? (erro ? "Não consegui ler a lista agora (" + erro + "). Tento de novo sozinho." : "Carregando a lista…")
+      : todos.length ? "Os trabalhos abertos agora são de um tipo que você escondeu. Ligue o tipo aqui embaixo pra ver." : "Nenhum trabalho visual aberto agora. Quando um terminal começar um site, app, deck ou prancha, ele aparece aqui."}));
+    const box = $("av-tipos");
+    box.hidden = !tipos.length;
+    box.replaceChildren(el("h3", {text: "Tipos que aparecem aqui"}),
+      el("div", {class: "av-tipos-bt"}, tipos.map(t => {
+        const on = !pref.ocultos.includes(t);
+        const b = bt("av-bt", on ? nomeTipo(t) : nomeTipo(t) + " · escondido", {"aria-pressed": String(on), "aria-label": (on ? "Esconder trabalho do tipo " : "Voltar a mostrar trabalho do tipo ") + nomeTipo(t)});
+        b.addEventListener("click", () => { pref.ocultos = on ? [...pref.ocultos, t] : pref.ocultos.filter(x => x !== t); salvar(); kLista = ""; desenhar(); });
+        return b;
+      })),
+      el("p", {class: "det", text: "Desligue o tipo que não te interessa e ele some da lista neste aparelho."}));
+  }
+
+  /* ---- a janela de um trabalho ---- */
+  function criar(slug) {
+    const w = {slug, fixo: null, cmp: false, k: {}, mandando: false};
+    const seg = (tela, nome) => { const b = bt("", nome, {"aria-pressed": "false"}); b.addEventListener("click", () => { pref.vista[slug] = tela; salvar(); atualizar(w); }); return b; };
+    w.btD = seg("d", "Computador"); w.btM = seg("m", "Celular");
+    w.seg = el("div", {class: "av-seg", role: "group", "aria-label": "Tamanho da tela"}, w.btD, w.btM);
+    w.btCmp = bt("av-bt", "Comparar com o de antes", {"aria-pressed": "false"});
+    w.btCmp.addEventListener("click", () => { w.cmp = !w.cmp; atualizar(w); });
+    w.btVolta = bt("av-bt", "Voltar pro quadro de agora");
+    w.btVolta.addEventListener("click", () => { w.fixo = null; atualizar(w); });
+    w.nome = el("h3", {class: "av-nome"}); w.meta = el("p", {class: "det"}); w.prog = el("div", {class: "av-prog", hidden: true});
+    w.palco = el("div", {class: "av-palco"}); w.tempo = el("div", {class: "av-tempo", role: "group", "aria-label": "Linha do tempo dos quadros", hidden: true});
+    w.campo = el("textarea", {id: "av-txt-" + slug, rows: "3", maxlength: "1200", placeholder: "Ex.: não gostei dessa cor do botão, tenta mais escura"});
+    w.mandar = el("button", {type: "submit", class: "btn", text: "Mandar palpite"});
+    w.envio = el("div", {class: "envio"}, w.mandar);
+    w.msg = el("p", {class: "a47-msg", role: "status"});
+    w.form = el("form", {class: "av-form"}, el("label", {for: "av-txt-" + slug, class: "det", text: "O palpite vai preso ao quadro que está na tela e chega no terminal que está fazendo."}), w.campo, w.envio, w.msg);
+    FALAR.ligar(w.campo, null, w.envio);
+    w.form.addEventListener("submit", ev => { ev.preventDefault(); palpitar(w); });
+    w.pal = el("ol", {class: "av-pal"});
+    w.btTV = bt("av-bt", "Mostrar na TV", {"aria-pressed": "false"});
+    w.btTV.addEventListener("click", () => naTV(w));
+    w.btOff = bt("av-bt", "Desligar", {"aria-label": "Desligar esta janela"});
+    w.btOff.addEventListener("click", () => alternar(slug, false));
+    w.no = el("article", {class: "av-jan", "aria-label": "Janela ao vivo"},
+      el("div", {class: "av-cab"}, el("div", {}, w.nome, w.meta), el("div", {class: "av-acoes"}, w.btTV, w.btOff)),
+      w.prog,
+      el("div", {class: "av-corpo"},
+        el("div", {class: "av-vista"}, el("div", {class: "av-barra-q"}, w.seg, w.btCmp, w.btVolta), w.tempo, w.palco),
+        el("div", {class: "av-lateral"}, el("h4", {text: "Seu palpite"}), w.form, w.pal)));
+    return w;
+  }
+  const item = slug => S && S.lista.find(i => i.slug === slug);
+  function quadroNaTela(w, i) { return (w.fixo && i.quadros.find(q => q.ts === w.fixo)) || i.quadros[i.quadros.length - 1] || null; }
+  function figura(i, q, tela, rotulo) {
+    const s = src(i.slug, q, q.telas.includes(tela) ? tela : q.telas[0]);
+    const leg = el("figcaption", {}, el("b", {text: rotulo}), " · " + hms(q.ts) + (q.origem ? " · " + q.origem : ""));
+    if (!s) return el("figure", {class: "av-quadro"}, leg, el("p", {class: "av-aviso", text: "Este quadro ficou só no PC. No celular chegam o de agora e o de antes."}));
+    const img = el("img", {src: s, alt: `${i.nome}, quadro das ${hms(q.ts)}`, decoding: "async"});
+    const rola = el("div", {class: "av-rola" + (tela === "m" && q.telas.includes("m") ? " m" : ""), tabindex: "0", role: "group", "aria-label": "Quadro das " + hms(q.ts) + ", role pra ver a página inteira"}, img);
+    const dica = el("span", {class: "av-dica", hidden: true, text: " · role dentro do quadro pra ver o resto da página"});
+    leg.append(dica);
+    // página mais alta que a caixa: degradê no pé e a dica, até ele rolar até o fim
+    const medir = () => { const tem = rola.scrollHeight - rola.clientHeight > 8; dica.hidden = !tem; rola.classList.toggle("av-tem-mais", tem && rola.scrollTop + rola.clientHeight < rola.scrollHeight - 8); };
+    img.addEventListener("load", medir, {once: true});
+    rola.addEventListener("scroll", medir, {passive: true});
+    return el("figure", {class: "av-quadro"}, leg, el("div", {class: "av-rola-cx"}, rola));
+  }
+  function medirTempo(w) { w.tempo.classList.toggle("av-tem-mais", w.tempo.scrollWidth - w.tempo.clientWidth > 8 && w.tempo.scrollLeft + w.tempo.clientWidth < w.tempo.scrollWidth - 8); }
+  function atualizar(w) {
+    const i = item(w.slug);
+    if (!i) return;
+    const q = quadroNaTela(w, i), n = i.quadros.length;
+    const temM = !!q && q.telas.includes("m");
+    const tela = temM && pref.vista[w.slug] === "m" ? "m" : "d";
+    const ultimo = n ? i.quadros[n - 1] : null;
+    w.nome.textContent = i.nome;
+    w.meta.textContent = [nomeTipo(i.tipo), "com " + nomeTela(i.quem), i.fechado ? "terminou " + haQuanto(i.fechado) : i.modo === "texto" ? (i.mexido ? "arquivo mexido " + haQuanto(i.mexido) : "") : ultimo ? "último quadro " + haQuanto(ultimo.ts) : ""].filter(Boolean).join(" · ");
+    // a barra do mesmo nome (scripts/progresso.py), pra janela e barra andarem juntas
+    const t = ((E.trabalhos || {}).lista || []).find(x => (x.nome || "").trim().toLowerCase() === i.nome.trim().toLowerCase());
+    const kp = t ? JSON.stringify([t.pct, t.passo_atual, t.agora, t.fim]) : "";
+    if (kp !== w.k.prog) {
+      w.k.prog = kp; w.prog.hidden = !t;
+      if (t) w.prog.replaceChildren(el("i", {}, el("b", {style: `width:${Math.max(0, Math.min(100, t.pct || 0))}%`})), el("strong", {text: (t.fim ? 100 : Math.round(t.pct || 0)) + "%"}),
+        el("span", {text: t.fim ? "Trabalho terminado." : [t.passo_atual, t.agora].filter(Boolean).join(" · ") || "andando"}));
+    }
+    w.seg.hidden = !temM; w.btCmp.hidden = n < 2 || i.modo === "texto"; w.btVolta.hidden = !w.fixo;
+    w.btD.setAttribute("aria-pressed", String(tela === "d")); w.btM.setAttribute("aria-pressed", String(tela === "m"));
+    w.btCmp.setAttribute("aria-pressed", String(w.cmp)); w.btCmp.textContent = w.cmp ? "Fechar a comparação" : "Comparar com o de antes";
+    w.btTV.setAttribute("aria-pressed", String(!!i.na_tv)); w.btTV.textContent = i.na_tv ? "Na TV" : "Mostrar na TV";
+    const cap = (S.capturador || {}), semPC = MODO === "nuvem" ? !pcVivo() : cap.batida && agoraS() - cap.batida > 30;
+    const kq = JSON.stringify([q && q.ts, tela, w.cmp, i.texto, i.erro, cap.pausa, semPC, MODO === "nuvem" && q ? !!src(i.slug, q, tela) : 1]);
+    if (kq !== w.k.palco) {
+      w.k.palco = kq;
+      const avisos = [];
+      if (i.erro) avisos.push(`A página deste trabalho não abriu agora. Se ela roda num servidor local, ele pode ter parado: mande um palpite pedindo pro terminal ${nomeTela(i.quem)} religar. O quadro volta sozinho quando a página abrir. (${i.erro})`);
+      if (cap.pausa) avisos.push(cap.pausa);
+      if (semPC) avisos.push(MODO === "nuvem" ? "O PC está sem sinal, então não chega quadro novo. O último fica aqui." : "O retratista da Central parou de responder. O último quadro fica aqui; reiniciar a Tela Central resolve.");
+      let corpo;
+      if (i.modo === "texto") corpo = [el("pre", {class: "av-texto", tabindex: "0", text: i.texto || "O arquivo ainda está vazio."}), el("p", {class: "det", text: `Fim do arquivo ${i.arquivo || ""}, do jeito que está agora.`})];
+      else if (!q) corpo = [el("p", {class: "av-aviso", text: i.fechado ? "Este trabalho terminou sem nenhum quadro guardado." : "Tirando o primeiro retrato. Com o PC cheio leva uns 20 segundos."})];
+      else {
+        const k = i.quadros.indexOf(q), antes = k > 0 ? i.quadros[k - 1] : null;
+        corpo = w.cmp && antes ? [figura(i, antes, tela, "Antes"), figura(i, q, tela, "Depois")] : [figura(i, q, tela, w.fixo ? "Quadro guardado" : "Agora")];
+      }
+      w.palco.className = "av-palco" + (w.cmp && corpo.length === 2 ? " cmp" : "");
+      w.palco.replaceChildren(...avisos.map(a => el("p", {class: "av-aviso" + (/não abriu|parou de responder/.test(a) ? " pede" : ""), role: "status", text: a})), ...corpo);
+    }
+    const kt = JSON.stringify([i.quadros.map(x => x.ts), q && q.ts]);
+    if (kt !== w.k.tempo) {
+      w.k.tempo = kt; w.tempo.hidden = n < 2;
+      w.tempo.replaceChildren(...i.quadros.slice().reverse().map((x, k) => {
+        const s = src(i.slug, x, "d");
+        const b = el("button", {type: "button", class: "av-q", "aria-pressed": String(!!q && x.ts === q.ts), "aria-label": "Ver o quadro das " + hms(x.ts)},
+          s ? el("img", {src: s, alt: "", loading: "lazy", width: "96", height: "60"}) : null, el("span", {text: (k === 0 ? "agora · " : "") + hms(x.ts)}));
+        const mini = b.querySelector("img");
+        if (mini) mini.addEventListener("error", () => mini.remove(), {once: true});   // miniatura que não veio: fica só a hora
+        b.addEventListener("click", () => { w.fixo = k === 0 ? null : x.ts; atualizar(w); });
+        return b;
+      }));
+      if (!w.tempo.dataset.rola) { w.tempo.dataset.rola = "1"; w.tempo.addEventListener("scroll", () => medirTempo(w), {passive: true}); }
+      requestAnimationFrame(() => medirTempo(w));
+    }
+    const kpal = JSON.stringify(i.palpites);
+    if (kpal !== w.k.pal) {
+      w.k.pal = kpal;
+      w.pal.replaceChildren(...i.palpites.slice().reverse().map(p => {
+        const ver = (txt, ts) => { const b = bt("av-bt", txt); b.addEventListener("click", () => { w.fixo = ts === (ultimo || {}).ts ? null : ts; w.cmp = false; atualizar(w); w.palco.scrollIntoView({block: "nearest", behavior: "smooth"}); }); return b; };
+        const tem = ts => ts && i.quadros.some(x => x.ts === ts);
+        return el("li", {},
+          el("p", {text: p.texto}),
+          el("p", {class: "det", text: `${hora(p.ts)} · ${p.de === "voz" ? "por voz · " : ""}${p.quadro ? "no quadro das " + hms(p.quadro) : "antes do primeiro quadro"}`}),
+          p.resposta ? el("p", {class: "av-resp"}, el("b", {text: nomeTela(i.quem) + ": "}), p.resposta) : el("p", {class: "det", text: `Mandado pro terminal ${nomeTela(i.quem)}. Sem resposta ainda.`}),
+          el("div", {class: "av-acoes"}, tem(p.quadro) ? ver("Ver o quadro do palpite", p.quadro) : null, p.resposta && tem(p.resp_quadro) && p.resp_quadro !== p.quadro ? ver("Ver o quadro de depois", p.resp_quadro) : null));
+      }));
+    }
+  }
+  async function palpitar(w) {
+    const i = item(w.slug), texto = w.campo.value.trim();
+    if (!i || w.mandando) return;
+    if (!texto) { w.msg.textContent = "Escreva ou fale o palpite antes de mandar."; w.campo.focus(); return; }
+    const q = quadroNaTela(w, i);
+    w.mandando = true; w.mandar.disabled = true; w.msg.textContent = "Mandando…";
+    try {
+      if (MODO === "pc") {
+        const r = await fetch("/aovivo/palpite", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({slug: w.slug, texto, quadro: q ? q.ts : null}), signal: comPrazo()});
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(d.erro || "a tela do PC respondeu " + r.status);
+      } else if (MODO === "nuvem") await votar("central-av-p-" + Date.now(), "palpite", {slug: w.slug, texto, quadro: q ? q.ts : null});
+      else throw new Error("na conferência o palpite não sai");
+      w.campo.value = "";
+      w.msg.textContent = `Palpite mandado pro terminal ${nomeTela(i.quem)}. A resposta aparece aqui embaixo.`;
+      ler();
+    } catch (e) { w.msg.textContent = "O palpite não saiu: " + motivo(e) + ". O texto continua na caixa, mande de novo."; }
+    finally { w.mandando = false; w.mandar.disabled = false; }
+  }
+  async function naTV(w) {
+    const i = item(w.slug);
+    if (!i) return;
+    const on = !i.na_tv;
+    w.btTV.disabled = true;
+    try {
+      if (MODO === "pc") { const r = await fetch("/aovivo/tv", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({slug: w.slug, on}), signal: comPrazo()}); if (!r.ok) throw new Error("a tela do PC respondeu " + r.status); }
+      else if (MODO === "nuvem") await votar("central-av-t-" + Date.now(), "tv", {slug: w.slug, on});
+      i.na_tv = on; atualizar(w);
+      w.msg.textContent = on ? "Ligado na TV. Peça ao Jarvis: abre o ao vivo." : "Saiu da TV.";
+    } catch (e) { w.msg.textContent = "A TV não mudou: " + motivo(e) + "."; }
+    finally { w.btTV.disabled = false; }
+  }
+  function desenhar() {
+    desenharLista();
+    if (!visivel) return;
+    const box = $("av-janelas");
+    const vivos = S ? pref.ligados.filter(s => { const i = item(s); return i && !pref.ocultos.includes(i.tipo); }) : [];
+    for (const [s, w] of J) if (!vivos.includes(s)) { w.no.remove(); J.delete(s); }
+    const vazio = box.querySelector(":scope > .av-vazio");
+    if (!vivos.length) {
+      const txt = !S ? "" : S.lista.length ? "Nenhuma janela ligada. Toque em Ligar num trabalho da lista pra ver ele sendo montado e dar palpite antes de ficar pronto." : "";
+      if (txt && !vazio) box.replaceChildren(el("p", {class: "av-vazio", text: txt}));
+      else if (!txt && vazio) vazio.remove();
+      return;
+    }
+    if (vazio) vazio.remove();
+    vivos.forEach((s, k) => {
+      let w = J.get(s);
+      if (!w) { w = criar(s); J.set(s, w); }
+      if (box.children[k] !== w.no) box.insertBefore(w.no, box.children[k] || null);
+      atualizar(w);
+    });
+  }
+  function mostrar(on) {
+    visivel = !!on && !$("app").hidden;
+    if (visivel) { batida = 0; ler(); }
+  }
+  setInterval(() => { if (document.hidden || $("app").hidden) return; if (visivel) ler(); }, MODO === "pc" ? 2500 : 5000);
+  setInterval(() => { if (!document.hidden && !$("app").hidden && !visivel) ler(); }, 30000);   // só o contador da aba
+  setTimeout(() => { if (!visivel) ler(); }, 1500);
+  return {mostrar, ler};
 })();
 
 /* ---------------- ligar tudo ---------------- */
