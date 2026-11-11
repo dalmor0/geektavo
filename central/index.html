@@ -4,8 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#07122B">
-<title>Central DAL MORO</title>
+<meta name="theme-color" content="#07070b">
+<title>Oráculo</title>
+<link rel="preload" href="jersey15.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="icone-180.png">
@@ -17,12 +18,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Big+Shoulders+Display:wght@700;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Rajdhani:wght@500;600;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<link rel="stylesheet" href="andar.css">
-<script src="andar.js"></script>
+<link rel="stylesheet" href="andar.css?v=33add54a4b">
+<script src="andar.js?v=33add54a4b"></script>
+<script src="aovivo-sala.js?v=33add54a4b"></script>
+<script src="oraculo-cena.js?v=33add54a4b"></script>
 <script>try{const t=localStorage.getItem("central-tema");if(t==="claro"||t==="escuro")document.documentElement.dataset.theme=t==="claro"?"light":"dark";}catch(e){}</script>
 <style>
 /* Central DAL MORO · repaginada de 06/11/2026 (terminal Escritorio Unico).
-   Conceito: o prédio da empresa em corte, com o Jarvis no telhado, e uma edição da noite em volta.
+   Conceito: o prédio da empresa em corte, com a Oráculo no telhado, e uma edição da noite em volta.
    Regras em CENTRAL/repaginada/PARECER-BANCA-CURTA.md: fio em vez de caixa, raio 0, sem sombra,
    ciano só pro que anda, vermelho só pro que espera ele. A versão antiga: index-antes-2026-11-06.html */
 :root{
@@ -334,7 +337,7 @@ section.espera{display:grid;gap:8px;align-content:start}
 @media (max-width:820px){ .jv-topo{grid-template-columns:minmax(0,1fr)} .jv-cara{order:-1;max-width:360px} }
 .jv-estado{font:900 44px/1.05 var(--display);margin:0}
 .jv-estado .on{color:var(--ciano)}
-/* conversa livre com o Jarvis (06/11): pergunta e resposta na tela, no PC e no celular */
+/* conversa livre com a Oráculo (06/11): pergunta e resposta na tela, no PC e no celular */
 .perg-lin{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px}
 .perg-lin input{min-height:44px}
 .rotulo{text-wrap:pretty}
@@ -392,7 +395,7 @@ article.it{grid-template-columns:minmax(0,1fr)} article.it > *{min-width:0} arti
 .ar-det > *,.ar-corpo > *{min-width:0}
 select{max-width:100%;min-width:0}
 
-/* faixa do Jarvis: ele em toda tela */
+/* faixa da Oráculo: ele em toda tela */
 .jfaixa{border-bottom:1px solid var(--fio);background:var(--noite)}
 .jf-in{max-width:1240px;margin:0 auto;padding:6px 32px;display:flex;align-items:center;gap:12px 20px;min-height:48px}
 #jf-cara{width:30px;height:31px;image-rendering:pixelated;flex:none}
@@ -406,7 +409,7 @@ select{max-width:100%;min-width:0}
 @media (max-width:820px){ .jf-in{padding:4px 16px;gap:12px} .jf-verbos button:nth-child(n+3){display:none} }
 @media (max-width:420px){ .jf-txt span{display:none} }
 
-/* conversa com o Jarvis (07/11): falar no celular e ouvir a resposta nele, sem a ponte de 20 s */
+/* conversa com a Oráculo (07/11): falar no celular e ouvir a resposta nele, sem a ponte de 20 s */
 .conv-abrir{min-height:56px;font-size:17px;justify-self:start}
 .conv-painel{position:fixed;inset:0;z-index:60;background:var(--ceu);display:flex;flex-direction:column;height:100vh;height:100dvh;
   padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
@@ -439,7 +442,7 @@ select{max-width:100%;min-width:0}
 body.conv-aberta{overflow:hidden}
 @media (max-width:360px){ .verbos{gap:4px 16px} }
 
-/* senhas faladas do Jarvis (07/11) */
+/* senhas faladas da Oráculo (07/11) */
 .senhas{display:grid;gap:16px;max-width:640px}
 .senhas .lin2{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end}
 .senhas label{display:grid;gap:6px}
@@ -747,7 +750,7 @@ body.conv-aberta{overflow:hidden}
 .pj .medida-cheio, .pj .botao, .pj .aviso{transition: none;}
 }
 
-/* ---------- Painel (07/11): o painel do Jarvis do PC virou a tela principal da Central ----------
+/* ---------- Painel (07/11): o painel da Oráculo do PC virou a tela principal da Central ----------
    Componentes: cópia escopada em .pj do JARVIS/painel/design.css (alerta, alertas e legenda viraram
    hud-alerta, hud-alertas e hud-legenda, que a Central já usa). Layout: o do JARVIS/painel/index.html,
    com as faixas 1 coluna (celular), 2 (700), 3 (1100) e 5 (1600, a mesma distribuição da TV). */
@@ -1031,6 +1034,44 @@ article.it .l1 > .tit{flex:1 1 auto}
 .falar-msg{font-size:14px;color:var(--cinza);margin:0}
 
 /* aba Ao vivo (09/11): o trabalho visual sendo montado, quadro leve por mudança, palpite no meio */
+/* crítica de 09/11, o que faltava: marca do Antes, ar entre botões e miniaturas, frase do palpite uma vez só */
+.av-q.av-antes{outline:2px dashed var(--cinza);outline-offset:-2px}
+.av-tempo{margin-top:16px}
+.av-jan + .av-jan .av-form > label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* ===== Oráculo (10/11, JARVIS/IDENTIDADE.md): Gotham vista do telhado. Preto de tinta, luz como tinta.
+   Ciano só pro que anda, amarelo do holofote só pro que espera ele, roxo e verde juntos só no erro. ===== */
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--noite:#07070b;--ceu:#07070b;--parede:#11131c;--sup:#11131c;--fio:#232a3b;--giz:#eef2f8;--cinza:#9aa6bd;
+  --ciano:#38d6ff;--verm:#ffe27a;--ambar:#ffe27a;--borda:#3a4358}}
+:root[data-theme="dark"]{--noite:#07070b;--ceu:#07070b;--parede:#11131c;--sup:#11131c;--fio:#232a3b;--giz:#eef2f8;--cinza:#9aa6bd;
+  --ciano:#38d6ff;--verm:#ffe27a;--ambar:#ffe27a;--borda:#3a4358}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--ciano:#0b6f8c;--verm:#7a5a00;--ambar:#7a5a00}}
+:root[data-theme="light"]{--ciano:#0b6f8c;--verm:#7a5a00;--ambar:#7a5a00}
+.marca{font:400 34px/1 var(--display);letter-spacing:.06em}
+.av-cena{position:relative;margin:0 0 40px;min-height:240px;min-width:0;max-width:100%;overflow:hidden}
+.av-lista-tit{margin:0 0 16px}
+.avs-tocado{outline:3px solid var(--giz);outline-offset:2px}
+/* a régua da Central inteira (inventário de 10/11, CENTRAL/repaginada/oraculo-2026-11-10/inventario/INVENTARIO.md) */
+main,body .topo-in,body .rodape{max-width:1840px!important}            /* 1: a mesma coluna em todas as abas */
+#v-aovivo,#v-andar,#v-olho{overflow-x:clip}                             /* 2: nada passa da largura no celular */
+.av-cena,.av-sala,.av-lista-tit,.av,#v-andar canvas{max-width:100%;min-width:0}
+/* 3 e 4: ação é botão de verdade, com caixa e 44 px; sublinhado só em link de texto corrido */
+.lnk,.card .acoes .nao,.card .acoes .aj,.lnk-ex,.jf-conv,.conv-abrir{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;
+  border:1px solid var(--borda)!important;background:none;color:var(--giz);text-decoration:none!important;font:600 15px/1.2 var(--body);cursor:pointer;white-space:nowrap}
+@media (hover:hover){.lnk:hover,.card .acoes .nao:hover,.card .acoes .aj:hover,.lnk-ex:hover,.jf-conv:hover{border-color:var(--giz)!important}}
+.btn,.av-bt,.topo-bt{min-height:44px}
+/* 7: nada esticado; Sim, Não e Editar na mesma fila */
+.card .acoes{display:flex!important;flex-wrap:wrap;gap:8px 12px}
+.card .acoes button{width:auto!important;flex:0 0 auto!important;min-width:96px}
+/* 5: uma escala de título */
+main h2{font-size:34px} @media (max-width:420px){main h2{font-size:26px}}
+.av-lista-tit{margin:0 0 24px}
+/* 8: o Olho com a mesma margem no celular */
+@media (max-width:700px){#v-olho .olho-cx{margin-inline:16px;width:calc(100% - 32px)}}
+/* sala de operações (10/11): a lista das estações, embaixo da cena; janelas e palpite no fim */
+.av-sala{position:relative;height:clamp(560px,calc(100svh - 190px),1000px);margin:0 0 48px}
+@media (max-width:699px){ .av-sala{height:auto;margin-bottom:32px} }
+.av-sala .avs-dec .acoes{display:flex;flex-wrap:wrap;gap:8px 12px}
+.av-sala .avs-dec .estado{font-size:14px;color:var(--cinza)}
 main:has(#v-aovivo:not([hidden])){max-width:1840px}
 body:has(#v-aovivo:not([hidden])) .topo-in,body:has(#v-aovivo:not([hidden])) .rodape{max-width:1840px}
 .av{display:grid;grid-template-columns:320px minmax(0,1fr);gap:48px;align-items:start}
@@ -1092,7 +1133,7 @@ body:has(#v-olho:not([hidden])) .topo-in,body:has(#v-olho:not([hidden])) .rodape
 .olho-cx iframe{display:block;width:100%;height:100%;border:0}
 .olho-pe{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 24px}
 .olho-cheia{display:inline-flex;align-items:center;text-decoration:none}
-body:has(#v-olho:not([hidden])) #jfaixa{display:none}      /* na aba do globo a faixa do Jarvis sai: a tela é dele */
+body:has(#v-olho:not([hidden])) #jfaixa{display:none}      /* na aba do globo a faixa da Oráculo sai: a tela é dele */
 .olho-cx{height:calc(100dvh - 64px - 16px - 76px)}
 @media (max-width:820px){ main:has(#v-olho:not([hidden])){padding:0} body:has(#v-olho:not([hidden])) .rodape{display:none}
   .olho-cx{height:calc(100dvh - 64px - var(--barra) - env(safe-area-inset-bottom));min-height:360px;box-shadow:none} .olho-pe{display:none} }
@@ -1185,7 +1226,7 @@ body:has(#v-olho:not([hidden])) #jfaixa{display:none}      /* na aba do globo a 
 .ctx.cheio i b{background:var(--ambar)} .ctx.cheio{color:var(--giz)}
 .ctx-acao{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 16px;align-items:center}
 
-/* avisos no canto, no jeito da caixa de diálogo do Jarvis na TV */
+/* avisos no canto, no jeito da caixa de diálogo da Oráculo na TV */
 .notas{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:24px;z-index:50;display:grid;gap:12px;width:min(420px,calc(100% - 32px));pointer-events:none}
 @media (max-width:820px){ .notas{bottom:auto;top:calc(64px + env(safe-area-inset-top));left:16px;right:16px;width:auto} }
 .nota{pointer-events:auto;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;align-items:start;padding:12px 14px 12px 12px;background:#141327;color:#e6e8f6;
@@ -1216,11 +1257,669 @@ body:has(#v-olho:not([hidden])) #jfaixa{display:none}      /* na aba do globo a 
 .avisos-perm p{margin:0}
 .avisos-perm-bt{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
 </style>
+<style id="o-casca">
+/* Casca nova da Central Oráculo (10/11/2026, ficha 2026-11-10-central-layout.md).
+   Quatro destinos (Agora, Cidade, Olho, Mais), a barra da Oráculo sempre presente e a gaveta lateral.
+   Espaço só em 4, 8, 16, 24, 32, 48. Raio 8 em tudo. Texto em três tamanhos: 13, 16, 28.
+   Cor com papel: amarelo espera você, azul andando, verde saiu, vermelho erro, cinza parado. */
+:root{
+  --o-fundo:#07070b; --o-sup:#0f1118; --o-sup2:#161925; --o-sup3:#1c2030;
+  --o-borda:rgba(255,255,255,.07); --o-borda2:rgba(255,255,255,.14);
+  --o-texto:#eef2f8; --o-apoio:#9aa6bd; --o-fraco:#8a93a7;
+  --o-amarelo:#ffe27a; --o-amarelo-f:rgba(255,226,122,.10);
+  --o-azul:#38d6ff; --o-azul-f:rgba(56,214,255,.10);
+  --o-verde:#5fe06a; --o-verde-f:rgba(95,224,106,.10);
+  --o-verm:#ff6b6b; --o-verm-f:rgba(255,107,107,.10);
+  --o-cinza:#7d8597;
+  --o-cheio-fundo:#eef2f8; --o-cheio-texto:#07070b;
+  --o-raio:0px; --o-trilho:88px; --o-barra-h:64px; --o-nav-h:64px;
+  --o-sans:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif; --o-pixel:"Jersey 15","Archivo",sans-serif;
+  --o-curva:cubic-bezier(.2,.7,.3,1);
+}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){
+  --o-fundo:#f3f4f7; --o-sup:#ffffff; --o-sup2:#f0f2f6; --o-sup3:#e7eaf0;
+  --o-borda:rgba(12,16,32,.08); --o-borda2:rgba(12,16,32,.16);
+  --o-texto:#11131c; --o-apoio:#4a5266; --o-fraco:#6b7283;
+  --o-amarelo:#8a6300; --o-amarelo-f:#fff3c4; --o-azul:#0a6f93; --o-azul-f:#e1f4fb;
+  --o-verde:#1d7a33; --o-verde-f:#e3f6e6; --o-verm:#b42318; --o-verm-f:#fde8e6; --o-cinza:#6b7283;
+  --o-cheio-fundo:#11131c; --o-cheio-texto:#ffffff;
+}}
+:root[data-theme="light"]{
+  --o-fundo:#f3f4f7; --o-sup:#ffffff; --o-sup2:#f0f2f6; --o-sup3:#e7eaf0;
+  --o-borda:rgba(12,16,32,.08); --o-borda2:rgba(12,16,32,.16);
+  --o-texto:#11131c; --o-apoio:#4a5266; --o-fraco:#6b7283;
+  --o-amarelo:#8a6300; --o-amarelo-f:#fff3c4; --o-azul:#0a6f93; --o-azul-f:#e1f4fb;
+  --o-verde:#1d7a33; --o-verde-f:#e3f6e6; --o-verm:#b42318; --o-verm-f:#fde8e6; --o-cinza:#6b7283;
+  --o-cheio-fundo:#11131c; --o-cheio-texto:#ffffff;
+}
+
+/* a casca antiga sai da frente (o motor continua: os botões dela são chamados daqui) */
+body.o .topo, body.o #jfaixa, body.o #abas-baixo, body.o #mais, body.o #rodape{display:none!important}
+body.o{background:var(--o-fundo);color:var(--o-texto);font-family:var(--o-sans)}
+body.o main#app{max-width:1200px!important;width:100%;margin:0 auto;padding:32px 32px calc(var(--o-barra-h) + 48px)!important}
+@media (min-width:821px){ body.o{padding-left:var(--o-trilho)} }
+@media (max-width:820px){ body.o main#app{padding:16px 16px calc(var(--o-barra-h) + var(--o-nav-h) + 32px + env(safe-area-inset-bottom))!important} }
+
+/* ---------- botões: três e só três, mesma altura ---------- */
+.o-bt{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:var(--o-raio);
+  font:600 14px/1 var(--o-sans);white-space:nowrap;cursor:pointer;text-decoration:none;border:1px solid transparent;
+  transition:background .15s var(--o-curva),border-color .15s var(--o-curva),color .15s var(--o-curva),transform .1s var(--o-curva)}
+.o-bt:active{transform:translateY(1px)}
+.o-bt:disabled{opacity:.45;cursor:default}
+.o-bt-cheio{background:var(--o-cheio-fundo);color:var(--o-cheio-texto)}
+.o-bt-cheio:hover{filter:brightness(.92)}
+.o-bt-contorno{background:transparent;color:var(--o-texto);border-color:var(--o-borda2)}
+.o-bt-contorno:hover{background:var(--o-sup2);border-color:var(--o-apoio)}
+.o-bt-fantasma{background:transparent;color:var(--o-apoio)}
+.o-bt-fantasma:hover{background:var(--o-sup2);color:var(--o-texto)}
+.o-bt.armado{border-color:var(--o-amarelo);color:var(--o-amarelo)}
+@media (max-width:820px){ .o-bt{height:44px} }
+body.o :focus-visible{outline:2px solid var(--o-azul);outline-offset:2px}
+
+/* ---------- trilho (PC) ---------- */
+.o-trilho{position:fixed;z-index:40;left:0;top:0;bottom:0;width:var(--o-trilho);background:var(--o-fundo);border-right:1px solid var(--o-borda);
+  display:flex;flex-direction:column;align-items:center;padding:24px 0 16px;gap:24px}
+.o-marca{margin:0;font:400 20px/1 var(--o-pixel);letter-spacing:.02em;color:var(--o-texto)}
+.o-destinos{display:flex;flex-direction:column;gap:8px;width:100%;padding:0 8px}
+.o-dest{all:unset;box-sizing:border-box;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;padding:8px 0;border-radius:var(--o-raio);
+  color:var(--o-apoio);cursor:pointer;font:600 13px/1 var(--o-sans);transition:background .15s var(--o-curva),color .15s var(--o-curva)}
+.o-dest svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.o-dest:hover{background:var(--o-sup2);color:var(--o-texto)}
+.o-dest[aria-selected="true"]{background:var(--o-sup3);color:var(--o-texto)}
+.o-dest:focus-visible{outline:2px solid var(--o-azul);outline-offset:-2px}
+.o-dest .o-n{position:absolute;top:4px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--o-amarelo);color:#07070b;
+  font:700 12px/18px var(--o-sans);text-align:center}
+:root[data-theme="light"] .o-dest .o-n{color:#fff}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .o-dest .o-n{color:#fff} }
+.o-dest .o-n:empty{display:none}
+.o-pc{margin-top:auto;position:relative;width:40px;height:40px;display:grid;place-items:center;border-radius:var(--o-raio);cursor:default}
+.o-pc i,.o-pc-cel i{display:block;width:8px;height:8px;border-radius:50%;background:var(--o-cinza)}
+.o-pc.vivo i,.o-pc-cel.vivo i{background:var(--o-verde);box-shadow:0 0 0 4px var(--o-verde-f)}
+.o-pc.morto i,.o-pc-cel.morto i{background:var(--o-verm);box-shadow:0 0 0 4px var(--o-verm-f)}
+.o-dica{position:absolute;left:calc(100% + 8px);bottom:4px;white-space:nowrap;background:var(--o-sup3);color:var(--o-texto);border:1px solid var(--o-borda2);
+  border-radius:var(--o-raio);padding:8px 16px;font:400 13px/1.3 var(--o-sans);opacity:0;pointer-events:none;transform:translateX(-4px);transition:opacity .15s,transform .15s var(--o-curva)}
+.o-pc:hover .o-dica,.o-pc:focus-visible .o-dica{opacity:1;transform:none}
+.o-topo-cel{display:none}
+@media (max-width:820px){
+  .o-trilho{top:auto;bottom:0;right:0;width:auto;height:calc(var(--o-nav-h) + env(safe-area-inset-bottom));flex-direction:row;padding:0 8px env(safe-area-inset-bottom);
+    border-right:0;border-top:1px solid var(--o-borda);gap:0}
+  .o-trilho .o-marca,.o-trilho .o-pc{display:none}
+  .o-destinos{flex-direction:row;gap:0;padding:0}
+  .o-dest{flex:1;height:var(--o-nav-h);justify-content:center}
+  .o-topo-cel{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:calc(8px + env(safe-area-inset-top)) 16px 8px;position:sticky;top:0;z-index:30;background:var(--o-fundo)}
+  .o-topo-cel .o-marca{font-size:28px}
+  .o-pc-cel{display:flex;align-items:center;gap:8px;font:400 13px/1 var(--o-sans);color:var(--o-apoio)}
+}
+
+/* ---------- barra da Oráculo ---------- */
+.o-barra{position:fixed;z-index:45;left:var(--o-trilho);right:0;bottom:16px;margin:0 auto;width:min(1136px,calc(100% - var(--o-trilho) - 64px));
+  display:flex;align-items:center;gap:8px;height:var(--o-barra-h);padding:0 8px 0 16px;background:var(--o-sup);border:1px solid var(--o-borda2);border-radius:var(--o-raio);
+  transition:border-color .15s var(--o-curva)}
+.o-barra:focus-within{border-color:var(--o-azul)}
+@media (min-width:821px){ .o-barra{left:calc(var(--o-trilho) + 32px);right:32px;width:auto;max-width:1136px} }
+@media (min-width:1300px){ .o-barra{left:calc(var(--o-trilho) + (100vw - var(--o-trilho) - 1136px) / 2);right:auto;width:1136px} }
+.o-cara{flex:none;width:32px;height:32px;display:block}
+.o-cara svg{width:32px;height:32px;display:block;shape-rendering:crispEdges}
+.o-cara .cabelo{fill:var(--o-fraco)} .o-cara .rosto{fill:var(--o-apoio)} .o-cara .olho{fill:var(--o-azul)} .o-cara .boca{fill:var(--o-sup)}
+.o-cara[data-estado="vigiando"] .olho{animation:o-pisca 6s steps(1) infinite}
+.o-cara[data-estado="falando"] .boca{animation:o-fala .32s steps(2) infinite}
+.o-cara[data-estado="ouvindo"] .olho,.o-cara[data-estado="pensando"] .olho{animation:o-pulsa 1s ease-in-out infinite}
+.o-cara[data-estado="calada"] .olho,.o-cara[data-estado="dormindo"] .olho,.o-cara[data-estado="fora"] .olho{fill:var(--o-fraco);animation:none}
+@keyframes o-pisca{0%,96%{opacity:1}97%,99%{opacity:0}}
+@keyframes o-fala{0%{transform:scaleY(1)}50%{transform:scaleY(2.2)}}
+.o-cara .boca{transform-box:fill-box;transform-origin:center}
+@keyframes o-pulsa{0%,100%{opacity:1}50%{opacity:.35}}
+.o-barra input{flex:1;min-width:0;height:44px;border:0;background:transparent;color:var(--o-texto);font:400 16px/1 var(--o-sans);outline:none;padding:0 8px}
+.o-barra input::placeholder{color:var(--o-fraco)}
+body.o .o-barra input:focus,body.o .o-barra input:focus-visible{outline:0!important;box-shadow:none!important;border:0!important}
+.o-tecla{flex:none;font:600 13px/1 var(--o-sans);color:var(--o-fraco);border:1px solid var(--o-borda2);border-radius:0;padding:4px 8px}
+.o-barra:focus-within .o-tecla{display:none}
+.o-rumo{flex:none;height:28px;padding:0 8px;border-radius:0;border:1px solid var(--o-borda2);background:transparent;color:var(--o-apoio);font:600 13px/1 var(--o-sans);cursor:pointer}
+.o-rumo[data-r="pergunta"]{color:var(--o-texto)}
+.o-rumo[data-r="trabalho"]{color:var(--o-azul);border-color:var(--o-azul)}
+.o-mic{flex:none;position:static;display:flex}
+.o-mic .falar{all:unset;box-sizing:border-box;width:40px;height:40px;border-radius:var(--o-raio);cursor:pointer;font-size:0;display:grid;place-items:center;color:var(--o-apoio)}
+.o-mic .falar::before{content:"";width:20px;height:20px;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Crect x='9' y='3' width='6' height='11' rx='3'/%3E%3Cpath d='M5 11a7 7 0 0 0 14 0M12 18v3'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Crect x='9' y='3' width='6' height='11' rx='3'/%3E%3Cpath d='M5 11a7 7 0 0 0 14 0M12 18v3'/%3E%3C/svg%3E") center/contain no-repeat}
+.o-mic .falar:hover{background:var(--o-sup2);color:var(--o-texto)}
+.o-mic .falar[aria-pressed="true"]{color:var(--o-azul);background:var(--o-azul-f)}
+.o-mic .falar.ocupado{opacity:.6}
+.o-mic .falar-msg,.o-barra-msg{position:absolute;left:16px;bottom:calc(100% + 8px);margin:0;font:400 13px/1.3 var(--o-sans);color:var(--o-apoio);background:var(--o-sup);border:1px solid var(--o-borda2);border-radius:var(--o-raio);padding:8px 16px;max-width:calc(100% - 32px)}
+.o-mic .falar-msg:empty,.o-barra-msg:empty{display:none}
+.o-modo{flex:none;display:flex;padding:2px;border:1px solid var(--o-borda2);border-radius:var(--o-raio);height:40px}
+.o-modo button{all:unset;box-sizing:border-box;height:34px;padding:0 16px;border-radius:0;font:600 13px/34px var(--o-sans);color:var(--o-apoio);cursor:pointer}
+.o-modo button:hover{color:var(--o-texto)}
+.o-modo button[aria-pressed="true"]{background:var(--o-sup3);color:var(--o-texto)}
+.o-modo button:disabled{opacity:.4;cursor:default}
+.o-modo button:focus-visible{outline:2px solid var(--o-azul)}
+.o-sep{flex:none;width:1px;height:24px;background:var(--o-borda2)}
+@media (max-width:820px){
+  .o-trilho::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:80px;background:var(--o-fundo);pointer-events:none}
+  .o-barra{left:16px;right:16px;width:auto;bottom:calc(var(--o-nav-h) + env(safe-area-inset-bottom) + 8px);height:56px;padding:0 4px 0 8px;gap:4px}
+  .o-barra .o-modo,.o-barra .o-sep,.o-barra .o-tecla{display:none}
+  .o-barra .o-bt-cheio{height:40px;padding:0 16px}
+  .o-rumo{display:none}
+  .o-barra:focus-within .o-rumo{display:inline-block}
+}
+
+/* resposta da Oráculo, em cima da barra */
+.o-resposta{position:fixed;z-index:44;left:var(--o-barra-l,auto);bottom:calc(16px + var(--o-barra-h) + 8px);background:var(--o-sup);border:1px solid var(--o-borda2);border-radius:var(--o-raio);
+  padding:16px;max-height:min(48vh,420px);overflow:auto;display:grid;gap:8px;animation:o-sobe .2s var(--o-curva)}
+@keyframes o-sobe{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.o-resposta .o-r-voce{margin:0;font:400 13px/1.4 var(--o-sans);color:var(--o-apoio)}
+.o-resposta .o-r-tx{margin:0;font:400 16px/1.5 var(--o-sans);color:var(--o-texto);white-space:pre-wrap}
+.o-resposta .o-r-tx.pensa{color:var(--o-apoio)}
+.o-resposta .o-r-pe{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+@media (max-width:820px){ .o-resposta{left:16px!important;right:16px;width:auto!important;bottom:calc(var(--o-nav-h) + env(safe-area-inset-bottom) + 72px)} }
+
+/* ---------- tela Agora ---------- */
+.o-cab{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:0 0 16px}
+.o-cab h1{margin:0;font:600 28px/1.15 var(--o-sans);letter-spacing:-.01em}
+.o-sub{margin:0;font:400 13px/1.4 var(--o-sans);color:var(--o-apoio)}
+.o-numeros{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:0 0 24px}
+.o-num{all:unset;box-sizing:border-box;display:grid;gap:4px;padding:16px;background:var(--o-sup);border:1px solid var(--o-borda);border-radius:var(--o-raio);cursor:pointer;
+  transition:background .15s var(--o-curva),border-color .15s var(--o-curva)}
+.o-num:hover{background:var(--o-sup2)}
+.o-num:focus-visible{outline:2px solid var(--o-azul);outline-offset:2px}
+.o-num b{font:600 28px/1 var(--o-sans);font-variant-numeric:tabular-nums;color:var(--o-texto)}
+.o-num span{font:400 13px/1.3 var(--o-sans);color:var(--o-apoio)}
+.o-num[data-k="espera"].tem b{color:var(--o-amarelo)}
+.o-num[aria-pressed="true"]{border-color:var(--o-apoio);background:var(--o-sup2)}
+.o-num[data-k="espera"][aria-pressed="true"]{border-color:var(--o-amarelo)}
+.o-num[data-k="andando"][aria-pressed="true"]{border-color:var(--o-azul)}
+.o-num[data-k="saiu"][aria-pressed="true"]{border-color:var(--o-verde)}
+.o-grade{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;align-items:start}
+#v-inicio,#v-mais2{display:block}
+.o-col{grid-column:span 6;display:grid;gap:16px;min-width:0}
+.o-col-e{grid-column:span 6}
+.o-bloco{background:var(--o-sup);border:1px solid var(--o-borda);border-radius:var(--o-raio);padding:8px 0;min-width:0}
+.o-bloco > header{display:flex;align-items:center;gap:8px;padding:8px 16px 8px}
+.o-rot{margin:0;font:400 20px/1 var(--o-pixel);letter-spacing:.03em;color:var(--o-apoio)}
+.o-espera .o-rot{color:var(--o-amarelo)}
+.o-cont{font:600 13px/1 var(--o-sans);color:var(--o-fraco);font-variant-numeric:tabular-nums}
+.o-bloco > header .o-bt{margin-left:auto;height:32px;padding:0 8px}
+.o-bloco > footer{padding:8px 16px 4px;display:flex;gap:8px;flex-wrap:wrap}
+.o-bloco > footer:empty{display:none}
+@media (max-width:1100px) and (min-width:821px){ .o-col-e{grid-column:span 12;grid-template-columns:1fr 1fr} .o-col{grid-column:span 12;grid-template-columns:1fr 1fr} }
+@media (max-width:820px){
+  .o-cab{margin-bottom:16px} .o-cab h1{font-size:28px}
+  .o-numeros{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:16px}
+  .o-num{padding:16px}
+  .o-grade{gap:16px} .o-col,.o-col-e{grid-column:span 12;grid-template-columns:1fr}
+}
+
+/* a linha: fechada, toda coisa é uma linha; tocou, abre a gaveta */
+.o-linhas{list-style:none;margin:0;padding:0}
+.o-linha{position:relative;display:flex;align-items:center;gap:8px;padding:0 16px 0 8px;min-height:52px;transition:background .15s var(--o-curva)}
+.o-linha + .o-linha::before{content:"";position:absolute;left:16px;right:16px;top:0;height:1px;background:var(--o-borda)}
+.o-linha:hover{background:var(--o-sup2)}
+.o-alvo{all:unset;box-sizing:border-box;flex:1;min-width:0;display:flex;align-items:center;gap:8px;min-height:52px;padding:0 8px;cursor:pointer;border-radius:0}
+.o-alvo:focus-visible{outline:2px solid var(--o-azul);outline-offset:-2px}
+.o-ponto{flex:none;width:8px;height:8px;border-radius:50%;background:var(--o-cinza)}
+.o-tit{flex:1 1 auto;min-width:min(50%,240px);font:500 16px/1.3 var(--o-sans);color:var(--o-texto);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.o-quem{flex:0 1 auto;min-width:0;max-width:30%;font:400 13px/1 var(--o-sans);color:var(--o-apoio);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.o-meta{display:contents}
+.o-tempo{flex:none;font:400 13px/1 var(--o-sans);color:var(--o-fraco);font-variant-numeric:tabular-nums;white-space:nowrap;min-width:56px;text-align:right}
+.o-et{flex:none;font:600 13px/1 var(--o-sans);padding:4px 8px;border-radius:0;background:var(--o-sup3);color:var(--o-apoio);white-space:nowrap}
+.o-acoes{flex:none;display:flex;gap:8px}
+.o-acoes .o-bt{height:32px;padding:0 16px}
+.o-fina{flex:none;width:56px;height:4px;background:var(--o-borda2);overflow:hidden;pointer-events:none;align-self:center}
+.o-fina i{display:block;height:100%;width:0;background:var(--o-azul);transition:width 1s linear}
+.o-fina.indet i{width:40%;animation:o-indet 2.4s var(--o-curva) infinite}
+@keyframes o-indet{from{transform:translateX(-100%)}to{transform:translateX(340%)}}
+/* papel de cada cor */
+.o-linha.espera .o-ponto{background:var(--o-amarelo);box-shadow:0 0 0 4px var(--o-amarelo-f)}
+.o-linha.espera .o-et{background:var(--o-amarelo-f);color:var(--o-amarelo)}
+.o-linha.anda .o-ponto{background:var(--o-azul)}
+.o-linha.anda .o-et{background:var(--o-azul-f);color:var(--o-azul)}
+.o-linha.saiu .o-ponto{background:var(--o-verde)}
+.o-linha.saiu .o-et{background:var(--o-verde-f);color:var(--o-verde)}
+.o-linha.erro .o-ponto{background:var(--o-verm)}
+.o-linha.erro .o-et{background:var(--o-verm-f);color:var(--o-verm)}
+.o-linha.parado .o-ponto{background:var(--o-cinza)}
+.o-linha.parado .o-tit{color:var(--o-apoio)}
+.o-linha.novo{animation:o-entra .45s var(--o-curva)}
+@keyframes o-entra{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:none}}
+.o-linha.saindo{animation:o-sai .35s var(--o-curva) forwards}
+@keyframes o-sai{to{opacity:0;transform:translateX(24px)}}
+.o-linha .o-msg{position:absolute;right:16px;bottom:2px;font:400 13px/1 var(--o-sans);color:var(--o-apoio)}
+.o-vazio{margin:0;padding:16px;font:400 16px/1.5 var(--o-sans);color:var(--o-apoio)}
+.o-vazio.erro{color:var(--o-verm)}
+.o-esqueleto{height:52px;margin:0 16px;border-radius:0;background:linear-gradient(90deg,var(--o-sup2) 0,var(--o-sup3) 50%,var(--o-sup2) 100%);background-size:200% 100%;animation:o-brilho 1.4s linear infinite}
+.o-esqueleto + .o-esqueleto{margin-top:8px}
+@keyframes o-brilho{from{background-position:200% 0}to{background-position:-200% 0}}
+@media (max-width:820px){
+  .o-linha{padding:0 8px 0 4px;min-height:72px}
+  .o-linha > .o-acoes{position:absolute;right:16px;bottom:8px}
+  .o-linha > .o-acoes .o-bt{height:40px}
+  .o-alvo .o-meta{flex:1 1 100%;display:flex;align-items:center;gap:8px;min-height:24px;padding-left:16px}
+  .o-linha.tem-acoes .o-alvo .o-meta{min-height:40px}
+  .o-alvo{flex-wrap:wrap;align-content:center;row-gap:4px;padding:8px}
+  .o-alvo .o-tit{flex:1 1 calc(100% - 16px)}
+  .o-alvo .o-ponto{order:-1}
+  .o-alvo .o-et,.o-alvo .o-quem,.o-alvo .o-tempo{margin-left:0}
+  .o-alvo .o-quem{max-width:50%}
+  .o-tempo{min-width:0;text-align:left}
+  .o-alvo .o-et ~ .o-quem,.o-alvo .o-et ~ .o-tempo{margin-left:0}
+  .o-linha .o-fina{bottom:4px}
+  .o-acoes .o-bt{height:40px}
+}
+@media (prefers-reduced-motion:reduce){ .o-linha.novo,.o-linha.saindo,.o-esqueleto,.o-fina.indet i,.o-cara *{animation:none!important} }
+
+/* ---------- gaveta (PC: lateral; celular: folha que sobe) ---------- */
+.o-veu{position:fixed;inset:0;z-index:60;background:rgba(3,4,8,.55);animation:o-aparece .2s var(--o-curva)}
+@keyframes o-aparece{from{opacity:0}}
+.o-gaveta{position:fixed;z-index:61;top:0;right:0;bottom:0;width:min(520px,100%);background:var(--o-sup);border-left:1px solid var(--o-borda2);display:flex;flex-direction:column;
+  animation:o-gav .25s var(--o-curva)}
+@keyframes o-gav{from{transform:translateX(24px);opacity:0}}
+.o-gav-cab{display:flex;align-items:flex-start;gap:16px;padding:24px 24px 16px;border-bottom:1px solid var(--o-borda)}
+.o-gav-cab h2{flex:1;margin:0;font:600 20px/1.3 var(--o-sans)}
+.o-gav-cab .o-et{margin-top:4px}
+.o-gav-corpo{flex:1;overflow:auto;padding:24px;display:grid;align-content:start;gap:24px}
+.o-gav-sec{display:grid;gap:8px}
+.o-gav-sec h3{margin:0;font:400 20px/1 var(--o-pixel);letter-spacing:.03em;color:var(--o-apoio)}
+.o-gav-sec p{margin:0;font:400 16px/1.5 var(--o-sans)}
+.o-gav-sec .o-apoio{font-size:13px;color:var(--o-apoio)}
+.o-dl{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin:0;font:400 16px/1.4 var(--o-sans)}
+.o-dl dt{color:var(--o-apoio);font-size:13px;line-height:22px} .o-dl dd{margin:0}
+.o-passos{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.o-passos li{display:flex;gap:8px;align-items:center;font:400 16px/1.4 var(--o-sans);color:var(--o-apoio)}
+.o-passos li::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;border:1px solid var(--o-borda2)}
+.o-passos li.f{color:var(--o-texto)} .o-passos li.f::before{background:var(--o-verde);border-color:var(--o-verde)}
+.o-passos li.at{color:var(--o-texto)} .o-passos li.at::before{background:var(--o-azul);border-color:var(--o-azul)}
+.o-gav-acoes{display:flex;flex-wrap:wrap;gap:8px}
+@media (max-width:820px){
+  .o-gaveta{top:auto;left:0;width:auto;max-height:88dvh;border-left:0;border-top:1px solid var(--o-borda2);border-radius:0;padding-bottom:env(safe-area-inset-bottom);animation:o-folha .28s var(--o-curva)}
+  .o-gav-cab{padding:16px}
+  .o-gav-cab::before{content:"";position:absolute;top:8px;left:50%;width:40px;height:4px;margin-left:-20px;border-radius:2px;background:var(--o-borda2)}
+  .o-gav-corpo{padding:16px}
+}
+@keyframes o-folha{from{transform:translateY(40px);opacity:0}}
+
+/* o motor antigo dentro da gaveta: os cartões viram a mesma língua */
+.o-gaveta .card{background:none;border:0;padding:0;margin:0;box-shadow:none;display:grid;gap:8px}
+.o-gaveta .card::before,.o-gaveta .card::after{display:none}
+.o-gaveta .card .tipo,.o-gaveta .card .cab{font:400 13px/1.4 var(--o-sans);color:var(--o-apoio);text-transform:none;letter-spacing:0}
+.o-gaveta .card h3{display:none}
+.o-gaveta .card p{margin:0;font:400 16px/1.5 var(--o-sans);color:var(--o-texto)}
+.o-gaveta .card .perg{font-weight:600}
+.o-gaveta .card .acoes,.o-gaveta .card .pe,.o-gaveta .card .pe-c{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0 0;padding:0;border:0}
+.o-gaveta .card button,.o-gaveta .card .ver,.o-gaveta .card .ajuste .btn{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 16px;border-radius:var(--o-raio);
+  font:600 14px/1 var(--o-sans);cursor:pointer;border:1px solid var(--o-borda2);color:var(--o-texto);white-space:nowrap}
+.o-gaveta .card button:hover,.o-gaveta .card .ver:hover{background:var(--o-sup2)}
+.o-gaveta .card button.sim{background:var(--o-cheio-fundo);color:var(--o-cheio-texto);border-color:transparent}
+.o-gaveta .card button.lnk-ex{border-color:transparent;color:var(--o-apoio)}
+.o-gaveta .card button.armado{border-color:var(--o-amarelo);color:var(--o-amarelo)}
+.o-gaveta .card button:disabled{opacity:.45;cursor:default}
+.o-gaveta .card .pe-vazio{display:none}
+.o-gaveta .card button,.o-gaveta .card .ver{min-height:0!important;height:40px!important;font-size:14px!important}
+.o-gaveta .med-falta b{font:600 16px/1.3 var(--o-sans)} .o-gaveta .med-falta span{font:400 13px/1.3 var(--o-sans);color:var(--o-apoio)}
+.o-gaveta .med-etapa{font:400 13px/1.4 var(--o-sans);color:var(--o-apoio)} .o-gaveta .med-etapa b{font-weight:600;color:var(--o-texto)}
+.o-gaveta .med-pct{font:600 28px/1 var(--o-sans)}
+.o-gaveta .card .ajuste{display:grid;gap:8px;margin:0}
+.o-gaveta .card .ajuste[hidden]{display:none}
+.o-gaveta textarea{width:100%;min-height:96px;resize:vertical;background:var(--o-fundo);color:var(--o-texto);border:1px solid var(--o-borda2);border-radius:var(--o-raio);padding:8px 16px;font:400 16px/1.5 var(--o-sans)}
+.o-gaveta .falar-lin{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.o-gaveta .falar-msg{margin:0;font:400 13px/1.3 var(--o-sans);color:var(--o-apoio)}
+.o-gaveta .estado{font:400 13px/1.4 var(--o-sans);color:var(--o-apoio)}
+.o-gaveta .estado:empty{display:none}
+.o-gaveta .fase{font:600 13px/1 var(--o-sans);padding:4px 8px;border-radius:0;background:var(--o-sup3)}
+.o-gaveta .veredito{padding:16px;border-radius:var(--o-raio);background:var(--o-fundo)}
+.o-gaveta .conv{font:400 13px/1.4 var(--o-sans)!important;color:var(--o-apoio)!important}
+.o-gaveta .med{margin:0}
+.o-gaveta .o-sub-card + .o-sub-card{border-top:1px solid var(--o-borda);padding-top:24px}
+
+/* ---------- Mais ---------- */
+.o-mais-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.o-mais-it{all:unset;box-sizing:border-box;display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:center;padding:16px;background:var(--o-sup);border:1px solid var(--o-borda);border-radius:var(--o-raio);cursor:pointer;
+  transition:background .15s var(--o-curva)}
+.o-mais-it:hover{background:var(--o-sup2)}
+.o-mais-it:focus-visible{outline:2px solid var(--o-azul);outline-offset:2px}
+.o-mais-it svg{grid-row:span 2;width:24px;height:24px;fill:none;stroke:var(--o-apoio);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.o-mais-it b{font:600 16px/1.3 var(--o-sans)} .o-mais-it span{font:400 13px/1.4 var(--o-sans);color:var(--o-apoio)}
+.o-mais-sec + .o-mais-sec{margin-top:32px}
+.o-mais-sec > h2{margin:0 0 16px}
+.o-volta{margin:0 0 16px}
+
+/* banca marco 1: colunas firmes e botões com caixa */
+.o-espera .o-acoes{min-width:128px;justify-content:flex-end}
+.o-bloco > footer .o-bt,.o-bloco > header .o-bt{height:32px;padding:0 16px}
+.o-gaveta .card button,.o-gaveta .card .ver,.o-gaveta .card .ajuste .btn{height:40px!important;min-height:0!important;padding:0 16px!important;font:600 14px/1 var(--o-sans)!important}
+.o-gaveta .card button.lnk-ex{border-color:transparent!important;color:var(--o-apoio)!important}
+.o-dl{grid-template-columns:88px 1fr}
+.o-gaveta .card .tipo{display:none}
+@media (max-width:820px){ .o-espera .o-acoes{min-width:0} }
+
+.o-espera .o-tit{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.3}
+.o-espera .o-alvo{padding-top:8px;padding-bottom:8px}
+
+/* A mesma língua nos painéis antigos (Cidade, Olho, Mais e o que mora nele). Só aparência: classes do motor
+   antigo vestidas com o sistema da casca. Fica depois da casca.css. */
+body.o main#app{--noite:var(--o-fundo);--giz:var(--o-texto);--cinza:var(--o-apoio);--fio:var(--o-borda2);--ciano:var(--o-azul);--verm:var(--o-amarelo);--body:var(--o-sans)}
+body.o main#app .vista{gap:24px}
+body.o main#app .o-volta{justify-self:start}
+
+/* seção: superfície um tom acima, sem fio branco de ponta a ponta */
+body.o main#app .secao{border:1px solid var(--o-borda);border-top:1px solid var(--o-borda);border-radius:var(--o-raio);background:var(--o-sup);padding:24px;gap:16px}
+body.o main#app .secao .secao{background:none;border:0;padding:0}
+body.o main#app h2,body.o main#app .a47-tit{font:400 20px/1.1 var(--o-pixel);letter-spacing:.03em;color:var(--o-apoio)}
+body.o main#app h2 small{font:400 13px/1.4 var(--o-sans);color:var(--o-fraco)}
+body.o main#app .o-cab h1{color:var(--o-texto)}
+body.o main#app details.secao > summary{cursor:pointer}
+body.o main#app .duas{gap:24px}
+body.o main#app .vazio{color:var(--o-apoio);font-size:16px}
+body.o main#app .det,body.o main#app .rotulo{font-size:13px;color:var(--o-apoio)}
+
+/* três botões e só três */
+body.o main#app .btn,body.o main#app .acoes .sim{display:inline-flex;align-items:center;justify-content:center;height:40px;min-height:40px;padding:0 16px;border-radius:var(--o-raio);
+  background:var(--o-cheio-fundo);color:var(--o-cheio-texto);border:0;font:600 14px/1 var(--o-sans);text-decoration:none}
+body.o main#app .sec,body.o main#app .av-bt,body.o main#app .av-liga,body.o main#app .av-seg button,body.o main#app .acoes .nao,body.o main#app .acoes .aj,body.o main#app .card .ver{
+  display:inline-flex;align-items:center;justify-content:center;height:40px;min-height:40px;padding:0 16px;border-radius:var(--o-raio);background:transparent;
+  color:var(--o-texto);border:1px solid var(--o-borda2);font:600 14px/1 var(--o-sans);text-decoration:none;cursor:pointer}
+body.o main#app .lnk,body.o main#app .lnk-ex,body.o main#app .conv-abrir,body.o main#app .ped-mais summary,body.o main#app .ja-res summary{display:inline-flex;align-items:center;height:40px;min-height:40px;padding:0 16px;
+  border-radius:var(--o-raio);background:transparent;border:0;color:var(--o-apoio);font:600 14px/1 var(--o-sans);text-decoration:none;cursor:pointer}
+body.o main#app .lnk:hover,body.o main#app .lnk-ex:hover,body.o main#app .sec:hover,body.o main#app .av-bt:hover,body.o main#app .acoes .nao:hover,body.o main#app .acoes .aj:hover{background:var(--o-sup2);color:var(--o-texto)}
+body.o main#app .acoes{gap:8px}
+body.o main#app .acoes .sim.armado,body.o main#app .lnk-ex.armado{background:transparent;border:1px solid var(--o-amarelo);color:var(--o-amarelo)}
+body.o main#app button:disabled{opacity:.45}
+/* filtro e subabas: um seletor de segmentos */
+body.o main#app .filtro,body.o main#app .subabas{display:inline-flex;gap:0;padding:2px;border:1px solid var(--o-borda2);border-radius:var(--o-raio);flex-wrap:wrap;justify-self:start;width:max-content;max-width:100%}
+body.o main#app .chip,body.o main#app .subabas button{height:36px;min-height:36px;padding:0 16px;border-radius:6px;font:600 13px/1 var(--o-sans);color:var(--o-apoio)}
+body.o main#app .chip[aria-pressed="true"],body.o main#app .subabas button[aria-selected="true"]{background:var(--o-sup3);color:var(--o-texto)}
+body.o main#app .subabas button[aria-selected="true"] .t{text-decoration:none}
+
+/* campos */
+body.o main#app textarea,body.o main#app input[type=text],body.o main#app input[type=password],body.o main#app input[type=email],body.o main#app select{background:var(--o-fundo);border:1px solid var(--o-borda2);border-radius:var(--o-raio);color:var(--o-texto);padding:8px 16px}
+body.o main#app textarea:focus,body.o main#app input:focus,body.o main#app select:focus{border-color:var(--o-apoio);box-shadow:none}
+
+/* cartões das pendências completas: grade, não colunas de jornal */
+body.o main#app .cards{column-count:auto;column-rule:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+body.o main#app .card{border:1px solid var(--o-borda);border-radius:var(--o-raio);background:var(--o-fundo);padding:16px;gap:8px}
+body.o main#app .card .tipo{font-size:13px;color:var(--o-fraco)}
+body.o main#app .card h3,body.o main#app .card.espera h3{font:600 16px/1.35 var(--o-sans);letter-spacing:0;display:-webkit-box}
+body.o main#app .card.espera h3::before{display:none}
+body.o main#app .card.espera{border-left:3px solid var(--o-amarelo)}
+body.o main#app .card p{font-size:14px}
+
+/* trabalhos, terminais, pedidos, alertas, rotinas: linhas com o mesmo respiro */
+body.o main#app .trab,body.o main#app .term,body.o main#app .ped,body.o main#app .alerta,body.o main#app .rot td{border-bottom:1px solid var(--o-borda)}
+body.o main#app .trab .nome{font:600 16px/1.3 var(--o-sans)}
+body.o main#app .rot th{border-bottom:1px solid var(--o-borda2);font-size:13px}
+body.o main#app .term .st.busy{background:var(--o-azul)} body.o main#app .term .st.waiting{background:var(--o-amarelo)}
+body.o main#app .med-cheio{background:var(--o-azul)}
+
+/* Áreas e índices */
+body.o main#app .gh-idx{border-right:1px solid var(--o-borda)}
+body.o main#app .gh-idx button{border-bottom:1px solid var(--o-borda);padding:8px 16px;border-radius:6px}
+body.o main#app .gh-idx button:hover{background:var(--o-sup2)}
+body.o main#app .gh-idx button[aria-current="true"]{background:var(--o-sup3)}
+body.o main#app .gh-idx button[aria-current="true"] b{text-decoration:none}
+body.o main#app .ar-cab h2{font:600 28px/1.15 var(--o-sans);color:var(--o-texto);letter-spacing:0}
+
+/* Oráculo (em Mais): as duas caixas antigas saem, a barra faz o papel delas */
+body.o #jv-conversa,body.o #v-jarvis .jv-topo .conv-abrir,body.o #v-jarvis .duas:has(#f-pedido) > .secao:last-child{display:none!important}
+body.o #v-jarvis .jv-topo{border:1px solid var(--o-borda);border-radius:var(--o-raio);background:var(--o-sup);padding:24px;grid-template-columns:minmax(0,1fr) 160px}
+body.o #v-jarvis .jv-estado{font:600 28px/1.15 var(--o-sans)}
+body.o #v-jarvis .jv-cara{max-width:160px;justify-self:end;background:none}
+body.o #v-jarvis #f-pedido{display:none}
+body.o #v-jarvis .duas:has(#f-pedido){grid-template-columns:1fr}
+body.o #v-jarvis .verbos{display:inline-flex;gap:0;padding:2px;border:1px solid var(--o-borda2);border-radius:var(--o-raio);width:max-content;max-width:100%;flex-wrap:wrap}
+body.o #v-jarvis .verbos button{all:unset;box-sizing:border-box;height:36px;padding:0 16px;border-radius:6px;font:600 13px/36px var(--o-sans);color:var(--o-apoio);cursor:pointer}
+body.o #v-jarvis .verbos button[aria-pressed="true"]{background:var(--o-sup3);color:var(--o-texto)}
+body.o #v-jarvis .esteiras{display:flex;flex-wrap:wrap;gap:8px}
+body.o #v-jarvis .esteiras button{height:40px;min-height:40px;padding:0 16px;border-radius:var(--o-raio);border:1px solid var(--o-borda2);background:transparent;color:var(--o-texto);font:600 14px/1 var(--o-sans);cursor:pointer}
+
+/* Cidade: a cena e a lista sem moldura pesada; seletor Cidade | Andar */
+.o-cid-sel{display:inline-flex;padding:2px;border:1px solid var(--o-borda2);border-radius:var(--o-raio);margin:0 0 16px}
+.o-cid-sel button{all:unset;box-sizing:border-box;height:36px;padding:0 16px;border-radius:6px;font:600 13px/36px var(--o-sans);color:var(--o-apoio);cursor:pointer}
+.o-cid-sel button[aria-pressed="true"]{background:var(--o-sup3);color:var(--o-texto)}
+.o-cid-sel button:focus-visible{outline:2px solid var(--o-azul)}
+body.o main#app .av-cena{border-radius:var(--o-raio);overflow:hidden}
+body.o main#app .av-lista-tit{margin:8px 0 0}
+body.o #v-andar .a47-falar{display:none}
+
+@media (max-width:820px){
+  body.o main#app .secao{padding:16px}
+  body.o main#app .cards{grid-template-columns:1fr}
+  body.o #v-jarvis .jv-topo{grid-template-columns:1fr}
+  body.o #v-jarvis .jv-cara{display:none}
+}
+body.o main#app .o-cid-sel{justify-self:start;width:max-content}
+body.o #v-jarvis .jv-cara{display:none!important}
+body.o #v-jarvis .jv-topo{grid-template-columns:1fr}
+
+/* Painéis novos (paineis.js): Pendências, Andamento, Oráculo, Áreas e Cidade na língua da Agora. Fica depois do comum.css. */
+body.o #v-fila > :not(.o-novo):not(.o-volta),
+body.o #v-agora > :not(.o-novo):not(.o-volta),
+body.o #v-jarvis > :not(.o-novo):not(.o-volta),
+body.o #v-areas > :not(.o-novo):not(.o-volta),
+body.o #v-aovivo > :not(.o-novo):not(.o-cid-sel):not(#av-cena){display:none!important}
+.o-novo{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}
+#v-aovivo .o-novo{margin-top:24px}
+#v-agora .o-novo{grid-column:1 / -1}
+
+/* colunas na grade de 12 */
+.o-c7{grid-column:span 7} .o-c5{grid-column:span 5} .o-c6{grid-column:span 6} .o-c4{grid-column:span 4} .o-c8{grid-column:span 8}
+@media (max-width:1100px) and (min-width:821px){
+  .o-c7,.o-c5,.o-c6{grid-column:span 12;grid-template-columns:minmax(0,1fr)}   /* 1024: um bloco por linha, a linha cabe inteira */
+}
+@media (max-width:820px){ .o-c7,.o-c5,.o-c6,.o-c4,.o-c8{grid-column:span 12;grid-template-columns:1fr} }
+
+/* linha sem ação (máquina, terminais na gaveta) e linha neutra */
+.o-fixa{cursor:default}
+.o-linha:has(.o-fixa):hover{background:none}
+.o-linha.info .o-ponto{background:var(--o-fraco)}
+.o-valor{font:500 14px/1.2 var(--o-sans);color:var(--o-texto);font-variant-numeric:tabular-nums;white-space:nowrap}
+.o-linha.recado .o-tit{color:var(--o-apoio)}
+.o-linha.atual{background:var(--o-sup2)}
+.o-linha.atual::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;background:var(--o-texto)}
+.o-bloco-nota{margin:0;padding:0 16px 8px;font:400 13px/1.45 var(--o-sans);color:var(--o-apoio)}
+.o-fala{list-style:none}
+.o-fala p{margin:0;padding:4px 16px 12px 32px;font:400 14px/1.5 var(--o-sans);color:var(--o-apoio)}
+
+/* seletor de segmentos dentro do bloco */
+.o-segs{display:flex;flex-wrap:nowrap;gap:0;margin:0 16px 8px;padding:2px;border:1px solid var(--o-borda2);width:max-content;max-width:calc(100% - 32px);overflow-x:auto;scrollbar-width:none}
+.o-segs::-webkit-scrollbar{display:none}
+.o-segs button{all:unset;box-sizing:border-box;flex:none;display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 16px;font:600 13px/1 var(--o-sans);color:var(--o-apoio);cursor:pointer;white-space:nowrap}
+.o-segs button:hover{color:var(--o-texto)}
+.o-segs button[aria-pressed="true"]{background:var(--o-sup3);color:var(--o-texto)}
+.o-segs button:focus-visible{outline:2px solid var(--o-azul);outline-offset:-2px}
+.o-segs-n{font-weight:400;color:var(--o-apoio);font-variant-numeric:tabular-nums}
+.o-segs button[aria-pressed="true"] .o-segs-n{color:var(--o-apoio)}
+
+/* Oráculo: o rodapé de "Ela agora" junta os verbos do motor e a conversa por voz */
+#v-jarvis .o-ela > footer{align-items:center;gap:8px 16px}
+#v-jarvis .o-ela > footer .verbos{margin:0}
+#v-jarvis .o-ela > footer #jv-msg{flex:1 1 100%;margin:0;font:400 13px/1.4 var(--o-sans);color:var(--o-apoio)}
+#v-jarvis .o-ela > footer #jv-msg:empty{display:none}
+#v-jarvis .o-ela > footer .o-bt{height:40px}
+
+/* Áreas: lista à esquerda, a área escolhida à direita */
+.o-ar-idx .o-linhas{max-height:none}
+.o-ar-det{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}
+.o-ar-cab{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;justify-items:start;min-width:0}
+body.o main#app .o-ar-nome{margin:0;font:600 28px/1.15 var(--o-sans);letter-spacing:-.01em;color:var(--o-texto)}
+.o-ar-cab .o-segs{margin:8px 0 0;max-width:100%}
+.o-ar-ferr{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:0 16px 8px}
+.o-ar-ferr .o-segs{margin:0}
+body.o main#app .o-busca{height:40px;min-width:min(280px,100%);flex:1 1 220px;padding:0 16px;background:var(--o-fundo);border:1px solid var(--o-borda2);color:var(--o-texto);font:400 14px/1 var(--o-sans);border-radius:0}
+.o-ar-corpo{min-width:0}
+.o-ar-corpo > #ar-corpo{display:grid;gap:16px}
+
+/* gaveta: itens das áreas, quadro do painel do PC */
+.o-gaveta.larga{width:min(960px,92vw)}
+.o-gav-frame{display:block;width:100%;height:68vh;border:1px solid var(--o-borda);background:var(--o-fundo)}
+.o-op{display:grid;gap:8px;padding:8px 0;border-top:1px solid var(--o-borda)}
+.o-arq{font:400 13px/1.4 "JetBrains Mono","Cascadia Mono",Consolas,monospace;overflow-wrap:anywhere}
+.o-gaveta .pt h4{margin:0 0 8px;font:600 14px/1.3 var(--o-sans);color:var(--o-texto)}
+.o-gaveta .pt p{margin:0 0 8px;font:400 14px/1.55 var(--o-sans)}
+.o-gaveta .senhas{display:grid;gap:16px}
+.o-gaveta .senhas .lin2{display:flex;flex-wrap:wrap;align-items:end;gap:8px}
+.o-gaveta .senhas .lin2 label{display:grid;gap:8px;flex:1 1 240px;font:400 13px/1.4 var(--o-sans);color:var(--o-apoio)}
+.o-gaveta .senhas input{height:40px;padding:0 16px;background:var(--o-fundo);border:1px solid var(--o-borda2);color:var(--o-texto);border-radius:0}
+.o-gaveta #av-tipos h3{display:none}
+.o-gaveta #av-tipos .av-tipos-bt{display:flex;flex-wrap:wrap;gap:8px}
+
+/* Cidade: janela ao vivo aberta ocupa a largura toda embaixo */
+body.o #v-aovivo #av-janelas{display:grid;gap:16px;min-width:0}
+body.o #v-aovivo #av-janelas:empty{display:none}
+body.o #v-aovivo .o-c5 .o-linha .o-bt{flex:none;height:32px;padding:0 16px}
+
+/* nada de ação sublinhada: link e "abrir" viram botão de contorno */
+body.o :is(main#app,.o-gaveta) :is(h2 small a,h3 small a,details:not(.secao) > summary,.ler-b,a.ver,.fontes a,.ped-mais summary,.ja-res summary,.lnk){
+  display:inline-flex;align-items:center;justify-content:center;height:40px;min-height:40px;padding:0 16px;border:1px solid var(--o-borda2);border-radius:0;
+  background:transparent;color:var(--o-texto);font:600 14px/1 var(--o-sans);text-decoration:none;cursor:pointer;list-style:none;width:max-content;max-width:100%}
+body.o :is(main#app,.o-gaveta) :is(details:not(.secao) > summary,.ped-mais summary,.ja-res summary)::-webkit-details-marker{display:none}
+body.o :is(main#app,.o-gaveta) :is(h2 small a,.ler-b,a.ver,.fontes a,.lnk):hover{background:var(--o-sup2);border-color:var(--o-apoio)}
+body.o :is(main#app,.o-gaveta) .fontes{display:flex;flex-wrap:wrap;gap:8px}
+body.o :is(main#app,.o-gaveta) h2 small:has(a){display:inline-flex;margin-left:8px}
+
+/* contagem do rótulo com contraste de texto (4,5:1) */
+.o-bloco > header .o-cont{color:var(--o-apoio)}
+
+/* conferência r2: linha estreita não deixa o botão por cima do tempo; tempo e contagem com contraste de texto */
+.o-tempo{color:var(--o-apoio)}
+/* linha com botão: o título encolhe (duas linhas no máximo) em vez de passar por baixo do botão */
+.o-linha.tem-acoes .o-tit{min-width:0}
+@media (max-width:820px){
+  .o-linha.muitas{flex-wrap:wrap}
+  .o-linha.muitas > .o-acoes{position:static;flex:1 1 100%;justify-content:flex-start;padding:0 8px 8px 28px}
+  .o-linha.muitas .o-alvo .o-meta{min-height:24px}
+}
+/* seletor quebra em duas linhas em vez de rolar escondido */
+.o-segs{flex-wrap:wrap;overflow:visible}
+.o-ar-cab,.o-ar-det{align-content:start}
+
+/* banca r2 (produção) */
+#v-areas #v-agora > .o-volta,#v-areas #v-agora .o-novo > .o-cab,#v-areas #v-atalhos > .o-volta{display:none}   /* dentro da área: um voltar e um título só */
+.o-bloco > header{flex-wrap:wrap;row-gap:8px}
+.o-rot{white-space:nowrap}
+@media (max-width:820px){
+  .o-bloco > header .o-bt,.o-bloco > footer .o-bt{height:40px}
+  .o-dest .o-n{top:2px;left:calc(50% + 12px)}
+}
+@media (hover:none){ .o-linha:hover,.o-segs button:hover{background:none} .o-segs button[aria-pressed="true"]{background:var(--o-sup3)} }
+
+/* banca r2 (diretor de arte) */
+/* Áreas em 1024: lista fixa de 240 px e o detalhe no resto, sem a divisão em duas colunas de dentro */
+#v-areas .o-c4,#v-areas .o-c8{grid-template-columns:minmax(0,1fr)}
+@media (max-width:1180px) and (min-width:821px){
+  #v-areas .o-grade{grid-template-columns:240px minmax(0,1fr)}
+  #v-areas .o-c4,#v-areas .o-c8{grid-column:auto}
+}
+#v-areas.o-dentro > .o-volta{display:none}
+body.o main#app .o-ar-nome{font-size:22px}
+#v-areas .o-linha.atual::before{left:0}
+/* Edição dentro da área: o bloco velho na língua nova */
+#v-areas #ed-painel-sec h2,#v-areas #v-edicao h2{font:600 16px/1.3 var(--o-sans);letter-spacing:0;color:var(--o-texto)}
+#v-areas #v-edicao h2 small:has(a){margin-left:16px}
+/* gaveta no celular: título na largura toda, etiqueta embaixo dele */
+@media (max-width:820px){
+  .o-gav-cab{display:grid!important;grid-template-columns:minmax(0,1fr) auto;row-gap:8px;align-items:start}
+  .o-gav-cab > h2{grid-column:1;grid-row:1}
+  .o-gav-cab > .o-et{grid-column:1;grid-row:2;justify-self:start}
+  .o-gav-cab > .o-bt{grid-column:2;grid-row:1}
+}
+.o-gaveta .card .acoes > *,.o-gaveta .card .ver{height:40px!important;margin:0!important;align-self:center}
+.o-gaveta .card p{-webkit-line-clamp:unset!important;display:block!important;overflow:visible!important}
+.o-gaveta li{font-size:inherit}
+.o-gaveta .lnk-ex{padding-left:0!important}
+/* linha de espera: colunas firmes no PC; no celular pequeno os botões numa faixa própria à direita */
+@media (min-width:821px){ .o-espera .o-acoes{min-width:142px;justify-content:flex-end} }
+@media (max-width:820px){ .o-linha.muitas > .o-acoes{justify-content:flex-end} }
+@media (max-width:360px){
+  .o-linha.tem-acoes{flex-wrap:wrap}
+  .o-linha.tem-acoes > .o-acoes{position:static;flex:1 1 100%;justify-content:flex-end;padding:0 8px 12px 28px}
+  .o-linha.tem-acoes .o-alvo .o-meta{min-height:24px}
+}
+/* Agora no PC: as duas colunas fecham na mesma base */
+@media (min-width:1101px){
+  #v-inicio .o-col-e,#v-inicio .o-col{display:flex;flex-direction:column}
+  #v-inicio .o-col-e > .o-bloco:last-child,#v-inicio .o-col > .o-bloco:last-child{flex:1;display:flex;flex-direction:column}
+  #v-inicio .o-bloco > footer{margin-top:auto}
+}
+/* Agora em 1024: a ordem da ficha (espera, andando, saiu, pedidos) em duas colunas */
+@media (max-width:820px){ #v-inicio .o-grade{grid-template-columns:minmax(0,1fr)} #v-inicio .o-col,#v-inicio .o-col-e{display:contents} #o-b-espera{order:1} #o-b-andando{order:2} #o-b-saiu{order:3} #o-b-pedidos{order:4} }
+@media (max-width:1100px) and (min-width:821px){
+  #v-inicio .o-grade{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #v-inicio .o-col,#v-inicio .o-col-e{display:contents}
+  #o-b-espera{order:1} #o-b-andando{order:2} #o-b-saiu{order:3} #o-b-pedidos{order:4}
+  #o-b-andando .o-quem{display:none}
+}
+/* Cidade: a cena na grade, sem a faixa de números (a Agora já tem) e sem os nomes cortados no celular */
+#v-aovivo .orc-conta{display:none}
+#v-aovivo .orc-palco{margin-inline:0;max-width:none}
+@media (max-width:600px){ #v-aovivo .orc-nomes{display:none} }
+#o-c-janelas .o-fixa .o-meta{display:flex;align-items:center;gap:8px;flex:1 1 auto;justify-content:flex-end;min-width:0}
+#o-c-janelas .o-fixa .o-bt{margin-left:auto}
+@media (max-width:820px){ #o-c-janelas .o-fixa .o-meta{padding-left:16px;justify-content:space-between} }
+/* Oráculo: Calar e Vigiar ficam só na barra; Resumo e Ouvir viram botão; a máquina numa linha */
+#v-jarvis .o-ela .verbos button[title^="para de falar"],#v-jarvis .o-ela .verbos button[title^="roda a vigia"]{display:none}
+#v-jarvis .o-ela .verbos{border:0;padding:0;gap:8px;display:inline-flex;flex-wrap:wrap}
+#v-jarvis .o-ela .verbos button{height:40px;padding:0 16px;border:1px solid var(--o-borda2);border-radius:0;font:600 14px/40px var(--o-sans);color:var(--o-texto)}
+#v-jarvis .o-ela .verbos button[aria-pressed="true"]{background:var(--o-sup3)}
+#o-o-pc .o-alvo{flex-wrap:nowrap}
+#o-o-pc .o-alvo .o-tit{flex:1 1 auto;min-width:0}
+#o-o-pc .o-alvo .o-meta{display:flex;flex:none;min-height:0;padding-left:0}
+/* Mais em cinco colunas (duas linhas cheias); Atalhos sem sublinhado; voltar alinhado ao título */
+@media (min-width:1101px){ .o-mais-grade{grid-template-columns:repeat(5,minmax(0,1fr))!important} }
+#v-atalhos a,#v-atalhos a *{text-decoration:none!important}
+@media (min-width:821px){ body.o main#app .o-volta{margin-left:-16px} }
+/* zoom 200 e tela baixa: barra de baixo mais curta, sem rótulo */
+@media (max-height:520px) and (max-width:820px){
+  :root{--o-nav-h:48px}
+  .o-dest > span:not(.o-n){display:none}
+}
+#v-olho .olho-cx{height:calc(100dvh - 260px)}
+@media (max-width:359px){ .o-barra .o-bt-cheio{padding:0 12px} }
+
+#v-areas .o-linha.atual::before{top:0;bottom:0}
+
+/* banca r3 (produção) */
+@media (prefers-reduced-motion:reduce){ .o-veu,.o-gaveta,.o-resposta{animation:none!important;transition:none!important} }
+#o-o-pc .o-alvo .o-tit{white-space:normal;overflow:visible}
+@media (max-width:820px){ body.o main#app .o-busca{font-size:16px} }
+#v-aovivo .avs-dec-cx button,#v-aovivo .avs-dec-cx .btn{font:600 14px/1 var(--o-sans)!important;height:40px;min-height:40px}
+
+/* banca r3 (diretor de arte) */
+@media (min-width:1101px){ #v-inicio .o-grade{align-items:stretch} }
+body.o main#app .o-volta{margin-left:-16px}
+#v-aovivo .orc-palco{margin:0}
+#v-aovivo #av-cena{margin-bottom:24px}
+.o-linha .o-et.o-et-neutra{background:var(--o-sup3);color:var(--o-apoio)}
+#o-b-saiu .o-linha:not(.tem-acoes){padding-right:96px}
+#o-b-saiu .o-acoes{min-width:72px;justify-content:flex-end}
+@media (max-width:820px){
+  #o-ar-lista .o-alvo{flex-wrap:nowrap}
+  #o-ar-lista .o-alvo .o-meta{flex:none;min-height:0;padding-left:0}
+  #o-ar-lista .o-alvo .o-quem{display:none}
+  #o-b-saiu .o-linha:not(.tem-acoes){padding-right:8px}
+}
+#v-jarvis .o-ela > footer .verbos{border:0!important;padding:0!important;gap:8px!important;background:none!important}
+#v-jarvis .o-ela > footer .verbos button{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;height:40px;padding:0 16px;border:1px solid var(--o-borda2);font:600 14px/1 var(--o-sans);color:var(--o-texto);cursor:pointer}
+#v-jarvis .o-ela > footer .verbos button:hover{background:var(--o-sup2)}
+#v-areas #v-edicao h2 small:has(a){margin-left:0}
+
+/* r4 (pedido 11/11): Cidade no celular sem a faixa preta no pé (o palco corta logo abaixo da rua, que fica em 212 de 270;
+   a sobra era pros nomes, que no celular não aparecem) e as respostas do sinal numa linha só, sem o Editar sozinho embaixo */
+@media (max-width:600px){
+  #v-aovivo .orc[data-modo="cel"] .orc-palco{height:auto!important;aspect-ratio:480/222}
+  #v-aovivo .orc-perg-dec .acoes{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:8px}
+  #v-aovivo .orc-perg-dec .acoes button{min-width:0;width:100%!important;padding:0 8px}
+}
+@media (max-width:600px){ #v-aovivo #av-cena{margin-bottom:0} }
+/* r4: no PC a cena, o sinal e o relógio começam na mesma borda dos blocos (antes: cena centrada em 268, cartão em 284, blocos em 196) */
+#v-aovivo .orc[data-modo="pc"]{max-width:var(--col)}
+#v-aovivo .orc[data-modo="pc"] > *{margin-inline:0}
+#v-aovivo .orc[data-modo="pc"] .orc-perg{margin:0 0 16px!important;max-width:var(--col)!important}
+
+</style>
 </head>
 <body>
 <header class="topo">
   <div class="topo-in">
-    <p class="marca">C<span class="lente"><b>E</b></span>NTRAL</p>
+    <p class="marca">Oráculo</p>
     <nav class="abas" role="tablist" aria-label="Vistas" id="abas-cima"></nav>
     <div class="pc" id="pc" title="Sinal do PC"><i></i><span id="pc-t">conectando…</span></div>
     <button class="topo-bt" id="avisos-bt" type="button" aria-expanded="false" aria-controls="avisos">Avisos<span class="n" id="avisos-n"></span></button>
@@ -1252,7 +1951,7 @@ body:has(#v-olho:not([hidden])) #jfaixa{display:none}      /* na aba do globo a 
 <div class="jfaixa" id="jfaixa" hidden>
   <div class="jf-in">
     <canvas id="jf-cara" width="30" height="31" aria-hidden="true"></canvas>
-    <button class="jf-txt" type="button" id="jf-abre"><b id="jf-estado">Jarvis</b> <span id="jf-fala"></span></button>
+    <button class="jf-txt" type="button" id="jf-abre"><b id="jf-estado">Oráculo</b> <span id="jf-fala"></span></button>
     <div class="verbos jf-verbos" id="jf-verbos"></div>
     <span class="estado" id="jf-msg" role="status"></span>
   </div>
@@ -1260,16 +1959,16 @@ body:has(#v-olho:not([hidden])) #jfaixa{display:none}      /* na aba do globo a 
 <div class="conv-painel" id="conv" role="dialog" aria-modal="true" aria-labelledby="conv-tit" hidden>
   <div class="conv-in">
     <div class="conv-topo">
-      <h2 id="conv-tit">Jarvis<span id="conv-estado" role="status" aria-live="polite">pronto</span></h2>
+      <h2 id="conv-tit">Oráculo<span id="conv-estado" role="status" aria-live="polite">pronto</span></h2>
       <button class="conv-fechar" type="button" id="conv-fechar">Fechar</button>
     </div>
-    <div class="conv-log" id="conv-log" role="log" aria-live="polite" aria-label="Conversa com o Jarvis"></div>
+    <div class="conv-log" id="conv-log" role="log" aria-live="polite" aria-label="Conversa com a Oráculo"></div>
     <p class="conv-vivo" id="conv-vivo" aria-live="polite"></p>
     <p class="conv-aviso" id="conv-aviso" role="status"></p>
     <button class="conv-tentar" type="button" id="conv-tentar" hidden>Tentar de novo</button>
     <button class="conv-mic" type="button" id="conv-mic" aria-pressed="false">Falar</button>
     <form class="conv-esc" id="conv-esc">
-      <label class="sr" for="conv-txt">Escrever pro Jarvis</label>
+      <label class="sr" for="conv-txt">Escrever pra Oráculo</label>
       <input id="conv-txt" type="text" maxlength="600" autocomplete="off" enterkeyhint="send" placeholder="ou escreva aqui">
       <button class="btn" type="submit">Mandar</button>
     </form>
@@ -1301,11 +2000,11 @@ body:has(#v-olho:not([hidden])) #jfaixa{display:none}      /* na aba do globo a 
         <section class="a47-falar" id="a47-falar">
           <h2 class="a47-tit">Fale com a Central</h2>
           <form id="a47-form" class="a47-form" autocomplete="off">
-            <label class="sr" for="a47-txt">O que você quer: um pedido pros terminais ou uma pergunta pro Jarvis</label>
+            <label class="sr" for="a47-txt">O que você quer: um pedido pros terminais ou uma pergunta pra Oráculo</label>
             <textarea id="a47-txt" maxlength="2000" rows="3" placeholder="Fale ou escreva. Ex.: faz a capa do longo do Chucky com 5 versões"></textarea>
             <div class="a47-botoes envio">
               <button class="btn" type="submit" id="a47-pedir">Mandar pros terminais</button>
-              <button class="lnk" type="button" id="a47-perguntar">Perguntar ao Jarvis</button>
+              <button class="lnk" type="button" id="a47-perguntar">Perguntar à Oráculo</button>
             </div>
             <p class="a47-msg" id="a47-msg" role="status"></p>
           </form>
@@ -1314,12 +2013,12 @@ body:has(#v-olho:not([hidden])) #jfaixa{display:none}      /* na aba do globo a 
     </div>
   </section>
 
-  <!-- PAINEL (07/11): o painel do Jarvis do PC como tela principal, mesclado com a Central -->
+  <!-- PAINEL (07/11): o painel da Oráculo do PC como tela principal, mesclado com a Central -->
   <section class="vista pj" id="v-painel" role="tabpanel" aria-labelledby="t-painel" hidden>
     <div class="pj-tela">
       <header class="pj-topo">
         <div class="pj-topo-esq">
-          <p class="pj-saudacao" id="pj-saudacao" lang="en">Jarvis</p>
+          <p class="pj-saudacao" id="pj-saudacao" lang="en">Oráculo</p>
           <p class="pj-resumo" id="pj-resumo">Ligando o painel.</p>
         </div>
         <div class="pj-topo-dir">
@@ -1331,17 +2030,17 @@ body:has(#v-olho:not([hidden])) #jfaixa{display:none}      /* na aba do globo a 
         </div>
       </header>
       <div class="palco" id="pj-palco">
-        <section class="centro" aria-label="Jarvis">
+        <section class="centro" aria-label="Oráculo">
           <div class="reator-caixa" id="pj-reator-caixa"><canvas id="pj-reator" aria-hidden="true"></canvas></div>
           <div class="reator-nome">JARVIS</div>
           <div class="reator-estado" id="pj-voz-estado" data-estado="dormindo">dormindo</div>
           <p class="hud-legenda legenda--vazia" id="pj-legenda" aria-live="polite"></p>
           <div class="pj-acoes">
             <button class="botao botao--principal" id="pj-btn-falar" type="button">Como estão as coisas?</button>
-            <button class="botao pj-falar" type="button" data-conv>Falar com o Jarvis</button>
+            <button class="botao pj-falar" type="button" data-conv>Falar com a Oráculo</button>
           </div>
           <form class="conversa" id="pj-conversa" autocomplete="off">
-            <input class="conversa-campo" id="pj-conversa-texto" type="text" maxlength="600" enterkeyhint="send" placeholder="Pergunte ao Jarvis" aria-label="Pergunte qualquer coisa ao Jarvis">
+            <input class="conversa-campo" id="pj-conversa-texto" type="text" maxlength="600" enterkeyhint="send" placeholder="Pergunte à Oráculo" aria-label="Pergunte qualquer coisa à Oráculo">
             <button class="botao" type="submit">Perguntar</button>
           </form>
           <p class="conversa-resposta" id="pj-resposta" aria-live="polite"></p>
@@ -1362,7 +2061,7 @@ body:has(#v-olho:not([hidden])) #jfaixa{display:none}      /* na aba do globo a 
     <div class="escr-grid">
       <div class="predio-col">
         <div class="escr" id="escr">
-          <canvas id="cv" aria-label="O prédio da empresa em pixel art: o Jarvis no telhado, cada andar uma sala do Maestri com um boneco por terminal acordado, as rotinas no porão"><div id="escr-lista"></div></canvas>
+          <canvas id="cv" aria-label="O prédio da empresa em pixel art: a Oráculo no telhado, cada andar uma sala do Maestri com um boneco por terminal acordado, as rotinas no porão"><div id="escr-lista"></div></canvas>
         </div>
         <p class="legenda"><span><i style="background:var(--ciano)"></i>trabalhando</span><span><i style="background:var(--verm)"></i>espera você</span><span><i style="background:var(--cinza)"></i>parado vira número na placa</span><span>toque num boneco pra ver o que ele faz</span></p>
         <p class="linha-estado" id="hud-sub"></p>
@@ -1374,10 +2073,10 @@ body:has(#v-olho:not([hidden])) #jfaixa{display:none}      /* na aba do globo a 
         </section>
         <aside class="ficha" id="ficha" aria-live="polite" hidden></aside>
         <section class="jdiz secao" id="jdiz">
-          <h2>O Jarvis diz</h2>
+          <h2>A Oráculo diz</h2>
           <p class="jfala" id="jd-fala">…</p>
           <p class="det" id="jd-quando"></p>
-          <button class="btn conv-abrir" type="button" data-conv>Conversar com o Jarvis</button>
+          <button class="btn conv-abrir" type="button" data-conv>Conversar com a Oráculo</button>
           <div class="verbos" id="jd-verbos"></div>
           <p class="estado" id="jd-msg" role="status"></p>
         </section>
@@ -1452,9 +2151,12 @@ body:has(#v-olho:not([hidden])) #jfaixa{display:none}      /* na aba do globo a 
 
   <!-- AO VIVO (09/11): o trabalho visual sendo montado -->
   <section class="vista" id="v-aovivo" role="tabpanel" aria-labelledby="t-aovivo" hidden>
+    <div class="av-cena" id="av-cena" hidden></div>
+    <h2 class="av-lista-tit" id="av-lista-tit" hidden>A cidade em lista</h2>
+    <div class="av-sala" id="av-sala" hidden></div>
     <div class="av">
       <aside class="av-lado" aria-label="Trabalhos visuais abertos">
-        <h2>Ao vivo</h2>
+        <h2 id="av-tit">Ao vivo</h2>
         <p class="det" id="av-sub">Ligue o que você quer ver sendo montado. Desligado não gasta nada do PC.</p>
         <ul class="av-lista" id="av-lista"></ul>
         <div class="av-tipos" id="av-tipos" hidden></div>
@@ -1476,21 +2178,21 @@ body:has(#v-olho:not([hidden])) #jfaixa{display:none}      /* na aba do globo a 
   <section class="vista" id="v-jarvis" role="tabpanel" aria-labelledby="t-jarvis" hidden>
     <div class="jv-topo">
       <div class="jv-txt">
-        <h1 class="jv-estado" id="jv-estado">Jarvis</h1>
+        <h1 class="jv-estado" id="jv-estado">Oráculo</h1>
         <p class="jfala" id="jv-fala"></p>
         <p class="det" id="jv-quando"></p>
-        <button class="btn conv-abrir" type="button" data-conv>Conversar com o Jarvis</button>
+        <button class="btn conv-abrir" type="button" data-conv>Conversar com a Oráculo</button>
         <div class="verbos" id="jv-verbos"></div>
         <p class="estado" id="jv-msg" role="status"></p>
       </div>
       <canvas class="jv-cara" id="jv-cara" aria-hidden="true"></canvas>
     </div>
     <section class="secao" id="jv-conversa">
-      <h2>Perguntar ao Jarvis</h2>
+      <h2>Perguntar à Oráculo</h2>
       <div class="duas">
         <form class="pedir" id="f-conversa">
-          <label for="conversa" class="rotulo">Pergunta livre, o Jarvis responde aqui por escrito. Trabalho pros terminais vai em Mandar pros terminais, logo abaixo.</label>
-          <input id="conversa" type="text" required maxlength="600" autocomplete="off" enterkeyhint="send" placeholder="ex.: quanto espaço tem no disco C?"><div class="perg-lin envio"><button class="btn" type="submit">Perguntar ao Jarvis</button></div>
+          <label for="conversa" class="rotulo">Pergunta livre, a Oráculo responde aqui por escrito. Trabalho pros terminais vai em Mandar pros terminais, logo abaixo.</label>
+          <input id="conversa" type="text" required maxlength="600" autocomplete="off" enterkeyhint="send" placeholder="ex.: quanto espaço tem no disco C?"><div class="perg-lin envio"><button class="btn" type="submit">Perguntar à Oráculo</button></div>
           <span class="msg" id="conversa-msg" role="status"></span>
         </form>
         <div class="jv-resp" id="jv-resp"></div>
@@ -1535,7 +2237,7 @@ body:has(#v-olho:not([hidden])) #jfaixa{display:none}      /* na aba do globo a 
     </div>
     <div class="duas">
       <section class="secao">
-        <h2>O que ele está vigiando <small id="jv-al-sub"></small></h2>
+        <h2>O que a Oráculo está vigiando <small id="jv-al-sub"></small></h2>
         <div class="alertas" id="jv-alertas"></div>
       </section>
       <section class="secao">
@@ -1544,9 +2246,9 @@ body:has(#v-olho:not([hidden])) #jfaixa{display:none}      /* na aba do globo a 
       </section>
     </div>
     <section class="secao" id="jv-painel-sec">
-      <h2>Painel completo do Jarvis <small><a href="http://127.0.0.1:4850/" target="_blank" rel="noopener">abrir sozinho</a></small></h2>
+      <h2>Painel completo da Oráculo <small><a href="http://127.0.0.1:4850/" target="_blank" rel="noopener">abrir sozinho</a></small></h2>
       <button class="lnk" type="button" id="jv-frame-abrir">Abrir o painel completo aqui embaixo</button>
-      <iframe class="painel-frame" id="jv-frame" title="Painel do Jarvis" hidden></iframe>
+      <iframe class="painel-frame" id="jv-frame" title="Painel da Oráculo" hidden></iframe>
     </section>
   </section>
 
@@ -1618,7 +2320,7 @@ const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 const DONO = "contato.onlydal@gmail.com";
 const LOCAL = new URLSearchParams(location.search).get("local");   // teste da conferência: ?local=estado.json (não grava nada)
 // três jeitos de abrir: no PC (servidor.py em 127.0.0.1:4848, sem login), no celular (Supabase, login do dono) e o teste
-const MODO = LOCAL ? "teste" : ["127.0.0.1", "localhost"].includes(location.hostname) ? "pc" : "nuvem";
+const MODO = LOCAL ? "teste" : ["127.0.0.1", "localhost", "dalmoro.taila293dc.ts.net"].includes(location.hostname) ? "pc" : "nuvem";
 const sb = MODO === "nuvem" && window.supabase ? supabase.createClient(URL_SB, ANON) : null;
 // guardados: toques que não chegaram no servidor do PC (fora do ar). Ficam no navegador e saem sozinhos.
 const GUARDA = "central-guardados";
@@ -1684,11 +2386,11 @@ function hora(s) {
 }
 const hojeISO = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 
-/* ---------- abas (escritório único, 06/11: Pedir foi pro Jarvis, Rotinas pro Andamento) ---------- */
-const ABAS = [["andar", "Andar 47"], ["fila", "Pendências"], ["agora", "Andamento"], ["aovivo", "Ao vivo"], ["olho", "Olho"], ["jarvis", "Jarvis"], ["areas", "Áreas"], ["atalhos", "Atalhos"]];   // 09/11: a torre da TV é a porta
-const EXTRAS = [["painel", "Painel de cartões do Jarvis"], ["escritorio", "Prédio em corte"]];   // vistas que abrem de dentro (Jarvis e Andamento) e pelo Mais
+/* ---------- abas (escritório único, 06/11: Pedir foi pra Oráculo, Rotinas pro Andamento) ---------- */
+const ABAS = [["aovivo", "Cidade"], ["fila", "Pendências"], ["agora", "Andamento"], ["andar", "Andar 47"], ["olho", "Olho"], ["jarvis", "Oráculo"], ["areas", "Áreas"], ["atalhos", "Atalhos"]];   // 09/11: a torre da TV é a porta
+const EXTRAS = [["painel", "Painel de cartões da Oráculo"], ["escritorio", "Prédio em corte"]];   // vistas que abrem de dentro (Oráculo e Andamento) e pelo Mais
 const BAIXO = ["andar", "fila", "jarvis", "areas"];
-let aba = "andar";
+let aba = "aovivo";       // Oráculo (10/11): a entrada é a cidade vista do telhado
 function montarAbas() {
   const bt = (id, nome, suf) => {
     const b = el("button", {type: "button", role: "tab", id: "t-" + id + suf, "aria-controls": "v-" + id, "aria-selected": String(id === aba)},
@@ -1738,7 +2440,7 @@ function contador(id, n) {
   if (b) { if (n) b.dataset.c = String(n); else delete b.dataset.c; }
 }
 
-/* ---------- Jarvis: o cérebro no telhado ---------- */
+/* ---------- Oráculo: o cérebro no telhado ---------- */
 let J = {estado: null, voz: null, ok: null};
 async function lerJarvis(soVoz) {
   if (MODO === "nuvem") { const j = E.jarvis || {}; J = {estado: j.no_ar ? j : null, voz: j.voz || null, ok: carregou ? !!j.no_ar : null}; return; }
@@ -1767,7 +2469,7 @@ function jarvisFala() {
   const c = (s.conversa || []).slice(-1)[0];
   if (c) return {texto: (c.tipo === "pedido" ? "Você pediu: " : "") + c.texto, quando: hora(c.em)};
   if (s.resumo_pt) return {texto: s.resumo_pt, quando: s.agora ? "resumo das " + hora(s.agora) : s.em ? "resumo das " + hora(s.em) : ""};
-  if (J.ok === false) return {texto: MODO === "pc" ? "O Jarvis não respondeu agora. Quando o servidor dele voltar, ele aparece aqui sozinho." : MODO === "nuvem" ? "O Jarvis não mandou sinal pelo PC. Quando o PC religar ele volta." : "O Jarvis só aparece na tela do PC.", quando: ""};
+  if (J.ok === false) return {texto: MODO === "pc" ? "A Oráculo não respondeu agora. Quando o servidor dela voltar, ela aparece aqui sozinha." : MODO === "nuvem" ? "A Oráculo não mandou sinal pelo PC. Quando o PC religar ela volta." : "A Oráculo só aparece na tela do PC.", quando: ""};
   return {texto: "…", quando: ""};
 }
 const VERBOS = [["falar", "Resumo no PC", "fala o resumo do dia em voz alta na caixa de som do PC (pra conversar, use Conversar)"], ["calar", "Calar", "para de falar na hora"],
@@ -1796,7 +2498,7 @@ async function jarvisAcao(acao, texto, msg, b) {
     if (MODO === "pc") {
       const r = await fetch("/jarvis/api/" + acao, {method: "POST", headers: {"Content-Type": "application/json"},
         body: JSON.stringify(acao === "alerta/ok" ? {id: texto} : {texto}), signal: comPrazo()});
-      if (!r.ok) throw new Error("o Jarvis não respondeu (" + r.status + ")");
+      if (!r.ok) throw new Error("a Oráculo não respondeu (" + r.status + ")");
     } else if (MODO === "nuvem") {
       const {error} = await comTempo(sb.from("votos").upsert({id: "central-j-" + Date.now(), dia: hojeISO(), tipo: "central-jarvis", n: 0, veredito: acao, logline: texto || null}));
       if (error) throw error;
@@ -1822,7 +2524,7 @@ function desenharConversa() {
   const daPonte = ((E.jarvis || {}).respostas || []);
   for (const m of MINHAS) {
     const r = daPonte.find(x => x.id === m.id);
-    if (r && r.estado !== "pensando" && m.estado === "pensando") $("conversa-msg").textContent = r.estado === "ok" ? "O Jarvis respondeu." : "O Jarvis não conseguiu responder.";
+    if (r && r.estado !== "pensando" && m.estado === "pensando") $("conversa-msg").textContent = r.estado === "ok" ? "A Oráculo respondeu." : "A Oráculo não conseguiu responder.";
     if (r && r.estado !== "pensando") Object.assign(m, r);
     else if (m.estado === "pensando" && agoraS() - m.em > 240) Object.assign(m, {estado: "erro", resposta: "O PC não devolveu a resposta em 4 min. Tente de novo."});
   }
@@ -1834,8 +2536,8 @@ function desenharConversa() {
   convChave = ch;
   $("jv-resp").replaceChildren(...(ls.length ? ls.map(x => el("article", {class: "jv-r"},
     el("p", {class: "p"}, "Você: ", el("b", {text: x.pergunta})),
-    el("p", {class: "r" + (x.estado === "pensando" ? " pensa" : x.estado === "erro" ? " erro" : ""), text: x.estado === "pensando" ? (x.via !== "celular" ? "O Jarvis está pensando…" : x.semSinal ? "O PC está sem sinal. A pergunta fica guardada e sai quando ele voltar." : "Pensando… a pergunta foi pro PC, a resposta chega aqui em até 1 min.") : String(x.resposta || "").replace(/\s*\(pedido mandado pro[\s\S]*$/i, "") || "Ele não disse nada."}),
-    el("p", {class: "q", text: [x.estado === "pensando" ? null : "Jarvis", haQuanto(x.em), x.velocidade === "trabalho" ? "virou pedido pros terminais" : null].filter(Boolean).join(" · ")})))
+    el("p", {class: "r" + (x.estado === "pensando" ? " pensa" : x.estado === "erro" ? " erro" : ""), text: x.estado === "pensando" ? (x.via !== "celular" ? "A Oráculo está pensando…" : x.semSinal ? "O PC está sem sinal. A pergunta fica guardada e sai quando ele voltar." : "Pensando… a pergunta foi pro PC, a resposta chega aqui em até 1 min.") : String(x.resposta || "").replace(/\s*\(pedido mandado pro[\s\S]*$/i, "") || "Ele não disse nada."}),
+    el("p", {class: "q", text: [x.estado === "pensando" ? null : "Oráculo", haQuanto(x.em), x.velocidade === "trabalho" ? "virou pedido pros terminais" : null].filter(Boolean).join(" · ")})))
     : [el("p", {class: "vazio", text: "Nada perguntado ainda. A resposta aparece aqui."})]));
 }
 $("f-conversa").addEventListener("submit", async ev => {
@@ -1852,7 +2554,7 @@ $("f-conversa").addEventListener("submit", async ev => {
       const r = await fetch("/jarvis/api/conversa", {method: "POST", headers: {"Content-Type": "application/json"},
         body: JSON.stringify({texto: t, canal: "central", idioma: "pt", falar: false}), signal: AbortSignal.timeout ? AbortSignal.timeout(100000) : undefined});
       const d = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(d.erro === "fora do ar" ? "o Jarvis está fora do ar" : "o Jarvis não respondeu (" + r.status + ")");
+      if (!r.ok) throw new Error(d.erro === "fora do ar" ? "a Oráculo está fora do ar" : "a Oráculo não respondeu (" + r.status + ")");
       Object.assign(item, {estado: "ok", resposta: d.fala_pt || d.legenda || d.fala || "", velocidade: d.velocidade});
     } else {
       const {error} = await comTempo(sb.from("votos").upsert({id: item.id, dia: hojeISO(), tipo: "central-jarvis", n: 0, veredito: "conversa", logline: t}));
@@ -1868,9 +2570,9 @@ $("f-conversa").addEventListener("submit", async ev => {
   b.disabled = false;
   convChave = ""; desenharConversa();
 });
-/* ---------- conversa de voz com o Jarvis (07/11) ----------
+/* ---------- conversa de voz com a Oráculo (07/11) ----------
    No celular: direto no porteiro pelo Funnel (o mesmo endereço da Alexa), com o login do dono no
-   Authorization; resposta em 1 a 3 s. Voz do Jarvis quando a frase já está gravada; senão a voz do
+   Authorization; resposta em 1 a 3 s. Voz da Oráculo quando a frase já está gravada; senão a voz do
    próprio aparelho (en-GB ou pt-BR) e o PC grava a dele pra próxima. Microfone pelo reconhecimento de
    fala do navegador; sem ele, grava e o whisper do PC transcreve. PC fora do ar: cai na ponte de antes. */
 const JV_URL = "https://dalmoro.taila293dc.ts.net/alexa/celular";
@@ -1928,7 +2630,7 @@ const conversa = (() => {
       signal: AbortSignal.timeout ? AbortSignal.timeout(prazo || 9000) : undefined});
     const d = await r.json().catch(() => ({}));
     if (r.status === 401) throw new Error("o PC não reconheceu o login; saia e entre de novo");
-    if (!r.ok) throw new Error(d.erro || "o Jarvis respondeu " + r.status);
+    if (!r.ok) throw new Error(d.erro || "a Oráculo respondeu " + r.status);
     return d;
   }
   async function noAr() {
@@ -1975,7 +2677,7 @@ const conversa = (() => {
   async function dizer(d) {
     if (!S.aberta) return;
     // 07/11: no iPhone o reconhecimento deixa o áudio em modo gravação e o speechSynthesis sai mudo (e respeita
-    // a chave de silêncio). Agora: para o microfone, toca o MP3 da voz do Jarvis por <audio> (gerado no PC se
+    // a chave de silêncio). Agora: para o microfone, toca o MP3 da voz da Oráculo por <audio> (gerado no PC se
     // ainda não existe) e só cai na voz do aparelho se o PC não entregar o som.
     try { S.rec && S.rec.abort(); } catch (e) {}
     S.rec = null;
@@ -2076,7 +2778,7 @@ const conversa = (() => {
         const r = await fetch("/jarvis/api/conversa", {method: "POST", headers: {"Content-Type": "application/json"},
           body: JSON.stringify({texto, canal: "central", idioma: "en", falar: false}), signal: AbortSignal.timeout ? AbortSignal.timeout(60000) : undefined});
         const x = await r.json().catch(() => ({}));
-        if (!r.ok) throw new Error("o Jarvis não respondeu (" + r.status + ")");
+        if (!r.ok) throw new Error("a Oráculo não respondeu (" + r.status + ")");
         d = {fala: x.fala || "", idioma: /[ãõçéêáíóú]/i.test(x.fala || "") ? "pt" : "en", velocidade: x.velocidade, acao: x.acao};
       } else if (S.via === "ponte") {
         return pelaPonte(texto, p);
@@ -2084,7 +2786,7 @@ const conversa = (() => {
     } catch (e) {
       if (MODO === "nuvem" && /fetch|Load failed|network|timed out|aborted|TimeoutError/i.test(e.message + e.name) && !(await noAr())) {
         S.via = "ponte"; estado("fora");
-        aviso("O PC não respondeu direto. Mandei pela ponte de antes: a resposta chega na aba Jarvis em até 1 min.", true);
+        aviso("O PC não respondeu direto. Mandei pela ponte de antes: a resposta chega na aba Oráculo em até 1 min.", true);
         return pelaPonte(texto, p);
       }
       p.className = "ele"; p.textContent = "Não foi: " + motivo(e);
@@ -2094,7 +2796,7 @@ const conversa = (() => {
     const ms = Math.round(performance.now() - t0);
     for (const r of d.recados || []) linha("ele", (d.idioma === "pt" ? r.fala_pt : r.fala) || r.fala);
     p.className = "ele"; p.textContent = d.fala || "…";
-    p.after(el("p", {class: "q", text: [(ms / 1000).toFixed(1).replace(".", ",") + " s", d.audios ? "voz do Jarvis" : "voz do aparelho",
+    p.after(el("p", {class: "q", text: [(ms / 1000).toFixed(1).replace(".", ",") + " s", d.audios ? "voz da Oráculo" : "voz do aparelho",
       d.velocidade === "trabalho" ? "foi pro terminal central" : null].filter(Boolean).join(" · ")}));
     await dizer(d);
     if (d.pendente && d.id) {
@@ -2117,7 +2819,7 @@ const conversa = (() => {
       const {error} = await comTempo(sb.from("votos").upsert({id: item.id, dia: hojeISO(), tipo: "central-jarvis", n: 0, veredito: "conversa", logline: texto}));
       if (error) throw error;
       MINHAS.unshift(item); convChave = "";
-      p.className = "ele pensa"; p.textContent = "Mandado pela ponte. A resposta aparece na aba Jarvis, em Pergunte qualquer coisa.";
+      p.className = "ele pensa"; p.textContent = "Mandado pela ponte. A resposta aparece na aba Oráculo, em Pergunte qualquer coisa.";
     } catch (e) { p.className = "ele"; p.textContent = "Não foi nem pela ponte: " + motivo(e); }
     estado(S.via === "ponte" ? "fora" : "pronto");
   }
@@ -2237,7 +2939,7 @@ function desenharJarvis() {
   if (!senhasLidas && !$("v-jarvis").hidden) { senhasLidas = true; senhas.ler(); }   // estado das senhas faladas, uma vez
   desenharConversa();
   const m = jarvisModo(), f = jarvisFala();
-  $("jv-estado").replaceChildren("Jarvis ", el("span", {class: ["falando", "ouvindo"].includes(m) ? "on" : null, text: JM[m]}));
+  $("jv-estado").replaceChildren("Oráculo ", el("span", {class: ["falando", "ouvindo"].includes(m) ? "on" : null, text: JM[m]}));
   $("jv-fala").textContent = f.texto;
   $("jv-quando").textContent = f.quando;
   verbos($("jv-verbos"), $("jv-msg"));
@@ -2255,7 +2957,7 @@ function desenharJarvis() {
       el("span", {class: "x", text: a.nivel === "urgente" ? "urgente" : a.em ? hora(a.em) : ""}),
       el("span", {style: "flex:1;min-width:0"}, a.titulo, a.texto ? el("span", {class: "det", text: " · " + a.texto}) : ""),
       MODO === "teste" ? null : b, msg);
-  }) : [el("p", {class: "vazio", text: J.ok === false ? "Sem o Jarvis no ar, sem vigia." : "Nada fora do lugar."})]));
+  }) : [el("p", {class: "vazio", text: J.ok === false ? "Sem a Oráculo no ar, sem vigia." : "Nada fora do lugar."})]));
   const pc = s.pc || {}, u = s.uso_claude || {}, vc = s.voz_credito || {}, dk = s.dark || {};
   const linhas = [
     pc.cpu != null ? ["Processador", `${pc.cpu}% em uso`] : null,
@@ -2263,7 +2965,7 @@ function desenharJarvis() {
     pc.gpu ? ["Placa de vídeo", `${pc.gpu}${pc.gpu_uso != null ? ` · ${pc.gpu_uso}%` : ""}`] : null,
     ...(pc.discos || []).map(d => [`Disco ${d.letra}`, `${d.livre_gb} GB livres de ${d.total_gb}`]),
     u.semana_pct != null ? ["Uso do Claude na semana", `${u.semana_pct}%`] : null,
-    vc.teto ? ["Voz do Jarvis hoje", `${vc.hoje} de ${vc.teto} caracteres (${vc.motor || "?"})`] : null,
+    vc.teto ? ["Voz da Oráculo hoje", `${vc.hoje} de ${vc.teto} caracteres (${vc.motor || "?"})`] : null,
     dk.programados != null ? ["Canais dark", `${dk.no_ar_hoje ?? 0} no ar hoje · ${dk.programados} programados · ${dk.fila ?? 0} na fila`] : null,
   ].filter(Boolean);
   $("jv-pc").replaceChildren(...(linhas.length ? linhas.map(([a, b]) => el("div", {}, el("span", {text: a}), el("b", {text: b})))
@@ -2661,17 +3363,17 @@ function desenharAreas() {
   if (Math.abs(scrollY - y) > 1) scrollTo({top: y});
 }
 
-/* ---------- a faixa do Jarvis, presente em toda tela ---------- */
+/* ---------- a faixa da Oráculo, presente em toda tela ---------- */
 function desenharFaixa() {
   if ($("jfaixa").hidden) return;
   const m = jarvisModo(), f = jarvisFala();
   const e = $("jf-estado");
-  e.textContent = "Jarvis " + JM[m];
+  e.textContent = "Oráculo " + JM[m];
   e.className = ["falando", "ouvindo"].includes(m) ? "on" : "";
   $("jf-fala").textContent = f.texto === "…" ? "" : "· " + f.texto;
   const box = $("jf-verbos");
   let mais = box.querySelector(".jf-mais");     // 09/11 (banca): Resumo no PC, Calar, Ouvir e Vigiar ficam a um toque
-  if (!mais) { mais = el("details", {class: "jf-mais"}, el("summary", {text: "Mais do Jarvis"}), el("div", {class: "jf-mais-in"})); box.append(mais); }
+  if (!mais) { mais = el("details", {class: "jf-mais"}, el("summary", {text: "Mais da Oráculo"}), el("div", {class: "jf-mais-in"})); box.append(mais); }
   verbos(mais.querySelector(".jf-mais-in"), $("jf-msg"));
   if (!box.querySelector(".jf-pedir")) {
     const p = el("button", {type: "button", class: "jf-pedir", text: "Mandar pros terminais"});
@@ -2679,7 +3381,7 @@ function desenharFaixa() {
     box.prepend(p);
   }
   if (!box.querySelector(".jf-conv")) {   // 07/11: no celular só os dois primeiros aparecem; conversar vem antes
-    const c = el("button", {type: "button", class: "jf-conv", title: "falar com o Jarvis e ouvir a resposta aqui", text: "Perguntar ao Jarvis"});
+    const c = el("button", {type: "button", class: "jf-conv", title: "falar com a Oráculo e ouvir a resposta aqui", text: "Perguntar à Oráculo"});
     c.addEventListener("click", () => conversa.abrir());
     box.prepend(c);
   }
@@ -3427,7 +4129,7 @@ function layout(W) {
   U = W >= 1200 ? 4 : W >= 640 ? 3 : 2;
   const totU = Math.floor(W / U);
   POCO = W < 640 ? 7 : 11;             // poço dos cabos, à esquerda
-  TETO = W < 640 ? 38 : 70;            // telhado com o Jarvis (dobrado no computador)
+  TETO = W < 640 ? 38 : 70;            // telhado com a Oráculo (dobrado no computador)
   X0 = 2 + POCO + 2;
   const largU = totU - X0 - 4;
   RD = X0 + largU;
@@ -3535,7 +4237,7 @@ function desenharCabos(ctx, L, modo, f) {
   const vivo = modo !== "dormindo" && modo !== "fora";
   const ls = andares(L), n = Math.max(1, Math.min(ls.length, Math.floor((POCO - 3) / 2)));
   const algum = vivo && ls.some(a => a.busy);
-  r(ctx, 5, TETO - 3, BUS, 1, algum ? PAL.ciano : PAL.fio);      // do pescoço do Jarvis até o poço
+  r(ctx, 5, TETO - 3, BUS, 1, algum ? PAL.ciano : PAL.fio);      // do pescoço da Oráculo até o poço
   ls.forEach((a, k) => {
     const cx = 5 + (k % n) * 2, alvo = a.y + 8, cor = vivo && a.busy ? PAL.ciano : PAL.fio;
     r(ctx, cx, TETO - 3, 1, alvo - TETO + 3, cor);
@@ -3729,8 +4431,8 @@ function desenharEscritorio() {
   }
   BUS = (W >= 640 ? 4 + 15 * 2 : 3 + 15) - 5;
   desenharCabos(ctx, L, modo, f);
-  // o Jarvis no telhado, com a tela de onda do lado
-  const JSC = W >= 640 ? 2 : 1;                 // no computador o Jarvis tem o dobro do tamanho de um boneco
+  // a Oráculo no telhado, com a tela de onda do lado
+  const JSC = W >= 640 ? 2 : 1;                 // no computador a Oráculo tem o dobro do tamanho de um boneco
   const jx = JSC === 2 ? 4 : 3, jy = TETO - 2 - 30 * JSC;
   const ox = jx + 31 * JSC + 2;
   const U0 = U;
@@ -3745,7 +4447,7 @@ function desenharEscritorio() {
   const nomeW = ctx.measureText("JARVIS  ").width;
   ctx.font = `400 condensed ${tam}px Archivo,sans-serif`;
   ctx.fillStyle = ["falando", "ouvindo"].includes(modo) ? PAL.ciano : PAL.cinza; ctx.fillText(JM[modo] || modo, ox * U + nomeW, (jy + 9 * JSC) * U);
-  const jr = {x: jx * U, y: jy * U, w: (ox + ow * JSC - jx) * U, h: 30 * JSC * U, it: {nome: "Jarvis", status: modo}, sala: {tipo: "jarvis", nome: "Telhado"}};
+  const jr = {x: jx * U, y: jy * U, w: (ox + ow * JSC - jx) * U, h: 30 * JSC * U, it: {nome: "Oráculo", status: modo}, sala: {tipo: "jarvis", nome: "Telhado"}};
   if (sobre && sobre.sala.tipo === "jarvis") { ctx.strokeStyle = "rgba(238,246,255,.4)"; ctx.lineWidth = 2; ctx.setLineDash([6, 4]); ctx.strokeRect(jr.x + 2, jr.y + 2, jr.w - 4, jr.h - 4); ctx.setLineDash([]); }
   cenas.push(jr);
   if (!L.salas.some(s => !s.porao)) { ctx.fillStyle = PAL.cinza; ctx.font = "400 15px Archivo,sans-serif"; ctx.textBaseline = "middle"; ctx.fillText(carregou ? "Ninguém aberto no Maestri agora." : "Esperando o PC mandar quem está aberto…", X0 * U + 8, (TETO + 12) * U); }
@@ -3840,7 +4542,7 @@ function listaAcessivel() {
   if (box.dataset.k === chave) return;
   box.dataset.k = chave;
   box.replaceChildren(...cenas.map(c => {
-    const b = el("button", {type: "button", text: c.sala.tipo === "jarvis" ? "Jarvis: abrir a aba dele" : `${c.it.nome}: ${c.sala.tipo === "robo" ? "rotina falhou" : NOMES_ST[c.it.status] || c.it.status}`});
+    const b = el("button", {type: "button", text: c.sala.tipo === "jarvis" ? "Oráculo: abrir a aba dele" : `${c.it.nome}: ${c.sala.tipo === "robo" ? "rotina falhou" : NOMES_ST[c.it.status] || c.it.status}`});
     b.addEventListener("click", () => { if (c.sala.tipo === "jarvis") return irPara("jarvis"); sel = c; desenharEscritorio(); });
     return b;
   }));
@@ -3862,7 +4564,7 @@ $("res-filtro").addEventListener("click", e => { const f = e.target.closest("[da
 $("term-filtro").addEventListener("click", e => { const f = e.target.closest("[data-f]"); if (f) { filtroTerm = f.dataset.f; desenharTerminais(); } });
 
 
-/* ---------- Painel (07/11): o painel do Jarvis do PC (JARVIS/painel/painel.js) como tela principal ----------
+/* ---------- Painel (07/11): o painel da Oráculo do PC (JARVIS/painel/painel.js) como tela principal ----------
    Mesmos cartões, mesma conta, mesmo reator. Dados: no PC o /jarvis/api/estado (J.estado); no celular a
    linha central-jarvis (E.jarvis), que a ponte manda só pro login do dono. Da Central entram as barras ao
    vivo dos trabalhos (medidor), os terminais trabalhando e as pendências. Campo que falta vira "sem dado". */
@@ -4275,8 +4977,8 @@ const PJ = (() => {
         const pct = x.usado / x.limite * 100;
         let html = stat(ehNum(x.sobra) ? compacto.format(x.sobra) : null, "caracteres sobrando", "g " + (pct >= 95 ? "urgente" : pct >= 80 ? "normal" : "reator")) +
           barraRei("Usado no mês", compacto.format(x.usado) + " de " + compacto.format(x.limite), pct, nivelPct(pct, 80, 95), ehNum(x.renova) ? x.renova : null);
-        if (v0 && ehNum(v0.hoje) && ehNum(v0.teto) && v0.teto > 0) { const meia = new Date(); meia.setHours(24, 0, 0, 0);     // o teto diário do Jarvis zera à meia-noite
-          html += barraRei("Hoje no Jarvis", nf.format(v0.hoje) + " de " + nf.format(v0.teto), v0.hoje / v0.teto * 100, nivelPct(v0.hoje / v0.teto * 100, 75, 95), Math.floor(meia / 1000)); }
+        if (v0 && ehNum(v0.hoje) && ehNum(v0.teto) && v0.teto > 0) { const meia = new Date(); meia.setHours(24, 0, 0, 0);     // o teto diário da Oráculo zera à meia-noite
+          html += barraRei("Hoje na Oráculo", nf.format(v0.hoje) + " de " + nf.format(v0.teto), v0.hoje / v0.teto * 100, nivelPct(v0.hoje / v0.teto * 100, 75, 95), Math.floor(meia / 1000)); }
         return {html, meta: "ElevenLabs" + (x.plano ? '<span class="uso-plano"> · ' + esc(x.plano) + "</span>" : ""), fonte: x.em};
       }
       const v = v0;
@@ -4344,8 +5046,8 @@ const PJ = (() => {
     medirTopo();
     arrumar();
     const s = fonte();
-    $("pj-saudacao").textContent = s.saudacao || "Jarvis";
-    $("pj-resumo").textContent = s.resumo_pt || (MODO === "nuvem" && carregou && !pcVivo() ? "O PC está sem sinal. Mostrando o último dado que chegou." : "Sem resumo do Jarvis ainda.");
+    $("pj-saudacao").textContent = s.saudacao || "Oráculo";
+    $("pj-resumo").textContent = s.resumo_pt || (MODO === "nuvem" && carregou && !pcVivo() ? "O PC está sem sinal. Mostrando o último dado que chegou." : "Sem resumo da Oráculo ainda.");
     const ok = noAr();
     raiz.classList.toggle("fora", !ok);
     const cx = $("pj-conexao");
@@ -4381,7 +5083,7 @@ const PJ = (() => {
   /* ---------- voz e reator ---------- */
   const NOME_ESTADO = {dormindo: "dormindo", ouvindo: "ouvindo", pensando: "pensando", falando: "falando"};
   const NOME_QUEM = {claude: "Claude", codex: "Codex"};
-  const DICA = {dormindo: MODO === "pc" ? 'Diga "ei Jarvis" pra chamar.' : "Toque em Falar com o Jarvis pra conversar.", ouvindo: "Pode falar.", pensando: "Um momento.", falando: ""};
+  const DICA = {dormindo: MODO === "pc" ? 'Diga "ei Jarvis" pra chamar.' : "Toque em Falar com a Oráculo pra conversar.", ouvindo: "Pode falar.", pensando: "Um momento.", falando: ""};
   const V = {estado: "dormindo", quem: "jarvis", nivel: 0, fora: false};
   function voz() {
     const v = vozAgora();
@@ -4521,7 +5223,7 @@ const PJ = (() => {
     timerAviso = setTimeout(() => a.classList.remove("aviso--visivel"), 4500);
   }
 
-  /* ---------- perguntar: vai pelo mesmo caminho da aba Jarvis (f-conversa), a resposta aparece aqui ---------- */
+  /* ---------- perguntar: vai pelo mesmo caminho da aba Oráculo (f-conversa), a resposta aparece aqui ---------- */
   let minhaPergunta = null;
   function perguntar(t) {
     if (MODO === "teste") { aviso("Na conferência a pergunta não sai daqui."); return; }
@@ -4536,7 +5238,7 @@ const PJ = (() => {
     desenharConversa();
     const m = MINHAS.find(x => x.id === minhaPergunta);
     if (!m) return;
-    const texto = m.estado === "pensando" ? (m.via !== "celular" ? "O Jarvis está pensando…" : m.semSinal ? "O PC está sem sinal. A pergunta sai quando ele voltar." : "Pensando… a resposta chega aqui em até 1 min.") : m.resposta || "Ele não disse nada.";
+    const texto = m.estado === "pensando" ? (m.via !== "celular" ? "A Oráculo está pensando…" : m.semSinal ? "O PC está sem sinal. A pergunta sai quando ele voltar." : "Pensando… a resposta chega aqui em até 1 min.") : m.resposta || "Ele não disse nada.";
     const ch = m.pergunta + "|" + texto;
     if (saida.dataset.k === ch) return;
     saida.dataset.k = ch;
@@ -4550,7 +5252,7 @@ const PJ = (() => {
     perguntar(t);
   });
   $("pj-btn-falar").addEventListener("click", ev => {
-    if (MODO === "pc") jarvisAcao("falar", "", {set textContent(v) { if (v && !/mandando/.test(v)) aviso(v.replace(/^ele vai/, "O Jarvis vai")); }}, ev.currentTarget);
+    if (MODO === "pc") jarvisAcao("falar", "", {set textContent(v) { if (v && !/mandando/.test(v)) aviso(v.replace(/^ele vai/, "A Oráculo vai")); }}, ev.currentTarget);
     else perguntar("Como estão as coisas?");
   });
 
@@ -4824,7 +5526,7 @@ if ("serviceWorker" in navigator && MODO !== "teste" && (location.protocol === "
    - FALAR: o botão Falar de toda caixa (PC: grava e o servidor transcreve; celular: ditado do navegador
      ou grava e o PC transcreve pelo Funnel; sem nada disso, o guia do microfone do teclado);
    - seções que abrem e fecham, lembrando o que ficou aberto; o tema claro, escuro ou do aparelho;
-   - NOTAS: os avisos no canto, no jeito da caixa de diálogo do Jarvis na TV, com histórico e notificação. */
+   - NOTAS: os avisos no canto, no jeito da caixa de diálogo da Oráculo na TV, com histórico e notificação. */
 (() => {
 "use strict";
 const LS = {
@@ -5035,7 +5737,7 @@ window.A47 = (() => {
   }
   // 1P e 2P da TV são os canais dele (o de cliente, como o do Sargentim, fica fora do placar)
   const proprios = cs => { const m = cs.filter(c => /dal ?moro|geektavo/i.test(JSON.stringify(c))); return m.length ? m : cs; };
-  function paraAndar() {   // o mesmo formato do /api/estado do Jarvis que a TV lê, montado com o dado da Central
+  function paraAndar() {   // o mesmo formato do /api/estado da Oráculo que a TV lê, montado com o dado da Central
     const base = (MODO === "pc" && J.estado) || E.jarvis || {};
     const F = ((E.fila || {}).lista || []);
     return {
@@ -5106,7 +5808,7 @@ window.A47 = (() => {
     }
     const T = (E.terminais || {}).lista || [];
     $("a47-legenda").textContent = !carregou ? "Lendo o andar…" : !pcVivo() && MODO === "nuvem" ? "O PC está sem sinal: o andar mostra o último retrato que chegou." :
-      "Quem trabalha senta no térreo com a barra em cima da mesa. Quem dorme fica no mezanino. O Jarvis faz a ronda servindo café.";
+      "Quem trabalha senta no térreo com a barra em cima da mesa. Quem dorme fica no mezanino. A Oráculo faz a ronda servindo café.";
     if (mesasAbertas) desenharMesas();
   }
   // a torre em tela cheia (celular: deitado fica do tamanho da TV)
@@ -5132,7 +5834,7 @@ window.A47 = (() => {
     if (estreito() !== largura) { largura = estreito(); if (andar && $("a47-tela").hidden) andar.encaixar(recorte()); } });
   document.addEventListener("visibilitychange", () => { if (!andar) return; if (document.hidden) andar.parar(); else if (visivel || !$("a47-tela").hidden) andar.ligar(); });
 
-  // a caixa de falar da porta: pedido vai pelo mesmo Pedir da aba Jarvis; pergunta abre a conversa
+  // a caixa de falar da porta: pedido vai pelo mesmo Pedir da aba Oráculo; pergunta abre a conversa
   const txt = $("a47-txt"), msg = $("a47-msg");
   $("a47-form").addEventListener("submit", ev => {
     ev.preventDefault();
@@ -5144,7 +5846,7 @@ window.A47 = (() => {
     $("f-pedido").requestSubmit();
     const olha = setInterval(() => {
       const m = $("pedido-msg").textContent;
-      if (/^mandado/.test(m)) { clearInterval(olha); txt.value = ""; msg.textContent = (MODO === "pc" ? "Mandado. Chega no terminal central em segundos." : "Mandado. Chega na central em até 20 s.") + " Você acompanha em Jarvis, Seus pedidos."; }
+      if (/^mandado/.test(m)) { clearInterval(olha); txt.value = ""; msg.textContent = (MODO === "pc" ? "Mandado. Chega no terminal central em segundos." : "Mandado. Chega na central em até 20 s.") + " Você acompanha em Oráculo, Seus pedidos."; }
       else if (/^não foi/.test(m)) { clearInterval(olha); msg.textContent = "Não foi: " + m.replace(/^não foi:\s*/, "") + ". O texto continua aqui, é só mandar de novo."; }
     }, 300);
     setTimeout(() => clearInterval(olha), 30000);
@@ -5153,7 +5855,7 @@ window.A47 = (() => {
     const t = txt.value.trim();
     if (MODO === "teste") { msg.textContent = "Na conferência a pergunta não sai daqui."; return; }
     txt.value = "";
-    msg.textContent = t ? "A resposta aparece na conversa com o Jarvis." : "";
+    msg.textContent = t ? "A resposta aparece na conversa com a Oráculo." : "";
     conversa.perguntar(t.slice(0, 600));
   });
 
@@ -5212,7 +5914,7 @@ window.NOTAS = (() => {
   }
   function noAparelho(a) {
     if (!("Notification" in window) || Notification.permission !== "granted" || !document.hidden || !navigator.serviceWorker) return;
-    navigator.serviceWorker.ready.then(r => r.showNotification(a.q === "JARVIS" ? "Jarvis" : "Central", {body: a.f, tag: a.id, icon: "icone-192.png", badge: "icone-192.png", data: {ir: a.ir}})).catch(() => {});
+    navigator.serviceWorker.ready.then(r => r.showNotification(a.q === "JARVIS" ? "Oráculo" : "Central", {body: a.f, tag: a.id, icon: "icone-192.png", badge: "icone-192.png", data: {ir: a.ir}})).catch(() => {});
   }
   function contar() { $("avisos-n").textContent = naoLidos ? String(naoLidos) : ""; }
   function novo(id, a) {
@@ -5262,10 +5964,10 @@ window.NOTAS = (() => {
   function desenharLista() {
     const ol = $("avisos-lista");
     ol.replaceChildren(...(hist.length ? hist.map(a => {
-      const b = el("button", {type: "button"}, el("b", {text: a.f}), el("span", {text: (a.q === "JARVIS" ? "Jarvis" : a.q.charAt(0) + a.q.slice(1).toLowerCase()) + " · " + quando(a.em)}));
+      const b = el("button", {type: "button"}, el("b", {text: a.f}), el("span", {text: (a.q === "JARVIS" ? "Oráculo" : a.q.charAt(0) + a.q.slice(1).toLowerCase()) + " · " + quando(a.em)}));
       b.addEventListener("click", () => ir(a));
       return el("li", {}, b);
-    }) : [el("li", {}, el("p", {class: "vazio", text: "Nenhum aviso ainda. Pendência nova, terminal que terminou e o que o Jarvis fizer aparecem aqui."}))]));
+    }) : [el("li", {}, el("p", {class: "vazio", text: "Nenhum aviso ainda. Pendência nova, terminal que terminou e o que a Oráculo fizer aparecem aqui."}))]));
     const pode = MODO === "nuvem" && "Notification" in window && Notification.permission === "default" && !LS.ler(KP, false);
     $("avisos-perm").hidden = !pode;
   }
@@ -5341,7 +6043,45 @@ window.AOVIVO = (() => {
       erro = "";
     } catch (e) { erro = motivo(e); }
     finally { lendo = false; }
+    if (visivel && sala()) { SALA.dados(S ? S.sala : null, {semRede: !!erro}); if (CENA) CENA.dados(S ? S.sala : null, extraCena()); }
     desenhar();
+  }
+
+  /* ---- sala de operações (Oráculo 360, 10/11): cada trabalho andando é uma estação; a resposta usa o mesmo
+     cartão da aba Pendências e "Abrir a janela" liga a janela de palpite aqui embaixo ---- */
+  let SALA = null, CENA = null;
+  function extraCena() {        // o que a cena precisa além da lista: limite do Claude, memória do PC e a voz
+    const c = ((((E.uso || {}).claude) || {}).contas || [])[0] || {}, j = c.sessao && c.sessao.pct != null ? c.sessao : (c.semana || {});
+    return {uso: {pct: j.pct, vira: j.reinicia}, clima: {memPct: (E.maquina || {}).mem, caiu: !pcVivo()}, voz: ((E.jarvis || {}).voz || {}).estado, semRede: !!erro};
+  }
+  function sala() {
+    if (SALA) return SALA;
+    if (!window.AovivoSala || !$("av-sala")) return null;     // sem o arquivo da sala, a aba fica como era
+    $("av-sala").hidden = false;
+    $("av-tit").textContent = "Janelas e palpite";
+    if (window.OraculoCena && $("av-cena")) {
+      $("av-cena").hidden = false; $("av-lista-tit").hidden = false;
+      CENA = OraculoCena.montar($("av-cena"), {semMarca: true,
+        decisao: pd => { const i = ((E.fila || {}).lista || []).find(x => x.id === pd.id); return i ? el("div", {class: "avs-dec-cx"}, cartaoFila(i)) : null; },
+        tocar: d => { const no = document.querySelector(`#av-sala [data-id="${CSS.escape(d.id)}"]`); if (no) { no.scrollIntoView({behavior: "smooth", block: "center"}); no.classList.add("avs-tocado"); setTimeout(() => no.classList.remove("avs-tocado"), 1600); } }
+      });
+    }
+    SALA = AovivoSala.montar($("av-sala"), {semTopo: !!CENA,
+      quadroUrl: q => {
+        const i = S && S.lista.find(x => x.slug === q.slug);
+        const u = i && i.quadros[i.quadros.length - 1];
+        return u ? src(q.slug, u, "d") : "";
+      },
+      decisao: pd => {
+        const i = ((E.fila || {}).lista || []).find(x => x.id === pd.id);
+        return i ? el("div", {class: "avs-dec-cx"}, cartaoFila(i)) : null;
+      },
+      abrir: slug => {
+        if (!pref.ligados.includes(slug)) alternar(slug, true);
+        setTimeout(() => { const w = J.get(slug); if (w) w.no.scrollIntoView({behavior: "smooth", block: "start"}); }, 500);
+      }
+    });
+    return SALA;
   }
 
   /* ---- a lista: liga e desliga, e os tipos que aparecem ---- */
@@ -5507,7 +6247,7 @@ window.AOVIVO = (() => {
       w.k.tempo = kt; w.tempo.hidden = n < 2;
       w.tempo.replaceChildren(...i.quadros.slice().reverse().map((x, k) => {
         const s = src(i.slug, x, "d");
-        const b = el("button", {type: "button", class: "av-q", "aria-pressed": String(!!q && x.ts === q.ts), "aria-label": "Ver o quadro das " + hms(x.ts)},
+        const b = el("button", {type: "button", class: "av-q", "data-ts": String(x.ts), "aria-pressed": String(!!q && x.ts === q.ts), "aria-label": "Ver o quadro das " + hms(x.ts)},
           s ? el("img", {src: s, alt: "", loading: "lazy", width: "96", height: "60"}) : null, el("span", {text: (k === 0 ? "agora · " : "") + hms(x.ts)}));
         const mini = b.querySelector("img");
         if (mini) mini.addEventListener("error", () => mini.remove(), {once: true});   // miniatura que não veio: fica só a hora
@@ -5516,6 +6256,10 @@ window.AOVIVO = (() => {
       }));
       if (!w.tempo.dataset.rola) { w.tempo.dataset.rola = "1"; w.tempo.addEventListener("scroll", () => medirTempo(w), {passive: true}); }
       requestAnimationFrame(() => medirTempo(w));
+    }
+    {   // crítica 09/11 (r1.7): no comparar, o quadro de antes também ganha marca na linha do tempo
+      const ix = q ? i.quadros.findIndex(x => x.ts === q.ts) : -1, antes = w.cmp && ix > 0 ? String(i.quadros[ix - 1].ts) : null;
+      for (const b of w.tempo.children) b.classList.toggle("av-antes", b.dataset.ts === antes);
     }
     // o palpite que acabou de sair aparece na hora (antes do PC confirmar) e some quando o de verdade chega
     if (w.pend && i.palpites.some(p => p.texto === w.pend.texto && p.ts >= w.pend.ts - 5)) w.pend = null;
@@ -5576,7 +6320,7 @@ window.AOVIVO = (() => {
       if (MODO === "pc") { const r = await fetch("/aovivo/tv", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({slug: w.slug, on}), signal: comPrazo()}); if (!r.ok) throw new Error("a tela do PC respondeu " + r.status); }
       else if (MODO === "nuvem") await votar("central-av-t-" + Date.now(), "tv", {slug: w.slug, on});
       i.na_tv = on; atualizar(w);
-      w.msg.textContent = on ? "Ligado na TV. Peça ao Jarvis: abre o ao vivo." : "Saiu da TV.";
+      w.msg.textContent = on ? "Ligado na TV. Peça à Oráculo: abre o ao vivo." : "Saiu da TV.";
     } catch (e) { w.msg.textContent = "A TV não mudou: " + motivo(e) + "."; }
     finally { w.btTV.disabled = false; }
   }
@@ -5603,6 +6347,8 @@ window.AOVIVO = (() => {
   }
   function mostrar(on) {
     visivel = !!on && !$("app").hidden;
+    if (SALA) { if (visivel) SALA.ligar(); else SALA.parar(); }
+    if (CENA) { if (visivel) CENA.ligar(); else CENA.parar(); }
     if (visivel) { batida = 0; ler(); }
   }
   setInterval(() => { if (document.hidden || $("app").hidden) return; if (visivel) ler(); }, MODO === "pc" ? 2500 : 5000);
@@ -5645,13 +6391,1104 @@ FALAR.ligar($("a47-txt"), null, $("a47-falar").querySelector(".a47-botoes"));
 FALAR.ligar($("pedido"), null, $("f-pedido").querySelector(".envio"));
 FALAR.ligar($("conversa"), null, $("f-conversa").querySelector(".envio"));
 if ($("pj-conversa-texto")) FALAR.ligar($("pj-conversa-texto"), $("pj-conversa"));
-// do Jarvis pro painel de cartões, do Andamento pro prédio em corte (as vistas antigas continuam a um toque)
+// da Oráculo pro painel de cartões, do Andamento pro prédio em corte (as vistas antigas continuam a um toque)
 const irBt = (txt, id) => { const b = el("button", {class: "lnk", type: "button", text: txt}); b.addEventListener("click", () => irPara(id)); return b; };
-$("v-jarvis").querySelector(".jv-txt").append(irBt("Abrir o painel de cartões do Jarvis", "painel"));
+$("v-jarvis").querySelector(".jv-txt").append(irBt("Abrir o painel de cartões da Oráculo", "painel"));
 $("term-lista").before(irBt("Ver os terminais no prédio em corte", "escritorio"));
 const ir = new URLSearchParams(location.search).get("ir");
 if (ir && !$("app").hidden) irPara(ir);
 A47.mostrar(aba === "andar" && !$("app").hidden);
 setInterval(() => { if (!$("app").hidden) { NOTAS.varrer(); A47.desenhar(); } }, 3000);
 })();
+</script>
+<script id="o-casca-js">
+/* Casca nova da Central Oráculo (10/11/2026). Roda depois do motor antigo e usa as mesmas funções dele:
+   decidir, cartaoFila, cartaoResultado, medidor, aoVivo, jarvisAcao, f-pedido e f-conversa. Nenhuma ação
+   nova vai pro PC: só muda o que aparece primeiro, quanto aparece e como responde. */
+(() => {
+document.body.classList.add("o");
+const SVG = {
+  agora: '<path d="M4 6h16M4 12h9M4 18h6"/><circle cx="18" cy="16.5" r="3.2"/>',
+  cidade: '<path d="M2 21h20M4 21V11h5v10M9 21V4h7v17M16 21v-8h4v8"/><path d="M12 8h1M12 12h1M12 16h1"/>',
+  olho: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  mais: '<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>',
+  pend: '<path d="M12 3v3M5 12H2M22 12h-3M12 21v-3"/><circle cx="12" cy="12" r="5"/>',
+  andamento: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+  oraculo: '<circle cx="12" cy="9" r="5"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+  areas: '<path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 12l9 4 9-4M3 17l9 4 9-4"/>',
+  atalhos: '<path d="M10 14L21 3M15 3h6v6"/><path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/>',
+  avisos: '<path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+  tema: '<circle cx="12" cy="12" r="8"/><path d="M12 4v16" /><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/>',
+  valores: '<path d="M3 3l18 18"/><path d="M10.6 5.1A10.6 10.6 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-3.2 4.1M6.6 6.6C3.8 8.4 2 12 2 12s3.6 7 10 7a9.9 9.9 0 0 0 5.4-1.6"/>',
+  painel: '<rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18M9 9v11"/>',
+  predio: '<path d="M5 21V3h14v18M2 21h20M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/>',
+};
+const ico = (k) => `<svg viewBox="0 0 24 24" aria-hidden="true">${SVG[k] || ""}</svg>`;
+const html = (tag, at, inner) => { const e = el(tag, at); e.innerHTML = inner; return e; };
+
+/* ---------- casca: trilho, topo do celular, barra, gaveta ---------- */
+const DEST = [["agora", "Agora"], ["cidade", "Cidade"], ["olho", "Olho"], ["mais", "Mais"]];
+const trilho = el("nav", {class: "o-trilho", id: "o-trilho", "aria-label": "Destinos"},
+  el("p", {class: "o-marca", "aria-hidden": "true", text: "Oráculo"}),
+  el("div", {class: "o-destinos", role: "tablist", id: "o-destinos"}),
+  el("div", {class: "o-pc", id: "o-pc", tabindex: "0", role: "status"}, el("i"), el("span", {class: "o-dica", id: "o-pc-dica", text: "conectando"})));
+for (const [k, nome] of DEST) {
+  const b = el("button", {class: "o-dest", type: "button", role: "tab", id: "o-d-" + k, "aria-selected": "false"});
+  b.innerHTML = ico(k) + `<span>${nome}</span>` + (k === "agora" ? '<span class="o-n" id="o-n-agora"></span>' : "");
+  b.addEventListener("click", () => irDestino(k));
+  trilho.querySelector(".o-destinos").append(b);
+}
+const topoCel = el("header", {class: "o-topo-cel"}, el("p", {class: "o-marca", text: "Oráculo"}),
+  el("span", {class: "o-pc-cel", id: "o-pc-cel"}, el("i"), el("span", {id: "o-pc-cel-t"})));
+const cara = html("span", {class: "o-cara", id: "o-cara", "data-estado": "vigiando", "aria-hidden": "true"},
+  '<svg viewBox="0 0 16 16"><rect class="cabelo" x="3" y="1" width="10" height="2"/><rect class="cabelo" x="2" y="2" width="2" height="10"/><rect class="cabelo" x="12" y="2" width="2" height="10"/>' +
+  '<rect class="rosto" x="4" y="3" width="8" height="8"/><rect class="cabelo" x="4" y="3" width="8" height="1"/><rect class="rosto" x="6" y="11" width="4" height="1"/>' +
+  '<rect class="cabelo" x="3" y="13" width="10" height="3"/><rect class="rosto" x="7" y="12" width="2" height="1"/>' +
+  '<g class="olho"><rect x="4" y="6" width="3" height="2"/><rect x="9" y="6" width="3" height="2"/><rect x="7" y="6" width="2" height="1"/></g><rect class="boca" x="7" y="9" width="2" height="1"/></svg>');
+const txt = el("input", {id: "o-txt", type: "text", maxlength: "2000", autocomplete: "off", enterkeyhint: "send", placeholder: "Fala com a Oráculo", "aria-label": "Fala com a Oráculo: pergunta ou trabalho"});
+const rumoB = el("button", {class: "o-rumo", id: "o-rumo", type: "button", hidden: true, title: "Toque pra trocar entre pergunta e trabalho"});
+const micSlot = el("span", {class: "o-mic", id: "o-mic"});
+const mandarB = el("button", {class: "o-bt o-bt-cheio", type: "submit", text: "Mandar"});
+const modo = el("div", {class: "o-modo", role: "group", "aria-label": "A Oráculo agora"},
+  el("button", {type: "button", "data-v": "vigiar", "aria-pressed": "true", title: "Roda a vigia agora", text: "Vigiar"}),
+  el("button", {type: "button", "data-v": "calar", "aria-pressed": "false", title: "Para de falar na hora", text: "Calar"}));
+const barraMsg = el("p", {class: "o-barra-msg", id: "o-barra-msg", role: "status"});
+const barra = el("form", {class: "o-barra", id: "o-barra", autocomplete: "off"}, cara, txt, el("kbd", {class: "o-tecla", text: "/", title: "Tecla / leva pra cá"}), rumoB, micSlot, mandarB, el("span", {class: "o-sep"}), modo, barraMsg);
+const resposta = el("div", {class: "o-resposta", id: "o-resposta", role: "status", "aria-live": "polite", hidden: true});
+const veu = el("div", {class: "o-veu", id: "o-veu", hidden: true});
+const gavTit = el("h2", {id: "o-gav-tit"});
+const gavFechar = el("button", {class: "o-bt o-bt-fantasma", type: "button", text: "Fechar"});
+const gavCorpo = el("div", {class: "o-gav-corpo", id: "o-gav-corpo"});
+const gaveta = el("aside", {class: "o-gaveta", id: "o-gaveta", role: "dialog", "aria-modal": "true", "aria-labelledby": "o-gav-tit", hidden: true},
+  el("header", {class: "o-gav-cab"}, gavTit, gavFechar), gavCorpo);
+document.body.prepend(trilho, topoCel);
+document.body.append(barra, resposta, veu, gaveta);
+if (window.FALAR) FALAR.ligar(txt, null, micSlot);
+const phCurto = () => { txt.placeholder = innerWidth < 360 ? "Fala com ela" : "Fala com a Oráculo"; };
+phCurto(); addEventListener("resize", phCurto);
+
+/* ---------- vistas novas dentro do #app ---------- */
+const vAgora = el("section", {class: "vista o-agora", id: "v-inicio", hidden: true, "aria-labelledby": "o-agora-tit"});
+const vMais = el("section", {class: "vista o-mais", id: "v-mais2", hidden: true, "aria-labelledby": "o-mais-tit"});
+$("velho").after(vAgora, vMais);
+
+/* ---------- navegação: quatro destinos por cima do irPara do motor ---------- */
+const DO_MAIS = new Set(["fila", "agora", "jarvis", "areas", "atalhos", "painel", "escritorio", "mais2", "edicao", "github"]);
+const destinoDe = id => id === "inicio" ? "agora" : (id === "aovivo" || id === "andar") ? "cidade" : id === "olho" ? "olho" : "mais";
+function marcar(id) {
+  const d = destinoDe(id);
+  for (const [k] of DEST) $("o-d-" + k).setAttribute("aria-selected", String(k === d));
+  try { sessionStorage.setItem("o-aba", id); } catch (e) {}
+}
+const _irPara = irPara;
+irPara = function (id) {
+  fecharGaveta(true);
+  if (id === "inicio" || id === "mais2") {
+    for (const s of $("app").querySelectorAll(":scope > .vista")) s.hidden = true;
+    if (window.A47) A47.mostrar(false);
+    if (window.AOVIVO) AOVIVO.mostrar(false);
+    if (window.AOLHO) AOLHO.mostrar(false);
+    try { PJ.esconder(); } catch (e) {}
+    aba = id;
+    $("v-" + id).hidden = false;
+    marcar(id);
+    if (id === "inicio") { chaveAgora = ""; desenharAgora(); } else desenharMais();
+    scrollTo({top: 0});
+    return;
+  }
+  vAgora.hidden = true; vMais.hidden = true;
+  _irPara(id);
+  if (DO_MAIS.has(aba) && aba !== "mais2") colocarVolta();
+  marcar(aba);
+  ganchos();
+};
+function irDestino(k) {
+  if (k === "agora") return irPara("inicio");
+  if (k === "cidade") return irPara("aovivo");
+  if (k === "olho") return irPara("olho");
+  irPara("mais2");
+}
+function colocarVolta() {   // as vistas antigas que moram em Mais ganham o caminho de volta
+  const v = $("v-" + aba);
+  if (!v || v.querySelector(":scope > .o-volta")) return;
+  const b = el("button", {class: "o-bt o-bt-fantasma o-volta", type: "button", text: "Voltar pro Mais"});
+  b.addEventListener("click", () => irPara("mais2"));
+  v.prepend(b);
+}
+
+/* ---------- gaveta ---------- */
+let gavAntes = null;
+function abrirGaveta(titulo, etiqueta, corpo) {
+  gavAntes = document.activeElement;
+  gavTit.replaceChildren(titulo);
+  const et = gaveta.querySelector(".o-gav-cab > .o-et");
+  if (et) et.remove();
+  if (etiqueta) gavTit.after(etiqueta);
+  gavCorpo.replaceChildren(...[].concat(corpo));
+  for (const b of gavCorpo.querySelectorAll("button, a.ver, a.o-bt")) { const t = b.textContent; if (t && /^[a-zà-ú]/.test(t) && b.children.length === 0) b.textContent = t.charAt(0).toUpperCase() + t.slice(1); }
+  gaveta.hidden = false; veu.hidden = false;
+  document.body.style.overflow = "hidden";
+  gavFechar.focus({preventScroll: true});
+}
+function fecharGaveta(semFoco) {
+  if (gaveta.hidden) return;
+  gaveta.hidden = true; veu.hidden = true; document.body.style.overflow = "";
+  gavCorpo.replaceChildren();
+  if (!semFoco && gavAntes && gavAntes.isConnected) try { gavAntes.focus({preventScroll: true}); } catch (e) {}
+  chaveAgora = ""; desenharAgora(); ganchos();
+}
+gavFechar.addEventListener("click", () => fecharGaveta());
+veu.addEventListener("click", () => fecharGaveta());
+addEventListener("keydown", ev => {
+  if (ev.key === "Escape") { if (!gaveta.hidden) { fecharGaveta(); ev.stopPropagation(); } else if (!resposta.hidden) resposta.hidden = true; }
+  if (ev.key === "Tab" && !gaveta.hidden) {   // o foco fica dentro da gaveta
+    const f = [...gaveta.querySelectorAll("button,a[href],textarea,input,select,[tabindex]:not([tabindex='-1'])")].filter(x => !x.disabled && x.offsetParent !== null);
+    if (!f.length) return;
+    if (ev.shiftKey && document.activeElement === f[0]) { ev.preventDefault(); f[f.length - 1].focus(); }
+    else if (!ev.shiftKey && document.activeElement === f[f.length - 1]) { ev.preventDefault(); f[0].focus(); }
+  }
+  if (ev.key === "/" && !/INPUT|TEXTAREA|SELECT/.test((document.activeElement || {}).tagName || "") && !(document.activeElement || {}).isContentEditable) { ev.preventDefault(); txt.focus(); }
+}, true);
+
+/* ---------- dados da tela Agora ---------- */
+const PROMPT = /^(voc[eê] [eé] |voce e |you are |\[|1\) ficha|trabalho fora de deck)/i;
+const humano = s => { s = String(s || "").trim(); return !s || PROMPT.test(s) || s.length > 160 ? "" : s; };
+const dia = ts => { const d = new Date(ts * 1000); return d.toDateString() === new Date().toDateString(); };
+const ts = v => typeof v === "number" ? v : v ? Date.parse(v) / 1000 || 0 : 0;
+const pesado = i => PESADO.has(i.so_ele) || /apag|exclu|compr|publica/i.test((i.pergunta || "") + " " + i.titulo);
+const chaveNome = s => [...palavrasB(s)].sort().join(" ");
+function limpoPedido(t) {
+  return String(t || "").replace(/^(\s*\[[^\]]*\]\s*)+/, "").replace(/\s*\[se isto virar[\s\S]*$/i, "").replace(/\s*\(frase original[^)]*\)\s*/i, " ").trim();
+}
+const corta = (s, n) => s.length > n ? s.slice(0, n - 2).replace(/\s+\S*$/, "") + "…" : s;
+const semGrito = s => String(s || "").replace(/\b[A-ZÀ-Ý]{4,}\b/g, w => w.toLowerCase()).replace(/\s+do gustavo\b/gi, "").replace(/\bo gustavo\b/gi, "você").replace(/^./, c => c.toUpperCase());
+// recado entre terminais e aviso de sistema não são pedido seu: ficam fora do "Seus pedidos" da Agora
+const recado = t => /^\s*\[[^\]]*(recado|n[aã]o [eé] pedido novo|ultimo aviso|último aviso)/i.test(String(t || ""));
+function tituloPedido(t) {
+  const cru = String(t || "");
+  const pal = cru.match(/^\s*\[PALPITE AO VIVO[^\]]*\]\s*Trabalho\s+"([^"]+)"[\s\S]*?O Gustavo disse:\s*([\s\S]*?)(?:\s*\|\||$)/i);
+  if (pal) return corta(`Palpite em ${pal[1]}: ${pal[2].trim()}`, 90);
+  const ordem = cru.match(/^\s*\[ORDEM DO GUSTAVO[^\]'"]*['"]([^'"]{6,})['"]/i);
+  if (ordem) return corta(semGrito(ordem[1]), 90);
+  let s = limpoPedido(t);
+  const pre = s.match(/^([^:]{2,40}):\s+([\s\S]+)$/);   // "TERMMINAL CENTRAL: repasse..." perde o destinatário
+  if (pre && (pre[1] === pre[1].toUpperCase() || /^(terminal|termminal|central|maestro)\b/i.test(pre[1]))) s = pre[2];
+  const c = s.split(/(?<=[.!?])\s|:\s|, pedido /)[0];
+  return semGrito(corta(c, 90) || s.slice(0, 80));
+}
+// título que ele não entende ("Do TERMINAL CENTRAL", "Trabalho X, no quadro das 22:06:32") não vai pra Agora
+const semSentido = s => { s = String(s || "").trim(); return s.length < 6 || /^[-–]/.test(s) || /^d[oae]s?\s+\S+(\s+\S+)?$/i.test(s) || /no quadro das/i.test(s) || /^trabalho\s+"?[^"]+"?,?\s*$/i.test(s); };
+function dados() {
+  const F = ((E.fila || {}).lista || []).filter(vivo);
+  const esperaTodos = F.filter(i => precisaDeVoce(i) && !decididos.has(i.id));
+  const alertas = esperaTodos.filter(i => i.tipo === "alerta");
+  const espera = esperaTodos.filter(i => i.tipo !== "alerta").sort((a, b) => urg(a) - urg(b));
+  const Wcru = (E.trabalhos || {}).lista || [];
+  const W = Wcru.map(t => !t.fim && !t.parado && (/^parado\b/i.test(t.agora || "") ||
+    (t.origem === "cartao" && t.comeco && agoraS() - Date.parse(t.comeco) / 1000 > 12 * 3600)) ? {...t, parado: true} : t);
+  const C = F.filter(i => i.classe === "cartao");
+  const nomesW = new Set(W.map(t => chaveNome(t.nome)));
+  const andando = W.filter(t => !t.fim && !t.parado).map(t => ({tipo: "trab", t, nome: t.nome, quem: t.terminal, desde: ts(t.comeco) || ts(t.atualizado)}))
+    .concat(C.filter(c => c.fase === "rodando" && !nomesW.has(chaveNome(c.titulo))).map(c => ({tipo: "cartao", c, nome: c.titulo, quem: c.quem, desde: c.criado_ts})))
+    .sort((a, b) => (b.desde || 0) - (a.desde || 0));
+  const parados = W.filter(t => t.parado).map(t => ({tipo: "trab", t, nome: t.nome, quem: t.terminal, quando: ts(t.atualizado)}))
+    .concat(C.filter(c => c.fase === "parado" && !nomesW.has(chaveNome(c.titulo))).map(c => ({tipo: "cartao", c, nome: c.titulo, quem: c.quem, quando: c.atualizado_ts || c.criado_ts})))
+    .sort((a, b) => (b.quando || 0) - (a.quando || 0));
+  const vistos = new Set();
+  const saiu = C.filter(c => c.fase === "concluido").map(c => ({tipo: "cartao", c, nome: c.titulo, quem: c.quem, quando: c.atualizado_ts || c.criado_ts, link: c.link}))
+    .concat(W.filter(t => t.fim && t.origem !== "delegacao").map(t => ({tipo: "trab", t, nome: t.nome, quem: t.terminal, quando: ts(t.atualizado)})))
+    .sort((a, b) => (b.quando || 0) - (a.quando || 0))
+    .filter(x => { const k = chaveNome(x.nome); if (vistos.has(k)) return false; vistos.add(k); return true; });
+  const P = (E.pedidos || {}).lista || [];
+  const pedidos = [...enviados.map(e => ({...e, estado: "novo", historico: [[e.criado_ts, "saiu daqui"]]})), ...P];
+  return {espera, alertas, andando, parados, saiu, saiuHoje: saiu.filter(x => x.quando && dia(x.quando)), pedidos, terminais: (E.terminais || {}).lista || []};
+}
+const urg = i => (i.pergunta ? 0 : 1) * 1e10 - (i.criado_ts || 0);
+
+/* ---------- desenho da tela Agora ---------- */
+let filtro = "", chaveAgora = "", vistosAntes = null;
+const LIM = () => innerWidth <= 820 ? 3 : innerHeight >= 1000 ? 5 : 4;
+function nomeHumano(nome, quem, agora) {   // "Jarvis Andamento · pedido das 12h30" vira o começo do pedido (o terminal já aparece do lado)
+  let n = String(nome || "").trim();
+  if (/· pedido das \d+h\d+$/.test(n) && agora) {
+    // "Do TERMMINAL CENTRAL (10/11 03h10): o Gustavo APROVOU..." vira "Você aprovou..."
+    let r = String(agora).replace(/^(\s*\[[^\]]*\]\s*)+/, "").trim();
+    const pre = r.match(/^([^:]{2,48}):\s+([\s\S]+)$/);
+    if (pre && (/^(d[oae]s?|maestro|central|claude|terminal|termminal|recado|pedido)\b/i.test(pre[1]) || pre[1] === pre[1].toUpperCase())) r = pre[2];
+    r = r.split(/(?<=[.!?;])\s|\s\(|:\s/)[0].trim();
+    if (r && r.length >= 8 && !PROMPT.test(r) && !semSentido(r)) return semGrito(corta(r, 72));
+    return "";
+  }
+  if (quem && n.toLowerCase().startsWith(quem.toLowerCase() + " · ")) n = n.slice(quem.length + 3);
+  return n.charAt(0).toUpperCase() + n.slice(1);
+}
+const nomeDe = x => nomeHumano(x.nome, x.quem, x.t && x.t.agora) || "Recado pro " + nomeTela(x.quem || "terminal");
+function linha(cls, partes, acoes, abrir, id) {
+  const [p0, p1, ...resto] = partes;   // ponto e título; o resto (quem, etiqueta, barra, tempo) vira a meta
+  const alvo = el("button", {class: "o-alvo", type: "button"}, p0, p1, el("span", {class: "o-meta"}, ...resto));
+  alvo.addEventListener("click", abrir);
+  const tem = acoes && acoes.length;
+  const li = el("li", {class: "o-linha " + cls + (tem ? " tem-acoes" : "") + (tem && acoes.length >= 3 ? " muitas" : ""), "data-o": id || ""}, alvo, tem ? el("div", {class: "o-acoes"}, ...acoes) : null);
+  if (vistosAntes && id && !vistosAntes.has(id)) li.classList.add("novo");
+  return li;
+}
+const ponto = () => el("i", {class: "o-ponto", "aria-hidden": "true"});
+const tit = t => { t = nomeTela(t); return el("span", {class: "o-tit", text: t, title: t}); };
+const et = t => el("span", {class: "o-et", text: t});
+const quemE = t => t ? el("span", {class: "o-quem", text: nomeTela(t)}) : null;
+const tempoE = t => el("span", {class: "o-tempo", text: t || ""});
+const bt = (cls, t, fn, at = {}) => { const b = el("button", {class: "o-bt " + cls, type: "button", text: t, ...at}); b.addEventListener("click", fn); return b; };
+
+function bloco(id, rotulo, n, cls, extra) {
+  return el("section", {class: "o-bloco " + (cls || ""), id, "aria-labelledby": id + "-t"},
+    el("header", {}, el("h2", {class: "o-rot", id: id + "-t", text: rotulo}), n != null ? el("span", {class: "o-cont", text: String(n)}) : null, extra || null),
+    el("ul", {class: "o-linhas"}), el("footer"));
+}
+function vazio(ul, texto, erro) { ul.replaceChildren(el("li", {}, el("p", {class: "o-vazio" + (erro ? " erro" : ""), text: texto}))); }
+function carregandoEm(ul) { ul.replaceChildren(el("li", {class: "o-esqueleto", "aria-hidden": "true"}), el("li", {class: "o-esqueleto", "aria-hidden": "true"}), el("li", {class: "sr", text: "Lendo o PC"})); }
+
+async function rapido(i, dec, b, li) {
+  if (!confirmar(i, dec, b)) return;
+  const card = cartaoFila(i);
+  for (const x of li.querySelectorAll("button")) x.disabled = true;
+  await decidir(i, dec, "", card);
+  if (decididos.has(i.id)) { li.classList.add("saindo"); setTimeout(() => { chaveAgora = ""; desenharAgora(); ganchos(); }, 350); }
+  else {
+    for (const x of li.querySelectorAll("button")) x.disabled = false;
+    li.append(el("span", {class: "o-msg", role: "status", text: (card.querySelector(".estado") || {}).textContent || "não foi"}));
+  }
+}
+/* pergunta de sim ou não ganha Sim e Não; pergunta de opções ("1, 2 ou 3?") ganha as opções; o resto só abre */
+function opcoesDe(i) {
+  if (Array.isArray(i.opcoes) && i.opcoes.length) return i.opcoes.map(o => String(o && (o.titulo || o.nome) || o)).filter(Boolean).slice(0, 5);
+  const m = String(i.pergunta || "").match(/(\d+(?:\s*,\s*\d+)*\s+ou\s+\d+)\s*\??/);
+  return m ? m[1].split(/\s*,\s*|\s+ou\s+/).filter(Boolean).slice(0, 5) : null;
+}
+function rotuloOpcao(i, o) {
+  const t = String((i.oque || "") + " " + (i.resumo || "") + " " + (i.pergunta || ""));
+  const m = t.match(new RegExp("(?:^|[^\d])" + o + "-([a-zà-ú]+(?:-[a-zà-ú]+){0,2})", "i"));
+  return m ? `${o}, ${m[1].replace(/-/g, " ")}` : o;
+}
+function simNao(i) {
+  const p = String(i.pergunta || "").trim().toLowerCase();
+  if (!p || opcoesDe(i)) return false;
+  if (/^(qual|quais|quando|onde|como|quanto|quantos|quantas|quem|o que|que |por ?que|pra qual|em qual|de qual)/.test(p)) return false;
+  if (/\s+ou\s+[^?]+\?/.test(p) && !/\bou n[aã]o\s*\?/.test(p)) return false;   // "ligo agora, ou espero?" é escolha, não sim
+  return true;
+}
+const RESPOSTAS = new Map();   // id -> opção escolhida, pra o cartão dizer "você respondeu 2" e não "você disse sim"
+function responder(i, valor, card) { RESPOSTAS.set(i.id, valor); return decidir(i, "sim", `Respondeu: ${valor} (pergunta de opções, não é sim nem não)`, card); }
+const _cartaoFila = cartaoFila;
+cartaoFila = function (i) {
+  const card = _cartaoFila(i);
+  if (!i.pergunta || simNao(i)) return card;
+  const r = RESPOSTAS.get(i.id);
+  if (r != null && decididos.has(i.id)) { const e = card.querySelector(".estado"); if (e) e.textContent = e.textContent.replace(/^você disse sim/, "você respondeu " + r); return card; }
+  const acoes = card.querySelector(".acoes");
+  if (!acoes) return card;
+  for (const b of acoes.querySelectorAll("button.sim,button.nao")) b.remove();
+  const ops = opcoesDe(i);
+  const cx = caixaTexto("sua resposta", "", "Mandar resposta");
+  const resp = el("button", {class: "aj", type: "button", text: "Responder com texto"});
+  resp.addEventListener("click", () => { cx.hidden = !cx.hidden; if (!cx.hidden) cx.querySelector("textarea").focus(); });
+  cx.querySelector("button").addEventListener("click", () => {
+    const t = cx.querySelector("textarea").value.trim();
+    const est = card.querySelector(".estado");
+    if (!t) { if (est) est.textContent = "escreva a resposta"; return; }
+    responder(i, t, card);
+  });
+  if (ops && !(i.comandos || {}).sim) acoes.prepend(...ops.map(o => { const b = el("button", {class: "aj", type: "button", text: rotuloOpcao(i, o), "aria-label": "Responder " + o}); b.addEventListener("click", () => responder(i, o, card)); return b; }));
+  acoes.append(resp);
+  card.querySelector(".pe").after(cx);
+  return card;
+};
+function linhaEspera(i) {
+  const tipo = i.pergunta ? "pergunta" : (ROTULO[i.tipo] || i.tipo || "entrega");
+  const acoes = [];
+  const li = () => acoes[0] && acoes[0].closest("li");
+  const ops = i.pergunta && !simNao(i) && !(i.comandos || {}).sim ? opcoesDe(i) : null;
+  if (ops) acoes.push(bt("o-bt-contorno", "Escolher", () => abrirEspera(i), {title: "Ver as opções: " + ops.join(", ")}));
+  else if (i.pergunta && simNao(i) && !pesado(i)) acoes.push(bt("o-bt-contorno", "Sim", ev => rapido(i, "sim", ev.currentTarget, li())), bt("o-bt-contorno", "Não", ev => rapido(i, "nao", ev.currentTarget, li())));
+  else if (i.pergunta) acoes.push(bt("o-bt-contorno", "Abrir", () => abrirEspera(i)));
+  else if (!i.pergunta && i.classe === "aprovar" && !pesado(i)) acoes.push(bt("o-bt-contorno", (i.botoes || {}).aprovar || "Aprovar", ev => rapido(i, "aprovar", ev.currentTarget, li())));
+  else acoes.push(bt("o-bt-contorno", "Abrir", () => abrirEspera(i)));
+  return linha("espera", [ponto(), tit(br(i.titulo)), et(tipo), tempoE(haQuanto(i.criado_ts))], acoes, () => abrirEspera(i), "e:" + i.id);
+}
+function linhaAlertas(ls) {
+  const top = ls.slice().sort((a, b) => (parseFloat(String(b.titulo).match(/([\d,.]+)x/)?.[1].replace(",", ".")) || 0) - (parseFloat(String(a.titulo).match(/([\d,.]+)x/)?.[1].replace(",", ".")) || 0))[0];
+  const nome = top ? String(top.titulo).replace(/ disparou.*$/, "") : "";
+  return linha("espera", [ponto(), tit(`${ls.length} ${ls.length === 1 ? "alerta" : "alertas"} de disparo` + (nome ? `, o maior é ${nome}` : "")), et("pauta"), tempoE(haQuanto(Math.max(...ls.map(i => i.criado_ts || 0))))],
+    [bt("o-bt-contorno", "Ver", () => abrirAlertas())], () => abrirAlertas(), "alertas");
+}
+const BARRAS = [];
+function fina(t) {
+  const b = el("span", {class: "o-fina", "aria-hidden": "true"}, el("i"));
+  BARRAS.push([b, t]);
+  pintarFina(b, t);
+  return b;
+}
+function pintarFina(b, t) {
+  const v = aoVivo(t);
+  b.classList.toggle("indet", v.estado === "trabalha" || v.estado === "espera");
+  if (v.estado !== "trabalha" && v.estado !== "espera") b.firstChild.style.width = Math.max(2, Math.min(100, v.pct)) + "%";
+}
+setInterval(() => { if (document.hidden || vAgora.hidden) return; for (const [b, t] of BARRAS) if (b.isConnected) pintarFina(b, t); }, 1000);
+function trabDeCartao(c) {
+  const p = c.progresso || {};
+  return {nome: c.titulo, pct: p.pct != null && !(p.pct <= 10 && /^agente/.test(p.texto || "")) ? p.pct : null, total: p.total || 1, feitos: p.feitos || 0,
+          comeco: p.comeco || new Date((c.criado_ts || agoraS()) * 1000).toISOString(), eta: p.eta, atualizado: p.atualizado || p.em, passo_desde: p.passo_desde};
+}
+function linhaAndando(x) {
+  const t = x.tipo === "trab" ? x.t : trabDeCartao(x.c);
+  const v = aoVivo(t);
+  const etq = v.estado === "anda" || v.estado === "fixo" ? Math.floor(v.pct) + "%" : x.tipo === "cartao" || t.origem === "cartao" ? "agente" : t.origem === "delegacao" ? "recado" : v.estado === "trabalha" ? "ativo" : "na fila";
+  const temPct = v.estado === "anda" || v.estado === "fixo";
+  const li = linha("anda", [ponto(), tit(nomeDe(x)), quemE(x.quem), temPct ? fina(t) : null, tempoE(haQuanto(x.desde).replace("há ", ""))], null, () => abrirTrab(x), "a:" + x.nome);
+  li.title = temPct ? etq + " feito" : etq;
+  return li;
+}
+function linhaParado(x) {
+  return linha("parado", [ponto(), tit(nomeDe(x)), quemE(x.quem), et("parado"), tempoE(haQuanto(x.quando))], null, () => abrirTrab(x), "p:" + x.nome);
+}
+function linhaSaiu(x) {
+  const link = x.link && /^https?:/.test(x.link) ? x.link : null;
+  const acoes = link ? [el("a", {class: "o-bt o-bt-contorno", href: link, target: "_blank", rel: "noopener", text: "Abrir"})] : null;
+  return linha("saiu", [ponto(), tit(nomeDe(x)), quemE(x.quem), tempoE(haQuanto(x.quando))], acoes, () => abrirTrab(x), "s:" + x.nome);
+}
+const ETQ_PED = {novo: "mandado", entregue: "na central", distribuido: "distribuído", feito: "feito"};
+function linhaPedido(p) {
+  const feito = p.estado === "feito";
+  return linha(feito ? "saiu" : "anda", [ponto(), tit(tituloPedido(p.texto)), et(ETQ_PED[p.estado] || p.estado), tempoE(haQuanto(p.criado_ts))], null, () => abrirPedido(p), "d:" + (p.id || p.texto));
+}
+
+function desenharAgora() {
+  if (vAgora.hidden) return;
+  if (!gaveta.hidden) return;   // não mexe por baixo da gaveta aberta
+  const D = dados();
+  const claro = x => { const n = nomeHumano(x.nome, x.quem, x.t && x.t.agora); return !!n && !semSentido(n); };
+  D.andando = D.andando.filter(claro); D.parados = D.parados.filter(claro); D.saiu = D.saiu.filter(claro); D.saiuHoje = D.saiuHoje.filter(claro);
+  const vistosP = new Set();
+  D.pedidos = D.pedidos.filter(p => { const t = tituloPedido(p.texto); if (recado(p.texto) || semSentido(t) || vistosP.has(t)) return false; vistosP.add(t); return true; });
+  const lerFalhou = !carregou && falhas >= 3;
+  const ch = JSON.stringify([carregou, lerFalhou, filtro, innerWidth <= 820, Math.floor(agoraS() / 60),
+    D.espera.map(i => i.id), D.alertas.length, D.andando.map(x => x.nome + (x.t ? x.t.feitos : "")), D.parados.length, D.saiu.slice(0, 8).map(x => x.nome), D.pedidos.slice(0, 6).map(p => p.estado + p.texto.length)]);
+  if (ch === chaveAgora) return;
+  chaveAgora = ch;
+  const antes = new Set([...vAgora.querySelectorAll(".o-linha[data-o]")].map(l => l.dataset.o));
+  vistosAntes = antes.size ? antes : null;
+  BARRAS.length = 0; RES.length = 0;
+  const nEspera = D.espera.length + D.alertas.length;
+  $("o-n-agora").textContent = nEspera ? String(nEspera) : "";
+  const hoje = new Date().toLocaleDateString("pt-BR", {weekday: "long", day: "numeric", month: "long"});
+  const cab = el("header", {class: "o-cab"}, el("h1", {id: "o-agora-tit", text: "Agora"}), el("p", {class: "o-sub", text: hoje + (E.maquina && E.maquina.batida ? " · atualizado às " + hora(E.maquina.batida) : "")}));
+  const num = (k, v, rot) => {
+    const b = el("button", {class: "o-num" + (k === "espera" && v ? " tem" : ""), type: "button", "data-k": k, "aria-pressed": String(filtro === k)},
+      el("b", {text: carregou ? String(v) : "…"}), el("span", {text: rot}));
+    b.addEventListener("click", () => { filtro = filtro === k ? "" : k; chaveAgora = ""; desenharAgora(); const alvo = $({espera: "o-b-espera", andando: "o-b-andando", parados: "o-b-andando", saiu: "o-b-saiu"}[k]); if (filtro && alvo && innerWidth <= 820) alvo.scrollIntoView({behavior: "smooth", block: "start"}); });
+    return b;
+  };
+  const numeros = el("div", {class: "o-numeros", role: "group", "aria-label": "Resumo, toque pra filtrar"},
+    num("andando", D.andando.length, D.andando.length === 1 ? "andando" : "andando"),
+    num("espera", nEspera, nEspera === 1 ? "espera você" : "esperam você"),
+    num("saiu", D.saiuHoje.length, D.saiuHoje.length === 1 ? "saiu hoje" : "saíram hoje"),
+    num("parados", D.parados.length, D.parados.length === 1 ? "parado" : "parados"));
+
+  const lim = LIM();
+  // 1. espera você
+  const bE = bloco("o-b-espera", "Espera você", nEspera || null, "o-espera", carregou ? bt("o-bt-contorno", "Pendências completas", () => irPara("fila")) : null);
+  const ulE = bE.querySelector("ul"), ftE = bE.querySelector("footer");
+  if (!carregou) lerFalhou ? vazio(ulE, "Não consegui ler o PC agora. Tento de novo sozinho a cada 4 segundos.", true) : carregandoEm(ulE);
+  else {
+    const todasE = filtro === "espera";
+    const ls = D.espera.map(linhaEspera);
+    if (D.alertas.length) ls.splice(Math.min(ls.length, todasE ? ls.length : lim - 1), 0, linhaAlertas(D.alertas));
+    const mostra = todasE ? ls : ls.slice(0, innerWidth <= 820 ? lim : 7);
+    if (mostra.length) ulE.replaceChildren(...mostra); else vazio(ulE, "Nada esperando você. Quando um terminal precisar do seu sim, aparece aqui com o botão.");
+    const bvE = ls.length > mostra.length || todasE && ls.length > 7 ? bt("o-bt-contorno", todasE ? "Mostrar menos" : `Ver todas (${ls.length})`, () => { filtro = todasE ? "" : "espera"; chaveAgora = ""; desenharAgora(); }) : null;
+    if (bvE) ftE.append(bvE);
+    RES.push([ulE, ls.slice(mostra.length), todasE ? null : bvE, "e"]);
+  }
+  // 2. andando (ou parados)
+  const soParados = filtro === "parados";
+  const nbT = D.terminais.filter(t => t.status === "busy").length;
+  const bA = bloco("o-b-andando", soParados ? "Parados" : "Andando", (soParados ? D.parados.length : D.andando.length) || null, "",
+    carregou ? bt("o-bt-contorno", `Terminais ${nbT} de ${D.terminais.length}`, abrirTerminais, {title: "Terminais trabalhando agora, de todos os abertos"}) : null);
+  const ulA = bA.querySelector("ul"), ftA = bA.querySelector("footer");
+  if (!carregou) lerFalhou ? vazio(ulA, "Não consegui ler o PC agora. Tento de novo sozinho a cada 4 segundos.", true) : carregandoEm(ulA);
+  else {
+    const base = soParados ? D.parados.map(linhaParado) : D.andando.map(linhaAndando);
+    const todos = filtro === "andando" || soParados;
+    const mostra = todos ? base : base.slice(0, innerWidth <= 820 ? lim : lim - 1);
+    if (mostra.length) ulA.replaceChildren(...mostra);
+    else vazio(ulA, soParados ? "Nenhum trabalho parado." : "Nenhum trabalho andando agora. Todo trabalho de 3 etapas ou mais aparece aqui sozinho.");
+    const bvA = base.length > mostra.length ? bt("o-bt-contorno", `Ver todos (${base.length})`, () => { filtro = "andando"; chaveAgora = ""; desenharAgora(); }) : null;
+    if (bvA) ftA.append(bvA);
+    RES.push([ulA, base.slice(mostra.length), bvA, "d"]);
+    if (soParados || filtro === "andando") ftA.append(bt("o-bt-contorno", "Voltar pro resumo", () => { filtro = ""; chaveAgora = ""; desenharAgora(); }));
+  }
+  // 3. acabou de sair
+  const bS = bloco("o-b-saiu", "Acabou de sair", null, "", carregou ? bt("o-bt-contorno", "Andamento completo", () => irPara("agora")) : null);
+  const ulS = bS.querySelector("ul"), ftS = bS.querySelector("footer");
+  if (!carregou) lerFalhou ? vazio(ulS, "Não consegui ler o PC agora. Tento de novo sozinho a cada 4 segundos.", true) : carregandoEm(ulS);
+  else {
+    const todos = filtro === "saiu";
+    const base = todos ? D.saiuHoje.length ? D.saiuHoje : D.saiu.slice(0, 12) : D.saiu.slice(0, innerWidth <= 820 ? lim : 3);
+    if (base.length) ulS.replaceChildren(...base.map(linhaSaiu)); else vazio(ulS, "Nada entregue ainda hoje.");
+    if (!todos && base.length) RES.push([ulS, D.saiu.slice(base.length, 12).map(linhaSaiu), null, "d"]);
+    ftS.append(bt("o-bt-contorno", todos ? "Mostrar menos" : "Ver as de hoje (" + D.saiuHoje.length + ")", () => { filtro = todos ? "" : "saiu"; chaveAgora = ""; desenharAgora(); }));
+  }
+  // 4. seus pedidos (abaixo da dobra no PC)
+  const bP = bloco("o-b-pedidos", "Seus pedidos", null, "o-pedidos");
+  const ulP = bP.querySelector("ul"), ftP = bP.querySelector("footer");
+  if (carregou) {
+    const ordem = D.pedidos.filter(p => p.estado !== "feito").concat(D.pedidos.filter(p => p.estado === "feito"));
+    const pedAll = pedTodasO ? ordem : ordem.slice(0, 3);
+    if (pedAll.length) ulP.replaceChildren(...pedAll.map(linhaPedido)); else vazio(ulP, "Nenhum pedido ainda. O que você mandar pela barra aparece aqui, com pra quem foi.");
+    const bvP = D.pedidos.length > 3 ? bt("o-bt-contorno", pedTodasO ? "Mostrar menos" : `Ver todos (${D.pedidos.length})`, () => { pedTodasO = !pedTodasO; chaveAgora = ""; desenharAgora(); }) : null;
+    if (bvP) ftP.append(bvP);
+    if (!pedTodasO && pedAll.length) RES.push([ulP, ordem.slice(3, 10).map(linhaPedido), bvP, "e"]);
+  } else carregandoEm(ulP);
+  const colE = el("div", {class: "o-col o-col-e"}, bE, bP), colD = el("div", {class: "o-col"}, bA, bS);
+  vAgora.replaceChildren(cab, numeros, el("div", {class: "o-grade"}, colE, colD));
+  encher({e: colE, d: colD});
+}
+/* no PC a Agora usa a altura da tela: cada bloco ganha linhas até a coluna encostar na barra da Oráculo */
+const RES = [];
+function encher(cols) {
+  const fila = RES.splice(0);
+  if (innerWidth <= 820 || filtro || innerWidth < 1101) return;
+  const lim = barra.getBoundingClientRect().top + scrollY - 24;
+  for (const [ul, res, botao, c] of fila) {
+    const col = cols[c];
+    while (res.length && col.getBoundingClientRect().bottom + scrollY + 52 <= lim) ul.append(res.shift());
+    if (!res.length && botao && /^Ver tod/.test(botao.textContent)) botao.remove();
+  }
+}
+let pedTodasO = false;
+
+/* ---------- conteúdo das gavetas ---------- */
+const sec = (rot, ...filhos) => el("div", {class: "o-gav-sec"}, rot ? el("h3", {text: rot}) : null, ...filhos);
+function abrirEspera(i) {
+  const card = cartaoFila(i);
+  abrirGaveta(br(i.titulo), et(i.pergunta ? "pergunta" : (ROTULO[i.tipo] || i.tipo || "entrega")), [card]);
+  const obs = new MutationObserver(() => { if (!card.isConnected) obs.disconnect(); });
+  obs.observe(gavCorpo, {childList: true});
+}
+function abrirAlertas() {
+  const D = dados();
+  const ls = D.alertas.slice().sort((a, b) => (b.criado_ts || 0) - (a.criado_ts || 0));
+  const A = E.alertas || {};
+  abrirGaveta("Alertas de disparo", et(ls.length + " pra decidir"), [
+    sec(null, el("p", {class: "o-apoio", text: "Assunto que disparou nas notícias. Vira pauta manda pro Geektavo; Descartar tira da lista." + (A.atualizado ? " Rodada das " + hora(A.atualizado) + "." : "")})),
+    ...ls.map(i => { const c = cartaoFila(i); c.classList.add("o-sub-card"); const h = el("p", {}, el("b", {text: br(i.titulo)})); c.prepend(h); return c; })]);
+}
+function abrirTrab(x) {
+  const corpo = [];
+  const t = x.tipo === "trab" ? x.t : null, c = x.tipo === "cartao" ? x.c : null;
+  const etq = t ? (t.fim ? "saiu" : t.parado ? "parado" : "andando") : ({concluido: "saiu", rodando: "andando", parado: "parado", descartado: "descartado"}[c.fase] || c.fase);
+  if (t) {
+    if (!t.fim) { const md = medidor(t); if ((t.total || 0) <= 1) { const e = md.querySelector(".med-etapa"); if (e) e.remove(); } corpo.push(sec(null, md)); }
+    const ag = humano(t.agora);
+    corpo.push(sec(null, el("dl", {class: "o-dl"},
+      t.terminal ? [el("dt", {text: "quem faz"}), el("dd", {text: nomeTela(t.terminal)})] : null,
+      ag && !t.fim ? [el("dt", {text: "agora"}), el("dd", {text: ag})] : null,
+      t.comeco ? [el("dt", {text: "começou"}), el("dd", {text: hora(t.comeco) + " · " + haQuanto(t.comeco)})] : null,
+      t.fim && t.atualizado ? [el("dt", {text: "terminou"}), el("dd", {text: hora(t.atualizado) + " · " + haQuanto(t.atualizado)})] : null)));
+    if ((t.passos || []).length > 1) {
+      let at = false;
+      corpo.push(sec("Etapas", el("ol", {class: "o-passos"}, t.passos.map(([f, n]) => { const cls = f ? "f" : !at ? (at = true, "at") : null; return el("li", {class: cls, text: n}); }))));
+    }
+    const term = ((E.terminais || {}).lista || []).find(z => (z.nome || "").toLowerCase() === (t.terminal || "").toLowerCase());
+    if (term) corpo.push(secTerminal(term));
+  }
+  if (c) {
+    const card = cartaoResultado(c);
+    const oq = card.querySelector(".oque");
+    if (oq && !humano(c.oque)) oq.remove();
+    corpo.push(card);
+    const term = ((E.terminais || {}).lista || []).find(z => (z.nome || "").toLowerCase() === (c.quem || "").toLowerCase());
+    if (term && c.fase === "rodando") corpo.push(secTerminal(term));
+  }
+  const etqE = et(etq); etqE.style.cssText = etq === "saiu" ? "background:var(--o-verde-f);color:var(--o-verde)" : etq === "andando" ? "background:var(--o-azul-f);color:var(--o-azul)" : "";
+  abrirGaveta(nomeDe(x), etqE, corpo);
+}
+function secTerminal(term) {
+  return sec("Terminal", el("dl", {class: "o-dl"},
+    el("dt", {text: "nome"}), el("dd", {text: nomeTela(term.nome)}),
+    el("dt", {text: "estado"}), el("dd", {text: NOMES_ST[term.status] || term.status}),
+    term.titulo ? [el("dt", {text: "assunto"}), el("dd", {text: term.titulo})] : null,
+    term.ultima && term.status !== "idle" ? [el("dt", {text: "disse"}), el("dd", {text: term.ultima})] : null),
+    window.A47 && A47.ctxBarra ? A47.ctxBarra(term) : null);
+}
+function abrirTerminais() {
+  const T = ((E.terminais || {}).lista || []).slice().sort((a, b) => (a.status === "busy" ? 0 : a.status === "waiting" ? 1 : 2) - (b.status === "busy" ? 0 : b.status === "waiting" ? 1 : 2));
+  const ul = el("ul", {class: "o-linhas"}, T.map(t => {
+    const cls = t.status === "busy" ? "anda" : t.status === "waiting" ? "espera" : "parado";
+    const li = el("li", {class: "o-linha " + cls}, el("div", {class: "o-alvo", style: "cursor:default"}, ponto(), tit(nomeTela(t.nome)), et(NOMES_ST[t.status] || t.status), tempoE(haQuanto(t.desde))));
+    return li;
+  }));
+  abrirGaveta("Terminais", et(T.filter(t => t.status === "busy").length + " trabalhando"), [ul,
+    sec(null, el("div", {class: "o-gav-acoes"}, bt("o-bt-contorno", "Ver no prédio em corte", () => irPara("escritorio"))))]);
+}
+function abrirPedido(p) {
+  const n = ETAPAS.findIndex(([k]) => k === p.estado);
+  abrirGaveta(tituloPedido(p.texto), et(ETQ_PED[p.estado] || p.estado), [
+    sec("O caminho", el("ol", {class: "o-passos"}, ETAPAS.map(([, nome], k) => el("li", {class: k < n || (k === n && p.estado === "feito") ? "f" : k === n ? "at" : null, text: nome})))),
+    p.destino || p.resposta ? sec("Resposta", el("dl", {class: "o-dl"},
+      p.destino ? [el("dt", {text: "foi pra"}), el("dd", {text: nomeTela(p.destino)})] : null,
+      p.resposta ? [el("dt", {text: "disse"}), el("dd", {text: p.resposta})] : null)) : null,
+    sec("O pedido inteiro", el("p", {text: limpoPedido(p.texto)})),
+    (p.historico || []).length ? sec("Histórico", el("ol", {class: "o-passos"}, p.historico.slice(-6).map(([t, h]) => el("li", {class: "f", text: `${hora(t)} ${nomeTela(h)}`})))) : null].filter(Boolean));
+}
+
+/* ---------- Mais ---------- */
+function desenharMais() {
+  const it = (k, nome, linha, fn) => { const b = el("button", {class: "o-mais-it", type: "button"}); b.innerHTML = ico(k); b.append(el("b", {text: nome}), el("span", {text: linha})); b.addEventListener("click", fn); return b; };
+  const F = ((E.fila || {}).lista || []).filter(vivo);
+  const tema = ($("tema-bt").textContent || "").trim();
+  vMais.replaceChildren(
+    el("header", {class: "o-cab"}, el("h1", {id: "o-mais-tit", text: "Mais"}), el("p", {class: "o-sub", text: "Tudo que não é de todo dia."})),
+    el("section", {class: "o-mais-sec"}, el("div", {class: "o-mais-grade"},
+      it("pend", "Pendências completas", `${F.filter(comAGente).length} com a gente, Shorts dark e alertas`, () => irPara("fila")),
+      it("andamento", "Andamento completo", "Resultados, trabalhos, terminais e rotinas do PC", () => irPara("agora")),
+      it("oraculo", "Oráculo", "Senhas faladas, o que ela vigia, a máquina e o resumo no PC", () => irPara("jarvis")),
+      it("areas", "Áreas", "Canal, empresa, esteiras e o resto, por área", () => irPara("areas")),
+      it("atalhos", "Atalhos", "Pastas e páginas que você abre sempre", () => irPara("atalhos")),
+      it("avisos", "Avisos", "Os últimos avisos que chegaram", () => $("avisos-bt").click()),
+      it("painel", "Painel de cartões", "O painel da Oráculo do PC, com as colunas", () => irPara("painel")),
+      it("predio", "Prédio em corte", "Cada terminal num andar, com o boneco dele", () => irPara("escritorio")),
+      it("tema", "Tema", tema ? tema + ". Toque pra trocar" : "Claro, escuro ou o do aparelho", () => { $("tema-bt").click(); desenharMais(); }),
+      it("valores", "Esconder valores", $("olho").getAttribute("aria-pressed") === "true" ? "Valores em R$ escondidos. Toque pra mostrar" : "Esconde todo valor em R$ da tela", () => { $("olho").click(); desenharMais(); }))));
+}
+
+/* ---------- barra da Oráculo: uma caixa, ela decide o rumo ---------- */
+let rumoManual = null;
+function rumoDe(t) {
+  const s = t.trim().toLowerCase();
+  if (!s) return null;
+  if (/\?\s*$/.test(s)) return "pergunta";
+  if (/^(quanto|quantos|quantas|qual|quais|quando|onde|quem|como|por ?que|porque|o que|oq|cad[eê]|tem |t[aá] |est[aá] |existe|ser[aá] que|me (diz|fala|conta)|sabe |lembra )/.test(s)) return "pergunta";
+  return "trabalho";
+}
+function pintarRumo() {
+  const r = rumoManual || rumoDe(txt.value);
+  rumoB.hidden = !r;
+  if (!r) return;
+  rumoB.dataset.r = r;
+  rumoB.textContent = r === "pergunta" ? "pergunta pra Oráculo" : "trabalho pros terminais";
+}
+txt.addEventListener("input", () => { if (!txt.value.trim()) rumoManual = null; pintarRumo(); });
+rumoB.addEventListener("click", () => { rumoManual = (rumoManual || rumoDe(txt.value)) === "pergunta" ? "trabalho" : "pergunta"; pintarRumo(); txt.focus(); });
+function posResposta() {
+  const r = barra.getBoundingClientRect();
+  resposta.style.left = r.left + "px"; resposta.style.width = r.width + "px";
+}
+addEventListener("resize", () => { if (!resposta.hidden) posResposta(); });
+let olhando = null;
+function mostrarResposta(voce, texto, pensa, acoes) {
+  posResposta();
+  const fechar = bt("o-bt-fantasma", "Fechar", () => { resposta.hidden = true; clearInterval(olhando); });
+  resposta.replaceChildren(el("p", {class: "o-r-voce", text: "Você: " + voce}), el("p", {class: "o-r-tx" + (pensa ? " pensa" : ""), text: texto}),
+    el("div", {class: "o-r-pe"}, ...(acoes || []), fechar));
+  resposta.hidden = false;
+}
+barra.addEventListener("submit", ev => {
+  ev.preventDefault();
+  const t = txt.value.trim();
+  if (!t) { txt.focus(); return; }
+  const r = rumoManual || rumoDe(t);
+  clearInterval(olhando);
+  if (r === "pergunta") {
+    $("conversa").value = t.slice(0, 600);
+    $("f-conversa").requestSubmit();
+    const item = MINHAS[0];
+    if (!item || item.pergunta !== t.slice(0, 600)) { mostrarResposta(t, $("conversa-msg").textContent || "Não saiu. Tente de novo.", false); return; }
+    txt.value = ""; rumoManual = null; pintarRumo();
+    mostrarResposta(t, "A Oráculo está pensando…", true);
+    olhando = setInterval(() => {
+      if (item.estado === "pensando") { if (item.semSinal) mostrarResposta(t, "O PC está sem sinal. A pergunta fica guardada e sai quando ele voltar.", true); return; }
+      clearInterval(olhando);
+      const acoes = item.velocidade === "trabalho" ? [bt("o-bt-contorno", "Ver seus pedidos", () => { resposta.hidden = true; irPara("inicio"); $("o-b-pedidos") && $("o-b-pedidos").scrollIntoView({behavior: "smooth"}); })] : [];
+      mostrarResposta(t, item.resposta || (item.estado === "erro" ? "A Oráculo não conseguiu responder." : "Respondido."), false, acoes);
+    }, 500);
+  } else {
+    $("pedido").value = t;
+    const msg = $("pedido-msg");
+    msg.textContent = "";
+    $("f-pedido").requestSubmit();
+    mostrarResposta(t, "Mandando pros terminais…", true);
+    olhando = setInterval(() => {
+      const m = msg.textContent;
+      if (!m || m === "mandando…") return;
+      clearInterval(olhando);
+      const foi = !/^não foi/.test(m);
+      if (foi) { txt.value = ""; rumoManual = null; pintarRumo(); chaveAgora = ""; desenharAgora(); }
+      mostrarResposta(t, m.charAt(0).toUpperCase() + m.slice(1), false, foi ? [bt("o-bt-contorno", "Ver seus pedidos", () => { resposta.hidden = true; if (aba !== "inicio") irPara("inicio"); setTimeout(() => $("o-b-pedidos") && $("o-b-pedidos").scrollIntoView({behavior: "smooth"}), 50); })] : []);
+    }, 300);
+  }
+});
+for (const b of modo.querySelectorAll("button")) b.addEventListener("click", () => jarvisAcao(b.dataset.v, "", barraMsg, b).then(() => setTimeout(() => { barraMsg.textContent = ""; }, 5000)));
+
+/* ---------- estado da Oráculo e do PC na casca ---------- */
+function pintarCasca() {
+  const m = jarvisModo();
+  cara.dataset.estado = m === "vigiando" ? "vigiando" : m;
+  const fora = MODO === "teste" || (MODO === "pc" && !J.ok) || m === "dormindo" || (MODO === "nuvem" && !navigator.onLine);
+  const ligado = m === "vigiando" || m === "falando" || m === "ouvindo" || m === "pensando";
+  for (const b of modo.querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.v === (ligado ? "vigiar" : "calar")));
+  modo.title = fora ? "A Oráculo está fora do ar agora; o toque fica sem efeito até ela voltar" : "";
+  cara.title = "Oráculo: " + (JM[m] || m);
+  const pc = $("pc"), pct = $("pc-t").textContent.replace(/\s+/g, " ").trim();
+  const cls = /vivo/.test(pc.className) ? "vivo" : /morto/.test(pc.className) ? "morto" : "";
+  $("o-pc").className = "o-pc " + cls; $("o-pc-dica").textContent = pct || "conectando"; $("o-pc").setAttribute("aria-label", pct || "conectando");
+  $("o-pc-cel").className = "o-pc-cel " + cls; $("o-pc-cel-t").textContent = pct.replace(/ · .*/, "");
+}
+const _desenhar = desenhar;
+var GANCHOS = [];   // os painéis novos (paineis.js) redesenham junto com a Agora
+function ganchos() { for (const f of GANCHOS || []) try { f(); } catch (e) { console.error(e); } }
+desenhar = function () { _desenhar(); try { pintarCasca(); desenharAgora(); } catch (e) { console.error(e); } ganchos(); };
+setInterval(() => { if (document.hidden) return; if (MODO === "pc") lerJarvis(true).then(pintarCasca); else pintarCasca(); if (!vAgora.hidden) desenharAgora(); ganchos(); }, 5000);
+addEventListener("resize", () => { chaveAgora = ""; desenharAgora(); });
+
+/* ---------- entrada: começa no Agora (ou onde estava) ---------- */
+function começar() {
+  let a = "inicio";
+  try { a = sessionStorage.getItem("o-aba") || "inicio"; } catch (e) {}
+  const ir = new URLSearchParams(location.search).get("ir");
+  irPara(ir || a);
+  pintarCasca();
+}
+const _abrir = abrir;
+abrir = function () { _abrir(); começar(); };
+if (!$("app").hidden) começar();
+/* ---------- Cidade e Andar num lugar só; a Oráculo de Mais sem as caixas repetidas ---------- */
+for (const v of ["aovivo", "andar"]) {
+  const sel = el("div", {class: "o-cid-sel", role: "group", "aria-label": "Ver como"},
+    ...[["aovivo", "Cidade"], ["andar", "Andar"]].map(([k, n]) => { const b = el("button", {type: "button", "aria-pressed": String(k === v), text: n}); b.addEventListener("click", () => irPara(k)); return b; }));
+  $("v-" + v).prepend(sel);
+}
+{
+  const sec = $("f-pedido") && $("f-pedido").closest(".secao");
+  const h = sec && sec.querySelector("h2");
+  if (h) h.textContent = "Começar uma esteira";
+  const rot = $("est-rot"); if (rot) rot.textContent = "Enche a barra da Oráculo com o começo do pedido; você completa e manda.";
+  $("jv-esteiras").addEventListener("click", () => setTimeout(() => {
+    const t = $("pedido").value; if (!t) return;
+    txt.value = t; $("pedido").value = ""; rumoManual = "trabalho"; pintarRumo(); txt.focus(); txt.setSelectionRange(t.length, t.length);
+  }, 0));
+}
+window.OC = {linha, ponto, tit, et, quemE, tempoE, bt, bloco, vazio, carregandoEm, abrirGaveta, fecharGaveta, sec, fina, abrirTrab, abrirEspera, abrirPedido,
+  secTerminal, linhaEspera, linhaAndando, linhaParado, linhaSaiu, linhaPedido, linhaAlertas, dados, nomeHumano, tituloPedido, recado, semSentido, semGrito, corta,
+  humano, GANCHOS, gaveta, txt, focarBarra: (t, rumo) => { txt.value = t; rumoManual = rumo || null; pintarRumo(); txt.focus(); txt.setSelectionRange(t.length, t.length); }};
+window.OCASCA = {irPara: id => irPara(id), abrirTerminais, desenharAgora: () => { chaveAgora = ""; desenharAgora(); }};
+})();
+
+/* Os painéis de Mais e a Cidade no layout novo (10/11/2026, rodada 2): Pendências completas, Andamento completo,
+   Oráculo, Áreas e Cidade na regra da Agora. Uma linha por coisa; o detalhe e as ações abrem na gaveta.
+   As vistas antigas continuam no DOM, escondidas, e o motor segue desenhando nelas: os formulários e os botões
+   que vão pra gaveta são os dele, então nenhuma ação muda de efeito. Roda depois do casca.js. */
+(() => {
+const O = window.OC;
+if (!O) return;
+const {linha, ponto, tit, et, tempoE, bt, bloco, vazio, carregandoEm, abrirGaveta, sec, abrirTrab, abrirPedido,
+  secTerminal, linhaEspera, linhaAndando, linhaParado, linhaSaiu, linhaPedido, dados, nomeHumano, semSentido, recado} = O;
+
+/* ---------- peças comuns ---------- */
+const chave = {};
+const TODOS = new Set();
+const aberta = () => !O.gaveta.hidden;
+function casco(id) {   // contêiner novo dentro da vista antiga; o CSS esconde o resto dela
+  const v = $("v-" + id);
+  let c = v.querySelector(":scope > .o-novo");
+  if (!c) {
+    c = el("div", {class: "o-novo"});
+    const depois = v.querySelector(":scope > #av-cena") || v.querySelector(":scope > .o-cid-sel") || v.querySelector(":scope > .o-volta");
+    depois ? depois.after(c) : v.prepend(c);
+  }
+  return c;
+}
+const cab = (h, sub) => el("header", {class: "o-cab"}, el("h1", {text: h}), sub ? el("p", {class: "o-sub", text: sub}) : null);
+const grade = (...cols) => el("div", {class: "o-grade"}, ...cols);
+const col = (n, ...filhos) => el("div", {class: "o-col o-c" + n}, ...filhos.filter(Boolean));
+const meta = t => t ? el("span", {class: "o-quem", text: t, title: t}) : null;
+function lista(b, k, linhas, lim, vazioTx, redesenhar) {
+  const ul = b.querySelector("ul"), ft = b.querySelector("footer");
+  if (!carregou) { if (falhas >= 3) vazio(ul, "Não consegui ler o PC agora. Tento de novo sozinho a cada 4 segundos.", true); else carregandoEm(ul); return; }
+  if (!linhas.length) { vazio(ul, vazioTx); return; }
+  const tudo = TODOS.has(k);
+  const ets = linhas.map(l => (l.querySelector(".o-et") || {}).textContent);
+  if (linhas.length >= 3 && ets.every(t => t && t === ets[0])) for (const l of linhas) l.querySelector(".o-et").remove();
+  ul.replaceChildren(...(tudo ? linhas : linhas.slice(0, lim)));
+  if (linhas.length > lim) ft.append(bt("o-bt-contorno", tudo ? "Mostrar menos" : `Ver todos (${linhas.length})`, () => { tudo ? TODOS.delete(k) : TODOS.add(k); redesenhar(); }));
+}
+function segs(rotulo, ops, atual, fn) {   // seletor de segmentos dentro do bloco
+  return el("div", {class: "o-segs", role: "group", "aria-label": rotulo}, ...ops.map(([k, nome, n]) => {
+    const b = el("button", {type: "button", "aria-pressed": String(k === atual)}, nome, n != null ? el("span", {class: "o-segs-n", text: String(n)}) : null);
+    b.addEventListener("click", () => fn(k));
+    return b;
+  }));
+}
+const comSegs = (b, s) => { b.querySelector("ul").before(s); return b; };
+const linhaFixa = (cls, partes) => el("li", {class: "o-linha " + cls}, el("div", {class: "o-alvo o-fixa"}, ...partes.filter(Boolean)));
+const botaoLink = (href, t) => el("a", {class: "o-bt o-bt-contorno", href, target: "_blank", rel: "noopener", text: t || "Abrir"});
+const urgPrimeiro = (a, b) => (a.pergunta ? 0 : 1) - (b.pergunta ? 0 : 1) || (b.criado_ts || 0) - (a.criado_ts || 0);
+const diaCurto = d => new Date(d + "T12:00").toLocaleDateString("pt-BR", {weekday: "short", day: "2-digit", month: "2-digit"});
+const virgula = v => String(v).replace(".", ",");
+
+/* ---------- Pendências completas ---------- */
+function linhaAlerta(i) {   // "David Zaslav disparou 13,2x nas notícias Brasil" vira título curto e etiqueta com o lugar
+  const li = linhaEspera(i);
+  const m = String(i.titulo).match(/^(.*?disparou [\d,.]+x)\s+nas not[ií]cias\s+(.+)$/i);
+  if (m) { const t = li.querySelector(".o-tit"); t.textContent = m[1]; t.title = i.titulo; const e = li.querySelector(".o-et"); if (e) { e.textContent = m[2]; e.classList.add("o-et-neutra"); } }
+  return li;
+}
+function pPend(forca) {
+  const v = $("v-fila");
+  if (!v || v.hidden || aberta()) return;
+  const F = ((E.fila || {}).lista || []).filter(vivo);
+  const esp = F.filter(i => precisaDeVoce(i) && !decididos.has(i.id));
+  const voce = esp.filter(i => i.tipo !== "alerta").sort(urgPrimeiro), alertasD = esp.filter(i => i.tipo === "alerta");
+  const resolvidos = F.filter(i => i.estado !== "esperando" && i.estado !== "info" && i.classe !== "cartao").slice(0, 6);
+  const nossas = F.filter(i => comAGente(i) && !decididos.has(i.id));
+  const A = E.alertas || {};
+  const jaAlerta = new Set(esp.filter(i => i.tipo === "alerta").map(i => String(i.titulo).trim()));
+  const noticias = (A.lista || []).filter(a => !jaAlerta.has(String(a.titulo).trim())).slice(0, 12);
+  const k = JSON.stringify([carregou, esp.map(i => i.id), resolvidos.map(i => i.id + i.estado), nossas.map(i => i.id + (i.editado_ts || "")),
+    DARK.map(l => l.id + (l.pedido || "") + (decididos.get("dark:" + l.id) || "")), noticias.map(a => a.titulo), [...TODOS], Math.floor(agoraS() / 60), innerWidth <= 820]);
+  if (!forca && k === chave.fila) return;
+  chave.fila = k;
+  const re = () => pPend(true);
+  const b1 = bloco("o-p-voce", "Só você resolve", voce.length || null, "o-espera");
+  lista(b1, "p-voce", voce.map(linhaEspera), 8, "Nada pra decidir agora. Quando um terminal precisar do seu ok, aparece aqui com o botão.", re);
+  if (carregou && resolvidos.length) b1.querySelector("footer").append(bt("o-bt-contorno", `Já resolvidas (${resolvidos.length})`,
+    () => abrirGaveta("Já resolvidas", et("as últimas " + resolvidos.length), resolvidos.map(i => cartaoFila(i)))));
+  const b2 = bloco("o-p-nossas", "Com a gente", nossas.length || null, "");
+  lista(b2, "p-nossas", nossas.map(i => linha("info", [ponto(), tit(br(i.titulo)), meta(nomeTela(i.quem || i.origem || "")), tempoE(haQuanto(i.criado_ts))], null,
+    () => abrirGaveta(br(i.titulo), et("com a gente"), [sec(null, el("p", {class: "o-apoio", text: "O que falta a gente fazer. Editar se a gente entendeu errado; Já resolvido tira da lista."})), cartaoFila(i)]), "n:" + i.id)),
+    6, "Nenhuma pendência nossa anotada.", re);
+  const b3 = bloco("o-p-alertas", "Alertas de disparo", alertasD.length || null, "o-espera");
+  lista(b3, "p-alertas", alertasD.sort((a, b) => (b.criado_ts || 0) - (a.criado_ts || 0)).map(linhaAlerta), 6, "Nenhum alerta pra virar pauta agora.", re);
+  const b4 = bloco("o-p-dark", "Shorts dos canais dark", DARK.length || null, "");
+  b4.querySelector("ul").before(el("p", {class: "o-bloco-nota", text: "Opcional: se você não escolher, o Claude escolhe o melhor uma hora antes."}));
+  lista(b4, "p-dark", DARK.map(l => {
+    const feito = l.pedido || decididos.get("dark:" + l.id);
+    const nota = [l.nota != null ? "nota " + virgula(l.nota) : null, l.duracao ? Math.round(l.duracao) + " s" : null].filter(Boolean).join(" · ");
+    return linha(feito ? "saiu" : "espera", [ponto(), tit(l.titulo || l.pasta), meta([DK[l.canal] || l.canal, nota].filter(Boolean).join(" · ")), l.estado === "escolhido" ? et("escolhido") : null, tempoE(!l.alvo_dia ? "" : l.alvo_dia === hojeISO() ? "hoje" : diaCurto(l.alvo_dia))], null,
+      () => abrirGaveta(l.titulo || l.pasta, et(DK[l.canal] || l.canal), [cartaoDark(l)]), "k:" + l.id);
+  }), 5, "Nenhum Short esperando aprovação.", re);
+  const b5 = bloco("o-p-noticias", "O que disparou hoje", null, "");
+  b5.querySelector("ul").before(el("p", {class: "o-bloco-nota", text: (A.atualizado ? `Rodada das ${hora(A.atualizado)}. ` : "") + "Só pra saber; a rotina do Geektavo usa na pauta."}));
+  lista(b5, "p-noticias", noticias.map(a => linha("info", [ponto(), tit(a.titulo), et(a.vezes ? virgula(a.vezes) + "x" : "alerta")],
+    a.link ? [botaoLink(a.link, "Abrir")] : null,
+    () => abrirGaveta(a.titulo, et(a.nivel === "forte" ? "forte" : "alerta"), [sec(null, el("p", {text: a.texto || ""})), a.link ? sec(null, el("div", {class: "o-gav-acoes"}, botaoLink(a.link, "Abrir a notícia"))) : null].filter(Boolean)), "t:" + a.titulo)),
+    5, "Nenhum disparo hoje.", re);
+  const nDec = voce.length + alertasD.length;
+  casco("fila").replaceChildren(cab("Pendências", nDec ? `${nDec} pra decidir · ${nossas.length} com a gente` : "Nada pra decidir agora"),
+    grade(col(7, b1, b4, b2), col(5, b3, b5)));
+}
+
+/* ---------- Andamento completo ---------- */
+let fRes = "todos", fTrab = "ativos", fTerm = "busy";
+const FASE_CLS = {concluido: "saiu", rodando: "anda", parado: "parado", descartado: "parado"};
+function linhaRotinaO(r) {
+  const rodando = r.estado === "rodando", off = r.estado === "desligada";
+  const res = off ? "desligada" : rodando ? "rodando agora" : r.ok ? "ok" : (CODIGOS[r.resultado] || "falhou");
+  const cls = off ? "parado" : rodando ? "anda" : r.ok ? "saiu" : "erro";
+  const nome = r.nome.replace(/^DAL MORO /, "");
+  return linha(cls, [ponto(), tit(nome), et(res), tempoE(r.ultima ? hora(r.ultima) : "nunca")], null, () => abrirGaveta(nome, et(res), [sec(null, el("dl", {class: "o-dl"},
+    el("dt", {text: "última vez"}), el("dd", {text: r.ultima ? hora(r.ultima) + " · " + haQuanto(r.ultima) : "nunca rodou"}),
+    el("dt", {text: "resultado"}), el("dd", {text: res + (r.ok || rodando || off ? "" : ` (código ${r.resultado})`)}),
+    el("dt", {text: "próxima"}), el("dd", {text: r.proxima ? hora(r.proxima) : "sem horário"}),
+    el("dt", {text: "nome no Windows"}), el("dd", {text: r.nome})))]), "r:" + r.nome);
+}
+function pAnd(forca) {
+  const v = $("v-agora");
+  if (!v || v.hidden || aberta()) return;
+  const D = dados();
+  const C = ((E.fila || {}).lista || []).filter(i => i.classe === "cartao" && vivo(i));
+  const T = (E.terminais || {}).lista || [];
+  const R = (E.rotinas || {}).lista || [];
+  const casa = R.filter(r => DA_CASA.test(r.nome || "")), resto = R.filter(r => !DA_CASA.test(r.nome || ""));
+  const k = JSON.stringify([carregou, fRes, fTrab, fTerm, C.map(c => c.id + c.fase), D.andando.map(x => x.nome + (x.t ? x.t.feitos : "")), D.parados.length, D.saiu.length,
+    T.map(t => t.nome + t.status), R.map(r => r.nome + r.ultima + r.estado), [...TODOS], Math.floor(agoraS() / 60), innerWidth <= 820]);
+  if (!forca && k === chave.and) return;
+  chave.and = k;
+  const re = () => pAnd(true);
+  const n = f => C.filter(c => c.fase === f).length;
+  const bR = comSegs(bloco("o-a-res", "Resultados", null, ""), segs("Filtrar resultados",
+    [["todos", "Todos", C.length], ["concluido", "Concluídos", n("concluido")], ["rodando", "Rodando", n("rodando")], ["parado", "Parados", n("parado")], ["descartado", "Descartados", n("descartado")]].filter(([k, , q]) => k === "todos" || q || k === fRes),
+    fRes, f => { fRes = f; re(); }));
+  const ls = C.filter(c => fRes === "todos" || c.fase === fRes);
+  lista(bR, "a-res" + fRes, ls.map(c => {
+    const x = {tipo: "cartao", c, nome: c.titulo, quem: c.quem};
+    return linha(FASE_CLS[c.fase] || "parado", [ponto(), tit(nomeHumano(c.titulo, c.quem) || c.titulo), meta(nomeTela(c.quem || "")), et(FASES[c.fase] || c.fase), tempoE(haQuanto(c.atualizado_ts || c.criado_ts))], null, () => abrirTrab(x), "c:" + c.id);
+  }), 8, "Quando um terminal termina, o resultado aparece aqui com o veredito.", re);
+  const terminadosHoje = D.saiuHoje.filter(x => x.tipo === "trab");
+  const bW = comSegs(bloco("o-a-trab", "Trabalhos", null, ""), segs("Filtrar trabalhos",
+    [["ativos", "Andando", D.andando.length], ["feitos", "Terminados hoje", terminadosHoje.length], ["parados", "Parados", D.parados.length]], fTrab, f => { fTrab = f; re(); }));
+  const lw = fTrab === "ativos" ? D.andando.map(linhaAndando) : fTrab === "feitos" ? terminadosHoje.map(linhaSaiu) : D.parados.map(linhaParado);
+  lista(bW, "a-trab" + fTrab, lw, 6, fTrab === "ativos" ? "Nenhum trabalho andando agora." : fTrab === "feitos" ? "Nada terminado hoje ainda." : "Nenhum trabalho parado.", re);
+  const ordemT = t => t.status === "busy" ? 0 : t.status === "waiting" ? 1 : 2;
+  const lt = (fTerm === "busy" ? T.filter(t => t.status !== "idle") : T).slice().sort((a, b) => ordemT(a) - ordemT(b));
+  const bT = comSegs(bloco("o-a-term", "Terminais", null, "", carregou ? bt("o-bt-contorno", "Prédio em corte", () => irPara("escritorio")) : null),
+    segs("Filtrar terminais", [["busy", "Trabalhando", T.filter(t => t.status !== "idle").length], ["todos", "Todos", T.length]], fTerm, f => { fTerm = f; re(); }));
+  lista(bT, "a-term" + fTerm, lt.map(t => linha(t.status === "busy" ? "anda" : t.status === "waiting" ? "espera" : "parado",
+    [ponto(), tit(nomeTela(t.nome)), et(NOMES_ST[t.status] || t.status), tempoE(haQuanto(t.desde).replace("há ", ""))], null,
+    () => abrirGaveta(nomeTela(t.nome), et(NOMES_ST[t.status] || t.status), [secTerminal(t)]), "m:" + t.nome)), 6, "Nenhum terminal trabalhando agora.", re);
+  const mal = casa.filter(r => !r.ok && r.estado !== "rodando" && r.estado !== "desligada");
+  const ordemR = r => (!r.ok && r.estado !== "rodando" && r.estado !== "desligada") ? 0 : r.estado === "rodando" ? 1 : r.estado === "desligada" ? 3 : 2;
+  const bO = bloco("o-a-rot", "Rotinas do PC", null, "", resto.length ? bt("o-bt-contorno", `Do Windows (${resto.length})`,
+    () => abrirGaveta("Tarefas do Windows e de outros programas", et(resto.length + " tarefas"), [el("ul", {class: "o-linhas"}, resto.map(linhaRotinaO))])) : null);
+  bO.querySelector("ul").before(el("p", {class: "o-bloco-nota", text: casa.length ? `${casa.length} rotinas da casa · ${mal.length ? mal.length + " com falha na última vez" : "nenhuma falhou"}` : "Agendador do Windows"}));
+  lista(bO, "a-rot", casa.slice().sort((a, b) => ordemR(a) - ordemR(b)).map(linhaRotinaO), 8, "Sem leitura das rotinas agora.", re);
+  casco("agora").replaceChildren(cab("Andamento"),
+    grade(col(6, bR, bT), col(6, bW, bO)));
+}
+
+/* ---------- Oráculo ---------- */
+let senhasNo = null, senhasCasa = null;
+function abrirSenhas() {
+  senhasNo = senhasNo || document.querySelector("#jv-senhas .senhas");
+  if (!senhasNo) return;
+  senhasCasa = senhasCasa || senhasNo.parentElement;
+  abrirGaveta("Senhas faladas", et("voz"), [senhasNo]);
+  const volta = new MutationObserver(() => { if (!senhasNo.isConnected || O.gaveta.hidden) { senhasCasa.append(senhasNo); volta.disconnect(); } });
+  volta.observe(O.gaveta, {attributes: true, attributeFilter: ["hidden"]});
+}
+function abrirPainelPC() {
+  const fr = el("iframe", {class: "o-gav-frame", title: "Painel da Oráculo", src: "http://127.0.0.1:4850/"});
+  abrirGaveta("Painel completo da Oráculo", et("no PC"), [sec(null, el("div", {class: "o-gav-acoes"}, botaoLink("http://127.0.0.1:4850/", "Abrir em outra aba"))), fr]);
+  O.gaveta.classList.add("larga");
+  const tira = new MutationObserver(() => { if (O.gaveta.hidden) { O.gaveta.classList.remove("larga"); tira.disconnect(); } });
+  tira.observe(O.gaveta, {attributes: true, attributeFilter: ["hidden"]});
+}
+function pOra(forca) {
+  const v = $("v-jarvis");
+  if (!v || v.hidden || aberta()) return;
+  if (!senhasLidas) { senhasLidas = true; senhas.ler(); }
+  const m = jarvisModo(), f = jarvisFala(), s = J.estado || {};
+  const al = (s.alertas || []).filter(a => !a.visto);
+  const pc = s.pc || {}, u = s.uso_claude || {}, vc = s.voz_credito || {}, dk = s.dark || {};
+  const est = s.esteiras || [];
+  const P = [...enviados.map(e => ({...e, estado: "novo", historico: [[e.criado_ts, "saiu daqui"]]})), ...((E.pedidos || {}).lista || [])];
+  const shEst = ($("sh-est") || {}).textContent || "";
+  const k = JSON.stringify([m, f.texto, f.quando, al.map(a => a.id), pc, u.semana_pct, vc.hoje, dk, est.map(e => e.nome), P.slice(0, 12).map(p => p.estado + String(p.texto).length), shEst, J.ok, [...TODOS], Math.floor(agoraS() / 60), innerWidth <= 820]);
+  if (!forca && k === chave.ora) return;
+  if (document.activeElement && v.contains(document.activeElement) && document.activeElement.closest(".o-verbos")) return;
+  chave.ora = k;
+  const re = () => pOra(true);
+  // ela agora: estado, a última fala e os verbos (os mesmos botões do motor)
+  const verbosNo = $("jv-verbos");
+  const bE = bloco("o-o-agora", "Ela agora", null, "o-ela");
+  const ul = bE.querySelector("ul");
+  ul.replaceChildren(...[
+    linhaFixa(m === "dormindo" || m === "fora" ? "parado" : "anda", [ponto(), tit("Está " + (JM[m] || m)), f.quando ? tempoE(f.quando) : null]),
+    f.texto && f.texto.replace(/[.…\s]/g, "").length > 3 ? el("li", {class: "o-fala"}, el("p", {text: "“" + f.texto + "”"})) : null].filter(Boolean));
+  verbosNo.classList.add("o-verbos");
+  bE.querySelector("footer").append(verbosNo, $("jv-msg"), bt("o-bt-contorno", "Conversar por voz", () => { const b = document.querySelector("#v-jarvis [data-conv]"); if (b) b.click(); }));
+  // o que ela vigia
+  const bV = bloco("o-o-vigia", "O que ela vigia", al.length || null, al.length ? "o-espera" : "");
+  lista(bV, "o-vigia", al.map(a => {
+    const urg = a.nivel === "urgente";
+    return linha(urg ? "erro" : "espera", [ponto(), tit(a.titulo), et(urg ? "urgente" : "fora do lugar"), tempoE(a.em ? hora(a.em) : "")], null, () => {
+      const msg = el("p", {class: "o-msg", role: "status"});
+      const visto = MODO === "teste" ? null : bt("o-bt-contorno", "Visto, pode tirar", ev => jarvisAcao("alerta/ok", a.id, msg, ev.currentTarget));
+      abrirGaveta(a.titulo, et(urg ? "urgente" : "fora do lugar"), [a.texto ? sec(null, el("p", {text: a.texto})) : null, sec(null, el("div", {class: "o-gav-acoes"}, visto), msg)].filter(Boolean));
+    }, "v:" + a.id);
+  }), 6, J.ok === false ? "Sem a Oráculo no ar, sem vigia." : "Nada fora do lugar.", re);
+  // a máquina
+  const linhasPC = [
+    pc.cpu != null ? ["Processador", `${pc.cpu}% em uso`, pc.cpu > 85] : null,
+    pc.ram_total_gb ? ["Memória", `${virgula(pc.ram_livre_gb)} GB livres de ${pc.ram_total_gb}`, pc.ram_livre_gb < 4] : null,
+    pc.gpu ? ["Placa de vídeo", `${pc.gpu}${pc.gpu_uso != null ? ` · ${pc.gpu_uso}%` : ""}`] : null,
+    ...(pc.discos || []).map(d => [`Disco ${d.letra}`, `${d.livre_gb} GB livres de ${d.total_gb}`, d.livre_gb < 20]),
+    u.semana_pct != null ? ["Uso do Claude na semana", `${u.semana_pct}%`, u.semana_pct > 85] : null,
+    vc.teto ? ["Voz da Oráculo hoje", `${vc.hoje} de ${vc.teto} caracteres`] : null,
+    dk.programados != null ? ["Canais dark", `${dk.no_ar_hoje ?? 0} no ar hoje · ${dk.programados} programados`] : null,
+  ].filter(Boolean);
+  const bM = bloco("o-o-pc", "A máquina", null, "");
+  const ulM = bM.querySelector("ul");
+  if (linhasPC.length) ulM.replaceChildren(...linhasPC.map(([a, b, alerta]) => linhaFixa(alerta ? "espera" : "info", [ponto(), tit(a), el("span", {class: "o-meta"}, el("span", {class: "o-valor", text: b}))])));
+  else vazio(ulM, "Sem leitura da máquina agora.");
+  // senhas, esteiras, painel
+  const bS = bloco("o-o-mais", "Voz e atalhos", null, "");
+  bS.querySelector("ul").replaceChildren(
+    linha("info", [ponto(), tit("Senhas faladas"), meta(shEst && shEst !== "…" && !/^não deu/i.test(shEst) ? O.corta(shEst, 60) : "senha 1, senha 2 e o teto de gasto")], [bt("o-bt-contorno", "Abrir", abrirSenhas)], abrirSenhas, "senhas"),
+    linha("info", [ponto(), tit("Painel completo da Oráculo"), meta("só no PC")], [botaoLink("http://127.0.0.1:4850/", "Abrir")], abrirPainelPC, "painel"));
+  const bT = bloco("o-o-esteiras", "Começar uma esteira", est.length || null, "");
+  bT.querySelector("ul").before(el("p", {class: "o-bloco-nota", text: "Enche a barra da Oráculo com o começo do pedido; você completa e manda."}));
+  lista(bT, "o-est", est.map(e => linha("info", [ponto(), tit(e.nome), meta(e.gatilho ? O.corta(e.gatilho, 56) : "")], null, () => O.focarBarra(e.pedido || "", "trabalho"), "x:" + e.nome)), 6, "Nenhuma esteira lida ainda.", re);
+  // todos os pedidos e recados, do mais novo pro mais velho
+  const bP = bloco("o-o-ped", "Pedidos e recados", P.length || null, "");
+  lista(bP, "o-ped", P.map(p => {
+    const li = linhaPedido(p);
+    if (recado(p.texto)) { const e = li.querySelector(".o-et"); if (e) e.textContent = "recado"; li.classList.add("recado"); }
+    return li;
+  }), 6, "Nenhum pedido ainda. O que você mandar pela barra aparece aqui, com pra quem foi.", re);
+  casco("jarvis").replaceChildren(cab("Oráculo", `Está ${JM[m] || m}` + (al.length ? ` · ${al.length} ${al.length > 1 ? "coisas" : "coisa"} fora do lugar` : "")),
+    grade(col(7, bE, bV, bP), col(5, bM, bS, bT)));
+}
+
+/* ---------- Áreas ---------- */
+let arDentro = false, arBusca = "", arGrupo = "";
+const EST_CLS = {anda: "anda", pronto: "saiu", parado: "parado", falhou: "erro", espera: "espera"};
+function quandoItem(i) {
+  const soDia = typeof i.quando === "string" && /^\d{4}-\d{2}-\d{2}$/.test(i.quando);
+  return soDia ? i.quando.slice(8, 10) + "/" + i.quando.slice(5, 7) : i.quando && (typeof i.quando === "number" || /^\d{4}-/.test(i.quando)) ? hora(i.quando) : i.quando ? String(i.quando) : "";
+}
+function abrirItemO(i) {
+  const link = /^https?:\/\//.test(i.link || "") ? i.link : null;
+  const corpo = [
+    i.linha || i.texto ? sec(null, i.linha ? el("p", {class: "o-apoio", text: i.linha}) : null, ...(i.texto ? textoComLista(i.texto) : [])) : null,
+    ...(i.partes || []).map(p => sec(null, parteArea(p))),
+    (i.opcoes || []).length ? sec((i.opcoes_nome || "Opções") + " · " + i.opcoes.length, ...i.opcoes.map(o => el("div", {class: "o-op"}, el("b", {text: o.titulo}), ...(o.partes || []).map(parteArea)))) : null,
+    i.arquivo || i.quando ? sec(null, el("dl", {class: "o-dl"}, i.arquivo ? [el("dt", {text: "arquivo"}), el("dd", {class: "o-arq", text: i.arquivo})] : null, i.quando ? [el("dt", {text: "quando"}), el("dd", {text: quandoItem(i)})] : null)) : null,
+    link ? sec(null, el("div", {class: "o-gav-acoes"}, botaoLink(link, "Abrir"))) : null].filter(Boolean);
+  abrirGaveta(i.titulo, i.estado && EST2[i.estado] ? et(EST2[i.estado]) : null, corpo.length ? corpo : [sec(null, el("p", {class: "o-apoio", text: "Sem mais detalhe."}))]);
+}
+function pAreas(forca) {
+  const v = $("v-areas");
+  if (!v || v.hidden || aberta()) return;
+  const A = listaAreas();
+  if (!A.length) { casco("areas").replaceChildren(cab("Áreas", "Lendo as áreas do PC…")); return; }
+  if (!arSel || !A.some(a => a.id === arSel)) arSel = A[0].id;
+  const a = A.find(x => x.id === arSel);
+  if (!subSel[a.id] || !a.subs.some(s => s.id === subSel[a.id])) subSel[a.id] = (a.subs[0] || {}).id;
+  const s = a.subs.find(x => x.id === subSel[a.id]) || {};
+  const cel = innerWidth <= 820;
+  const foco = document.activeElement && document.activeElement.classList.contains("o-busca");
+  const k = JSON.stringify([arSel, s.id, s.nativo ? "" : (s.itens || []).map(i => [i.titulo, i.estado, i.linha]), A.map(x => [x.id, x.linha, nEspera(x)]), arDentro, arBusca, arGrupo, cel, (E.areas || {}).atualizado]);
+  if (!forca && k === chave.areas) return;
+  if (!forca && foco) return;   // digitando na busca: não redesenha por baixo
+  chave.areas = k;
+  try { sessionStorage.setItem("central-area", arSel); sessionStorage.setItem("central-subs", JSON.stringify(subSel)); } catch (e) {}
+  const re = () => pAreas(true);
+  // a lista das áreas
+  const bL = bloco("o-ar-lista", "Áreas", A.length, "o-ar-idx");
+  bL.querySelector("ul").replaceChildren(...A.map(x => {
+    const n = nEspera(x);
+    const li = linha(n ? "espera" : "info", [ponto(), tit(x.nome), n ? Object.assign(et(String(n)), {title: n + " esperando você"}) : meta(x.linha ? O.corta(x.linha, 40) : "")], null,
+      () => { arSel = x.id; arDentro = true; arBusca = ""; arGrupo = ""; re(); if (cel) scrollTo({top: 0}); }, "ar:" + x.id);
+    if (x.id === arSel) li.classList.add("atual"), li.querySelector(".o-alvo").setAttribute("aria-current", "true");
+    return li;
+  }));
+  // a área escolhida
+  const cabA = el("header", {class: "o-ar-cab"}, cel ? bt("o-bt-fantasma o-volta", "Voltar pras áreas", () => { arDentro = false; re(); scrollTo({top: 0}); }) : null,
+    el("h2", {class: "o-ar-nome", text: a.nome}), a.linha || a.velho ? el("p", {class: "o-sub", text: [a.linha, a.velho ? "dado da leitura anterior" : null].filter(Boolean).join(" · ")}) : null,
+    a.subs.length > 1 ? segs("Partes da área", a.subs.map(x => [x.id, x.nome, null]), s.id, id => { subSel[a.id] = id; arBusca = ""; arGrupo = ""; re(); }) : null);
+  const corpo = el("div", {class: "o-ar-corpo"});
+  const oldCorpo = $("ar-corpo"), casaCorpo = document.querySelector("#v-areas .ar-det");
+  if (oldCorpo.parentElement !== casaCorpo) casaCorpo.append(oldCorpo);   // nunca fica solto: as telas inteiras moram dentro dele
+  const mostraDet = !cel || arDentro;
+  if (s.nativo) {   // Edição, GitHub, Atalhos e Andamento são telas inteiras: o motor desenha, a casca só dá o lugar
+    arChave = ""; desenharAreas();
+    if (mostraDet) corpo.append(oldCorpo);
+    for (const a2 of oldCorpo.querySelectorAll("h2 small a")) a2.textContent = a2.textContent.charAt(0).toUpperCase() + a2.textContent.slice(1);
+  } else {
+    const itens = s.itens || [];
+    const grupos = [...new Set(itens.map(i => i.grupo).filter(Boolean))];
+    if (arGrupo && !grupos.includes(arGrupo)) arGrupo = "";
+    const q = semAcento(arBusca.trim());
+    const vis = itens.filter(i => (!arGrupo || i.grupo === arGrupo) && (!q || semAcento([i.titulo, i.linha, i.texto, i.grupo, ...(i.partes || []).map(p => p.texto)].join(" ")).includes(q)));
+    const bI = bloco("o-ar-itens", s.nome || a.nome, vis.length === itens.length ? itens.length || null : `${vis.length} de ${itens.length}`, "");
+    const ferr = [];
+    if (grupos.length >= 2) ferr.push(segs("Filtrar " + (s.nome || ""), [["", "Tudo", itens.length], ...grupos.map(g => [g, g, itens.filter(i => i.grupo === g).length])], arGrupo, g => { arGrupo = g; re(); }));
+    if (itens.length >= 8) {
+      const busca = el("input", {type: "search", class: "o-busca", placeholder: "buscar nesta parte", "aria-label": "Buscar em " + (s.nome || a.nome), enterkeyhint: "search", value: arBusca});
+      busca.addEventListener("input", () => { arBusca = busca.value; const p = busca.selectionStart; re(); const nb = document.querySelector("#v-areas .o-busca"); if (nb) { nb.focus(); nb.setSelectionRange(p, p); } });
+      ferr.push(busca);
+    }
+    if (ferr.length) bI.querySelector("ul").before(el("div", {class: "o-ar-ferr"}, ...ferr));
+    if (s.linha || s.texto) bI.querySelector("ul").before(el("p", {class: "o-bloco-nota", text: [s.linha, s.texto].filter(Boolean).join(" ")}));
+    lista(bI, "ar:" + a.id + "/" + s.id + arGrupo + q, vis.map(i => linha(EST_CLS[i.estado] || "parado",
+      [ponto(), tit(i.titulo), i.estado && EST2[i.estado] ? et(EST2[i.estado]) : meta(i.linha ? O.corta(i.linha, 48) : ""), tempoE(quandoItem(i))],
+      /^https?:\/\//.test(i.link || "") ? [botaoLink(i.link, "Abrir")] : null, () => abrirItemO(i), "it:" + i.titulo)),
+      40, itens.length ? "Nada com esse filtro." : "Nada aqui agora.", re);
+    corpo.append(bI);
+  }
+  const conteudo = el("div", {class: "o-ar-det"}, cabA, corpo);
+  const c = casco("areas");
+  v.classList.toggle("o-dentro", cel && arDentro);
+  if (cel) c.replaceChildren(...(arDentro ? [conteudo] : [cab("Áreas", "Canal, empresa, esteiras e o resto, por área"), bL]));
+  else c.replaceChildren(cab("Áreas", "Canal, empresa, esteiras e o resto, por área"), grade(col(4, bL), el("div", {class: "o-col o-c8"}, conteudo)));
+}
+
+/* ---------- Cidade ---------- */
+function janelas() {   // as janelas ao vivo vêm da lista do motor (escondida); o botão da linha toca o dele
+  return [...document.querySelectorAll("#av-lista > li.av-item")].map(li => ({
+    nome: (li.querySelector("b") || {}).textContent || "", sub: (li.querySelector(":scope > span") || {}).textContent || "",
+    on: (li.querySelector(".av-liga") || {}).getAttribute?.("aria-pressed") === "true", fim: li.classList.contains("fim"), bt: li.querySelector(".av-liga")}));
+}
+let tiposNo = null, tiposCasa = null;
+function abrirTipos() {
+  tiposNo = tiposNo || $("av-tipos"); tiposCasa = tiposCasa || tiposNo.parentElement;
+  tiposNo.hidden = false;
+  abrirGaveta("Tipos que aparecem", et("neste aparelho"), [tiposNo]);
+  const volta = new MutationObserver(() => { if (O.gaveta.hidden) { tiposCasa.append(tiposNo); volta.disconnect(); } });
+  volta.observe(O.gaveta, {attributes: true, attributeFilter: ["hidden"]});
+}
+function pCid(forca) {
+  const v = $("v-aovivo");
+  if (!v || v.hidden || aberta()) return;
+  const D = dados();
+  const claro = x => { const n = nomeHumano(x.nome, x.quem, x.t && x.t.agora); return !!n && !semSentido(n); };
+  const anda = D.andando.filter(claro), par = D.parados.filter(claro);
+  const J2 = janelas();
+  const k = JSON.stringify([carregou, D.espera.map(i => i.id), D.alertas.length, anda.map(x => x.nome + (x.t ? x.t.feitos : "")), par.map(x => x.nome), J2.map(j => j.nome + j.on + j.sub), [...TODOS], Math.floor(agoraS() / 60), innerWidth <= 820]);
+  if (!forca && k === chave.cid) return;
+  chave.cid = k;
+  const re = () => pCid(true);
+  const linhasA = [...anda.map(linhaAndando), ...par.map(linhaParado)];
+  const bA = bloco("o-c-cidade", "Na cidade agora", linhasA.length || null, "");
+  lista(bA, "c-cidade", linhasA, 8, "Ninguém trabalhando na cidade agora. Quando um terminal começar, ele acende um prédio.", re);
+  const bJ = bloco("o-c-janelas", "Janelas ao vivo", J2.filter(j => j.on).length ? J2.filter(j => j.on).length + " ligada" + (J2.filter(j => j.on).length > 1 ? "s" : "") : null, "",
+    $("av-tipos") && !$("av-tipos").hidden || tiposNo ? bt("o-bt-contorno", "Tipos", abrirTipos) : null);
+  bJ.querySelector("ul").before(el("p", {class: "o-bloco-nota", text: "Ligue o que você quer ver sendo montado e dê palpite antes de ficar pronto. Desligado não gasta nada do PC."}));
+  lista(bJ, "c-janelas", J2.map(j => {
+    const b = bt(j.on ? "o-bt-cheio" : "o-bt-contorno", j.on ? "Ligada" : "Ligar", () => { if (j.bt) j.bt.click(); setTimeout(re, 400); }, {"aria-pressed": String(j.on), "aria-label": (j.on ? "Desligar a janela de " : "Ligar a janela de ") + j.nome});
+    return linhaFixa(j.on ? "anda" : j.fim ? "saiu" : "info", [ponto(), tit(j.nome), el("span", {class: "o-meta"}, meta(j.sub), b)]);
+  }), 6, ($("av-lista").textContent || "").trim() || "Nenhum trabalho visual aberto agora. Quando um terminal começar um site, app, deck ou prancha, ele aparece aqui.", re);
+  const jan = $("av-janelas");
+  jan.hidden = !J2.some(j => j.on);   // sem janela ligada, o aviso do motor repetiria o da lista
+  const c = casco("aovivo");
+  c.replaceChildren(grade(col(7, bA), col(5, bJ)), jan);
+}
+/* toque num prédio da cena: o motor procura a estação na sala (escondida); a casca abre a gaveta dela */
+new MutationObserver(ms => {
+  for (const m of ms) {
+    const no = m.target;
+    if (!no.classList || !no.classList.contains("avs-tocado")) continue;
+    const nome = ((no.querySelector(".avs-nome") || {}).textContent || "").trim().toLowerCase();
+    const D = dados();
+    const x = [...D.andando, ...D.parados, ...D.saiu].find(y => String(y.nome).trim().toLowerCase() === nome);
+    if (x) abrirTrab(x);
+    else { const i = D.espera.find(y => String(y.titulo).trim().toLowerCase() === nome); if (i) O.abrirEspera(i); }
+  }
+}).observe($("av-sala"), {subtree: true, attributes: true, attributeFilter: ["class"]});
+
+/* Edição, GitHub e, no celular, Andamento e Atalhos moram dentro de Áreas: entrar por eles abre a área direto */
+const _ir = irPara;
+irPara = function (id) {
+  if (id === "edicao" || id === "github" || (innerWidth <= 820 && (id === "agora" || id === "atalhos"))) arDentro = true;
+  else if (id === "areas") arDentro = false;
+  return _ir(id);
+};
+try {   // a primeira entrada (?ir= ou a aba guardada) passa antes deste arquivo: confere aqui
+  const ir0 = new URLSearchParams(location.search).get("ir") || sessionStorage.getItem("o-aba") || "";
+  if (aba === "areas" && /^(agora|atalhos|edicao|github)$/.test(ir0)) arDentro = true;
+} catch (e) {}
+function pAtalhos() {   // Atalhos ganha o título de página como os outros
+  const v = $("v-atalhos");
+  if (!v || v.hidden) return;
+  const tem = v.querySelector(":scope > .o-cab");
+  if (v.closest("#v-areas")) { if (tem) tem.remove(); return; }   // dentro da área o título já é o da área
+  if (tem) return;
+  const c = cab("Atalhos", "Pastas e páginas que você abre sempre");
+  const volta = v.querySelector(":scope > .o-volta");
+  volta ? volta.after(c) : v.prepend(c);
+}
+O.GANCHOS.push(() => pAtalhos(), () => pPend(), () => pAnd(), () => pOra(), () => pAreas(), () => pCid());
+for (const f of O.GANCHOS) try { f(); } catch (e) { console.error(e); }
+})();
+
 </script>
