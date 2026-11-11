@@ -1848,3 +1848,181 @@ return api;
 }
 raiz.Andar = { criar };
 })(window);
+
+/* andar_sala.js (11/11/2026). Acréscimo à torre do Andar 47 na TV, fora do andar.js gerado (mesmo jeito do
+   andar_mais.js). O montar_sala.py junta este arquivo depois do andar_mais.js e o andar_sala.css depois do
+   andar_mais.css.
+
+   Pedido do Gustavo (11/11, ~9h): "arruma o alerta no painel da tv sobre coisas q esperam minha resolução '9 coisas só
+   voce resolve a mais antiga há 1d e 8h', arruma a proporcao dele, deixa menor e no canto superior esquerdo em baixo dos
+   meus numeros do youtube [...] pode ser até uma piadinha com o Charada por ser algo que nao está solucionado, igual ao
+   procurado do Coringa como erro" e "as musicas aparecendo no cantinho que ta tocando".
+   - Cartão do CHARADA: a frase grande do céu sai; o cartão fica embaixo do placar do YouTube, alinhado na mesma
+     margem, com quantas coisas esperam ele e há quanto tempo espera a mais antiga. O holofote e o sinal seguem no céu.
+     O dado é o mesmo do sinal (estado.esperando_ele e o alerta "esperando-ele").
+   - Tocando agora: faixa pequena embaixo do placar do Instagram, só com música tocando (vem de /api/musica, o
+     Spotify de qualquer aparelho). Pausou: fica apagada 20 s e sai. Página do Spotify aberta: o canto dorme. */
+(function (raiz) {
+  "use strict";
+  if (!raiz.Andar || !raiz.Andar.criar || raiz.Andar.__sala) return;
+  const criar0 = raiz.Andar.criar;
+  raiz.Andar.__sala = true;
+  raiz.Andar.criar = function (opts) {
+    const api = criar0(opts);
+    try { if (!(opts && opts.teste)) montar(api, opts || {}); } catch (e) { if (raiz.console) console.error("andar_sala", e); }
+    return api;
+  };
+
+  const PAUSA_S = 20;        // pausada: o canto fica apagado isso e sai
+  const PERGUNTA_MS = 3000;  // de quanto em quanto o canto pergunta o que toca
+  const num = (v) => typeof v === "number" && isFinite(v);
+
+  /* o ponto de interrogação do Charada em pixel (9 x 13), verde com sombra escura */
+  const INTERROGA = [
+    "..#####..",
+    ".##...##.",
+    "##.....##",
+    "##.....##",
+    ".......##",
+    "......##.",
+    ".....##..",
+    "....##...",
+    "....##...",
+    ".........",
+    "....##...",
+    "....##...",
+    ".........",
+  ];
+  function pintaInterroga(cv) {
+    const c = cv.getContext("2d");
+    c.clearRect(0, 0, cv.width, cv.height);
+    for (const [cor, dx] of [["#14401e", 1], ["#5fe06a", 0]]) {
+      c.fillStyle = cor;
+      INTERROGA.forEach((l, y) => { for (let x = 0; x < l.length; x++) if (l[x] === "#") c.fillRect(x + dx, y + dx, 1, 1); });
+    }
+  }
+  /* nota musical em pixel (capa que não veio) */
+  const NOTA = '<svg viewBox="0 0 12 12" aria-hidden="true"><rect x="5" y="1" width="5" height="1" fill="#9aa6bd"/><rect x="9" y="1" width="1" height="7" fill="#9aa6bd"/>' +
+    '<rect x="5" y="1" width="1" height="8" fill="#9aa6bd"/><rect x="2" y="7" width="4" height="3" fill="#9aa6bd"/><rect x="6" y="6" width="4" height="3" fill="#9aa6bd"/></svg>';
+
+  function montar(api, opts) {
+    const host = api.host;
+    const hud = host && host.querySelector("#a6-hud");
+    if (!hud) return;
+    const agoraMs = () => (opts.agora ? opts.agora() : Date.now());
+    host.classList.add("sala2");
+
+    /* ---------- Charada ---------- */
+    const ch = document.createElement("div");
+    ch.className = "pn";
+    ch.id = "a6-charada";
+    ch.hidden = true;
+    ch.innerHTML = '<canvas id="a6-chq" width="10" height="14"></canvas><div class="tx"><div class="t1">CHARADA</div>' +
+      '<div class="t2"><b id="a6-chn"></b> <span id="a6-chw"></span></div><div class="t3" id="a6-chd"></div></div>';
+    hud.appendChild(ch);
+    pintaInterroga(ch.querySelector("canvas"));
+
+    let tz = -180, pend = 0, desde = 0, visto = 0, ultimo = "";
+    function horaDoPC(s) {
+      const m = /^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):?(\d\d)?/.exec(String(s || ""));
+      return m ? Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0)) - tz * 60000 : 0;
+    }
+    function dur(ms) {              // 12 min, 3h 05, 1d 8h
+      const m = Math.max(0, Math.floor(ms / 60000));
+      if (m < 1) return "";
+      if (m < 60) return m + " min";
+      const h = Math.floor(m / 60);
+      if (h < 24) return h + "h" + (m % 60 ? " " + String(m % 60).padStart(2, "0") : "");
+      return Math.floor(h / 24) + "d" + (h % 24 ? " " + (h % 24) + "h" : "");
+    }
+    function desenharCharada() {
+      const on = pend > 0;
+      const d = desde ? dur(agoraMs() - desde) : "";
+      const k = on ? pend + "|" + d : "";
+      if (k === ultimo) return;
+      ultimo = k;
+      ch.hidden = !on;
+      host.classList.toggle("com-charada", on);
+      if (!on) return;
+      host.querySelector("#a6-chn").textContent = pend;
+      host.querySelector("#a6-chw").textContent = "sem resposta";
+      host.querySelector("#a6-chd").textContent = d ? "a mais antiga há " + d : "chegou agora";
+    }
+
+    const est0 = api.estado;
+    api.estado = function (e) {
+      est0(e);
+      try {
+        e = e && typeof e === "object" ? e : {};
+        if (e.carregando) return;
+        const m = /([+-])(\d\d):?(\d\d)$/.exec(String(e.agora || ""));
+        if (m) tz = (m[1] === "-" ? -1 : 1) * (+m[2] * 60 + +m[3]);
+        const p = num(e.esperando_ele) ? e.esperando_ele : 0;
+        const al = (Array.isArray(e.alertas) ? e.alertas : []).find((a) => a && a.id === "esperando-ele");
+        const em = al ? horaDoPC(al.em) : 0;
+        if (p > 0 && pend <= 0) visto = agoraMs();      // sem a hora no alerta: conta de quando a TV viu
+        pend = p;
+        desde = p > 0 ? (em && em <= agoraMs() ? em : visto) : 0;
+        desenharCharada();
+      } catch (err) { if (raiz.console) console.error("andar_sala", err); }
+    };
+
+    /* ---------- tocando agora ---------- */
+    const mu = document.createElement("div");
+    mu.className = "pn";
+    mu.id = "a6-musica";
+    mu.hidden = true;
+    mu.innerHTML = '<div class="cp">' + NOTA + '</div><div class="tx"><div class="l1"><span class="ti"></span>' +
+      '<span class="eq"><i></i><i></i><i></i></span></div><div class="ar"></div><div class="br"><i></i></div></div>';
+    hud.appendChild(mu);
+    const $m = (s) => mu.querySelector(s);
+    let cur = null, recebidoEm = 0, falhas = 0, capaAtual = null;
+
+    function pagina() {           // outra página da TV na frente (Spotify, Olho...): o canto não pergunta nada
+      const t = document.getElementById("tvx");
+      return !!(t && t.classList.contains("tvx--on"));
+    }
+    function mostrar() {
+      const m = cur && cur.musica;
+      const pausado = !!(m && !m.tocando);
+      const on = !!(m && m.titulo && (m.tocando || (num(cur.parado_ha) ? cur.parado_ha < PAUSA_S : true)));
+      if (!on) { if (!mu.hidden) { mu.classList.add("sai"); setTimeout(() => { if (mu.classList.contains("sai")) { mu.hidden = true; mu.classList.remove("sai"); } }, 400); } host.classList.remove("com-musica"); return; }
+      mu.classList.remove("sai");
+      mu.hidden = false;
+      host.classList.add("com-musica");
+      mu.classList.toggle("pausado", pausado);
+      if ($m(".ti").textContent !== m.titulo) $m(".ti").textContent = m.titulo;
+      const ar = m.artista || m.album || "";
+      if ($m(".ar").textContent !== ar) $m(".ar").textContent = ar;
+      const capa = m.capa || "";
+      if (capa !== capaAtual) {
+        capaAtual = capa;
+        const cp = $m(".cp"), velha = cp.querySelector("img");
+        if (velha) velha.remove();
+        if (capa) { const im = new Image(); im.alt = ""; im.decoding = "async"; im.onerror = () => im.remove(); im.src = capa; cp.appendChild(im); }
+      }
+      barra();
+    }
+    function barra() {
+      const m = cur && cur.musica;
+      if (!m || !m.duracao) { $m(".br i").style.transform = "scaleX(0)"; return; }
+      const pos = m.posicao + (m.tocando ? (performance.now() - recebidoEm) / 1000 : 0);
+      $m(".br i").style.transform = "scaleX(" + Math.max(0, Math.min(1, pos / m.duracao)).toFixed(4) + ")";
+    }
+    async function perguntar() {
+      if (!pagina() && !document.hidden && raiz.ANDAR_MUSICA === true) {
+        try {
+          const r = await fetch("api/musica", { cache: "no-store", credentials: "same-origin" });
+          if (!r.ok) throw new Error(r.status);
+          cur = await r.json(); recebidoEm = performance.now(); falhas = 0;
+        } catch (e) {
+          if (++falhas >= 4) cur = null;      // sem contato por ~12 s: o canto sai, nunca fica preso
+        }
+        mostrar();
+      }
+      setTimeout(perguntar, PERGUNTA_MS);
+    }
+    setTimeout(perguntar, 1200);
+    setInterval(() => { try { if (!mu.hidden) barra(); if (pend > 0) desenharCharada(); } catch (e) {} }, 1000);
+  }
+})(window);

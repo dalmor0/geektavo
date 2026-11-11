@@ -306,3 +306,54 @@ body:has(#andar.ficha-aberta) #a47-tela-fechar{visibility:hidden}
 #andar #a6-ficha .fc-ac button:first-child:only-child{grid-column:1/-1}
 #andar #a6-ficha button.fc-x{grid-column:auto;min-height:56px;font-size:24px;background:transparent;box-shadow:inset 0 0 0 2px var(--n4);color:var(--n7)}
 #andar #a6-ficha .fc-ac button.fc-x:first-child{grid-column:auto}
+
+/* andar_sala.css (11/11/2026): cartão do Charada e o "tocando agora" da torre na TV (ver andar_sala.js).
+   Medidas em pixel do palco de 1920x1080; letra mínima de 28 px (TV a 3 m); Jersey 15 em tudo, como o PROCURADO. */
+
+/* a frase grande do céu e a placa "esperando você" saem: quem conta as pendências agora é o Charada.
+   O holofote e o morcego seguem no céu (o sinal continua sendo a única coisa que chama). */
+#andar.sala2 #a6-ceuq,#andar.sala2 #a6-pend{display:none!important}
+
+/* ---------- Charada: embaixo do placar do YouTube, na mesma margem (32 px) ---------- */
+#andar #a6-charada{left:32px;top:108px;height:112px;padding:0 30px 0 20px;display:flex;align-items:center;gap:18px;--bc:var(--g2);background:#0a110c;white-space:nowrap}
+#andar #a6-charada[hidden]{display:none}
+#andar #a6-charada canvas{width:50px;height:70px;flex:none;transform-origin:50% 90%;animation:a6-chq 7s steps(1,end) infinite}
+#andar #a6-charada .tx{line-height:1}
+#andar #a6-charada .t1{font-size:28px;letter-spacing:4px;color:var(--g3)}
+#andar #a6-charada .t2{font-size:40px;color:var(--n8);margin-top:4px}
+#andar #a6-charada .t2 b{font-weight:400;color:var(--y3)}
+#andar #a6-charada .t3{font-size:28px;color:var(--n7);margin-top:4px}
+/* o ? balança de leve de vez em quando, em passos de pixel (a bengala do Charada) */
+@keyframes a6-chq{0%,88%{transform:none}90%{transform:rotate(-8deg)}93%{transform:rotate(6deg)}96%{transform:rotate(-3deg)}98%{transform:none}}
+#andar.palco-luta #a6-charada{visibility:hidden}
+/* o aviso "sem notícia há N min" morava no mesmo canto: desce pra baixo do cartão */
+#andar.com-charada #a6-aviso{top:232px}
+
+/* ---------- tocando agora: embaixo do placar do Instagram, no lugar da antiga placa de pendências ---------- */
+#andar #a6-musica{left:1452px;top:104px;width:452px;height:104px;--bc:var(--n4);display:flex;align-items:center;gap:16px;padding:0 22px 0 16px;box-sizing:border-box;transition:opacity .4s}
+#andar #a6-musica[hidden]{display:none}
+#andar #a6-musica.sai{opacity:0}
+#andar #a6-musica .cp{position:relative;flex:none;width:72px;height:72px;background:var(--n3);box-shadow:inset 0 0 0 2px var(--n5);display:flex;align-items:center;justify-content:center;overflow:hidden}
+#andar #a6-musica .cp svg{width:36px;height:36px;image-rendering:pixelated}
+#andar #a6-musica .cp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:auto}
+#andar #a6-musica .tx{flex:1;min-width:0;line-height:1}
+#andar #a6-musica .l1{display:flex;align-items:center;gap:12px}
+#andar #a6-musica .ti{flex:1;min-width:0;font-size:32px;color:var(--a3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#andar #a6-musica .ar{font-size:28px;color:var(--n7);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#andar #a6-musica .br{position:relative;height:6px;margin-top:10px;background:var(--n3);overflow:hidden}
+#andar #a6-musica .br i{position:absolute;left:0;top:0;bottom:0;width:100%;background:var(--c3);transform-origin:left center;transform:scaleX(0);transition:transform 1s linear}
+/* equalizador de 3 barras em pixel: anda enquanto toca */
+#andar #a6-musica .eq{flex:none;display:flex;align-items:flex-end;gap:4px;height:24px}
+#andar #a6-musica .eq i{display:block;width:6px;height:8px;background:var(--c3);animation:a6-eq 1.2s steps(4,end) infinite}
+#andar #a6-musica .eq i:nth-child(2){animation-delay:-.4s}
+#andar #a6-musica .eq i:nth-child(3){animation-delay:-.8s}
+@keyframes a6-eq{0%{height:8px}25%{height:20px}50%{height:12px}75%{height:24px}100%{height:8px}}
+#andar #a6-musica.pausado .ti{color:var(--n7)}
+#andar #a6-musica.pausado .eq i{animation:none;height:8px;background:var(--n5)}
+#andar #a6-musica.pausado .br i{background:var(--n5)}
+#andar #a6-musica.pausado .cp img{filter:brightness(.45) saturate(.4)}
+@media (prefers-reduced-motion:reduce){#andar #a6-charada canvas,#andar #a6-musica .eq i{animation:none}}
+
+/* a cena "tocando" dos poderes (pedido de música pelo Jarvis) segue entrando grande por 6 s; o canto dela, no pé da
+   tela por cima dos quadros, sai: o canto da TV agora é este */
+html.sala .pd-musica.canto{display:none!important}

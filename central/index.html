@@ -18,10 +18,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Big+Shoulders+Display:wght@700;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Rajdhani:wght@500;600;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<link rel="stylesheet" href="andar.css?v=aa009cfd1f">
-<script src="andar.js?v=aa009cfd1f"></script>
-<script src="aovivo-sala.js?v=aa009cfd1f"></script>
-<script src="oraculo-cena.js?v=aa009cfd1f"></script>
+<link rel="stylesheet" href="andar.css?v=0f7536cdf1">
+<script src="andar.js?v=0f7536cdf1"></script>
+<script src="aovivo-sala.js?v=0f7536cdf1"></script>
+<script src="oraculo-cena.js?v=0f7536cdf1"></script>
 <script>try{const t=localStorage.getItem("central-tema");if(t==="claro"||t==="escuro")document.documentElement.dataset.theme=t==="claro"?"light":"dark";}catch(e){}</script>
 <style>
 /* Central DAL MORO · repaginada de 06/11/2026 (terminal Escritorio Unico).
@@ -1960,6 +1960,13 @@ body.o main#app #v-aovivo,body.o main#app #v-andar{display:grid;grid-template-co
   body.o .o-barra .o-bt-cheio{min-height:44px!important}
   body.o .o-cid-sel button{min-height:44px!important}
   body.o .a47-torre-acoes{display:flex;flex-wrap:wrap;gap:8px}
+}
+
+/* 11/11 13h45: Charada e "tocando agora" da TV dentro do Andar. No celular o recorte da cena é [0, 96, 1780, 810]
+   (andar.js): a música da TV (x 1452 a 1904) sairia pela direita. A torre vai de borda a borda no celular: 110 px de palco dão uns 24 px de tela. */
+@media (max-width:700px){
+  #a47-torre #andar #a6-charada{left:110px;top:120px}
+  #a47-torre #andar #a6-musica{left:1310px;top:296px;width:360px}   /* abaixo do sinal do morcego, que segue sendo o que chama */
 }
 
 </style>
@@ -7558,6 +7565,10 @@ for (const f of O.GANCHOS) try { f(); } catch (e) { console.error(e); }
   addEventListener("resize", ajusta);
   ajusta();
 })();
+
+/* 11/11 13h45: o "tocando agora" do Andar (andar_sala.js da TV) só pergunta ao PC onde o PC responde (PC e rede privada);
+   no github.io não tem quem responda, então o canto nem pergunta. */
+try { window.ANDAR_MUSICA = typeof MODO !== "undefined" && MODO === "pc"; } catch (e) { window.ANDAR_MUSICA = false; }
 
 </script>
 
