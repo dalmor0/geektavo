@@ -18,10 +18,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Big+Shoulders+Display:wght@700;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Rajdhani:wght@500;600;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<link rel="stylesheet" href="andar.css?v=a014bac3e2">
-<script src="andar.js?v=a014bac3e2"></script>
-<script src="aovivo-sala.js?v=a014bac3e2"></script>
-<script src="oraculo-cena.js?v=a014bac3e2"></script>
+<link rel="stylesheet" href="andar.css?v=aa009cfd1f">
+<script src="andar.js?v=aa009cfd1f"></script>
+<script src="aovivo-sala.js?v=aa009cfd1f"></script>
+<script src="oraculo-cena.js?v=aa009cfd1f"></script>
 <script>try{const t=localStorage.getItem("central-tema");if(t==="claro"||t==="escuro")document.documentElement.dataset.theme=t==="claro"?"light":"dark";}catch(e){}</script>
 <style>
 /* Central DAL MORO · repaginada de 06/11/2026 (terminal Escritorio Unico).
@@ -1938,6 +1938,29 @@ body.o main#app #v-aovivo,body.o main#app #v-andar{display:grid;grid-template-co
 /* 11/11: no PC a cena vai de borda a borda da grade (o paineis.js estica o palco com zoom até a largura dos blocos) */
 #v-aovivo .orc[data-modo="pc"],#v-aovivo .orc[data-modo="pc"] > *{max-width:none}
 #v-aovivo .orc[data-modo="pc"] .orc-perg{max-width:none!important}
+
+/* 11/11 9h, celular prático (pedido do Gustavo): toque de 44 px e o que espera ele mais perto do topo */
+@media (max-width:820px){
+  body.o main#app .o-cab{margin-bottom:12px}
+  body.o main#app .o-cab h1{font-size:24px}
+  body.o main#app .o-numeros{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:16px}
+  body.o main#app .o-num{padding:12px 8px;min-height:72px;align-content:start}
+  body.o main#app .o-num b{font-size:24px}
+  body.o main#app .o-num span{font-size:12px;line-height:1.25}
+}
+@media (max-width:820px) and (pointer:coarse){
+  body.o main#app .o-bt,body.o main#app .btn,body.o main#app .acoes .sim,body.o main#app .lnk,body.o main#app .lnk-ex,
+  body.o main#app .conv-abrir,body.o main#app .ped-mais summary,body.o main#app .ja-res summary,body.o main#app a.ver,
+  body.o main#app .o-bloco > header .o-bt,body.o main#app .o-bloco > footer .o-bt,body.o main#app .o-acoes .o-bt,
+  body.o main#app .o-linha > .o-acoes .o-bt,body.o #v-aovivo .o-c5 .o-linha .o-bt{height:44px;min-height:44px}
+  body.o .o-segs button{height:44px}
+  body.o #a6-abre,body.o #v-andar .lnk,body.o #v-andar .btn,body.o #v-andar a.ver,body.o #v-andar .acoes button,
+  body.o .a47-botoes button{min-height:44px!important}
+  body.o button.falar{min-width:44px!important;min-height:44px!important}
+  body.o .o-barra .o-bt-cheio{min-height:44px!important}
+  body.o .o-cid-sel button{min-height:44px!important}
+  body.o .a47-torre-acoes{display:flex;flex-wrap:wrap;gap:8px}
+}
 
 </style>
 </head>
@@ -7537,3 +7560,4 @@ for (const f of O.GANCHOS) try { f(); } catch (e) { console.error(e); }
 })();
 
 </script>
+

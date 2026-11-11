@@ -275,7 +275,7 @@ body.leve .tela{animation:none}
 <p id="chip" hidden></p>
 <p id="aviso" hidden role="status"></p>
 <section class="tela" id="tela" hidden aria-live="polite"></section>
-<script src="olho.js?v=a014bac3e2"></script>
+<script src="olho.js?v=aa009cfd1f"></script>
 <script>
 (() => {
 "use strict";
@@ -474,7 +474,7 @@ async function carregarFicha(iso, cid) {
   const meu = ++pedidoFicha; estado.ficha = null; estado.fichaErro = "";
   try {
     const q = cid ? `?cidade=${encodeURIComponent(cid.nome)}&lat=${cid.lat}&lon=${cid.lon}` : "";
-    const r = await fetch(API + "pais/" + iso + q, { cache: "no-store" });
+    if (P.get("dados") === "mensagem") throw new Error("ficha só no PC"); const r = await fetch(API + "pais/" + iso + q, { cache: "no-store" });
     if (!r.ok) throw new Error("http " + r.status);
     const f = await r.json();
     if (meu !== pedidoFicha) return;
@@ -482,7 +482,7 @@ async function carregarFicha(iso, cid) {
   } catch (e) {
     if (meu !== pedidoFicha) return;
     estado.fichaErro = P.get("dados") === "mensagem" ? "A ficha do país abre no PC e na TV; no celular, por enquanto, só o mapa." : "Sem contato com o PC agora. A ficha volta sozinha quando ele responder.";
-    setTimeout(() => { if (estado.pais && estado.pais.iso === iso && !estado.ficha) carregarFicha(iso).then(pintarLado); }, 15000);
+    if (!(P.get("dados") === "mensagem")) setTimeout(() => { if (estado.pais && estado.pais.iso === iso && !estado.ficha) carregarFicha(iso).then(pintarLado); }, 15000);
   }
   pintarLado();
 }
@@ -599,7 +599,7 @@ async function comecarRonda() {
   if (estado.ronda) return;
   fecharTela();
   estado.ronda = true; $("ronda").setAttribute("aria-pressed", "true"); rondaI = 0;
-  try { const r = await fetch(API + "ronda", { cache: "no-store" }); rondaPontos = (await r.json()).paradas || []; } catch (e) { rondaPontos = []; }
+  try { const r = await fetch(P.get("dados") === "mensagem" ? "data:application/json,%7B%7D" : API + "ronda", { cache: "no-store" }); rondaPontos = (await r.json()).paradas || []; } catch (e) { rondaPontos = []; }
   if (!rondaPontos.length && D && D.terremotos) rondaPontos = D.terremotos.slice(0, 3).map((t) => ({ lat: t.lat, lon: t.lon, txt: `Terremoto de ${virg(t.mag, 1)}, ${t.lugar}` }));
   if (!rondaPontos.length) rondaPontos = [{ lat: -14, lon: -52, iso: "BR", txt: "Brasil" }];
   passoRonda();
@@ -685,6 +685,7 @@ async function buscar() {
   }
 }
 addEventListener("message", (ev) => { if (ev.origin === location.origin && ev.data && ev.data.olho) receber(ev.data.olho); else if (ev.origin === location.origin && ev.data && ev.data.olhoAviso) avisar(ev.data.olhoAviso); });
+if (P.get("dados") === "mensagem") $("fechar-tv").style.display = "none";   /* tirar da TV é do PC */
 if (P.get("dados") === "mensagem") { $("quando").textContent = "Esperando o dado da Central…"; parent.postMessage({ olhoPronto: true }, location.origin); }
 buscar(); setInterval(() => { if (!document.hidden) buscar(); }, 60000);
 async function buscarBase() {
