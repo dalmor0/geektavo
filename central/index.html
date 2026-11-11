@@ -18,10 +18,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Big+Shoulders+Display:wght@700;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Rajdhani:wght@500;600;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<link rel="stylesheet" href="andar.css?v=33add54a4b">
-<script src="andar.js?v=33add54a4b"></script>
-<script src="aovivo-sala.js?v=33add54a4b"></script>
-<script src="oraculo-cena.js?v=33add54a4b"></script>
+<link rel="stylesheet" href="andar.css?v=a014bac3e2">
+<script src="andar.js?v=a014bac3e2"></script>
+<script src="aovivo-sala.js?v=a014bac3e2"></script>
+<script src="oraculo-cena.js?v=a014bac3e2"></script>
 <script>try{const t=localStorage.getItem("central-tema");if(t==="claro"||t==="escuro")document.documentElement.dataset.theme=t==="claro"?"light":"dark";}catch(e){}</script>
 <style>
 /* Central DAL MORO · repaginada de 06/11/2026 (terminal Escritorio Unico).
@@ -1913,6 +1913,31 @@ body.o main#app .o-volta{margin-left:-16px}
 #v-aovivo .orc[data-modo="pc"]{max-width:var(--col)}
 #v-aovivo .orc[data-modo="pc"] > *{margin-inline:0}
 #v-aovivo .orc[data-modo="pc"] .orc-perg{margin:0 0 16px!important;max-width:var(--col)!important}
+
+/* 11/11 03h (print do celular): hora, data e limite dentro da cena, no céu, colados à borda; sem a faixa vazia em cima.
+   A ordem dos filhos da cena é topo, sinal, quieto, faixa, rede: a grade põe o topo na mesma célula da faixa */
+#v-aovivo .orc:not([data-modo="tv"]){display:grid;grid-template-columns:minmax(0,1fr);align-items:start}
+#v-aovivo .orc:not([data-modo="tv"]) > .orc-perg{grid-row:1}
+#v-aovivo .orc:not([data-modo="tv"]) > .orc-quieto{grid-row:2}
+#v-aovivo .orc:not([data-modo="tv"]) > .orc-rola,#v-aovivo .orc:not([data-modo="tv"]) > .orc-topo{grid-row:3;grid-column:1}
+#v-aovivo .orc:not([data-modo="tv"]) > .orc-rede{grid-row:4}
+#v-aovivo .orc:not([data-modo="tv"]) > .orc-topo{position:relative;z-index:2;padding:16px;pointer-events:none;background:none}
+#v-aovivo .orc-topo > div:first-child{display:none}   /* a marca não vem (semMarca) e a contagem saiu na r2 */
+#v-aovivo .orc-relo{margin-left:0;text-align:left}   /* à esquerda: à direita a lua do céu fica atrás da hora */
+#v-aovivo .orc-relo span,#v-aovivo .orc-clima{text-shadow:0 1px 0 #07070b}
+#v-aovivo .orc:not([data-modo="tv"]) > .orc-perg.on{margin:16px 16px 16px!important}
+#v-aovivo .orc[data-modo="pc"] > .orc-perg.on{margin:0 0 16px!important}
+/* 11/11 03h: a mesma grade em todas as abas. Cabeçalho (título ou seletor Cidade/Andar) a 16 do conteúdo, como na
+   Agora; entre blocos 16 no celular e 24 no PC; tudo começando na margem da página (o Olho entrava 16 px no celular) */
+body.o main#app .o-cid-sel{margin:0}
+body.o main#app #v-aovivo,body.o main#app #v-andar{display:grid;grid-template-columns:minmax(0,1fr);row-gap:16px!important}
+#v-aovivo #av-cena{margin:0!important}
+#v-aovivo .o-novo{margin-top:0}
+@media (min-width:821px){ #v-aovivo .o-novo{margin-top:8px} }
+@media (max-width:820px){ #v-olho .olho-cx{margin-inline:0;width:auto} }
+/* 11/11: no PC a cena vai de borda a borda da grade (o paineis.js estica o palco com zoom até a largura dos blocos) */
+#v-aovivo .orc[data-modo="pc"],#v-aovivo .orc[data-modo="pc"] > *{max-width:none}
+#v-aovivo .orc[data-modo="pc"] .orc-perg{max-width:none!important}
 
 </style>
 </head>
@@ -7489,6 +7514,26 @@ function pAtalhos() {   // Atalhos ganha o título de página como os outros
 }
 O.GANCHOS.push(() => pAtalhos(), () => pPend(), () => pAnd(), () => pOra(), () => pAreas(), () => pCid());
 for (const f of O.GANCHOS) try { f(); } catch (e) { console.error(e); }
+})();
+
+/* 11/11: no PC a cena desenha na escala da altura da tela e ficava mais estreita que a grade (fechava em x=1188 com os
+   blocos em 1332). O zoom no palco estica a cena inteira (prédios, letreiros, torre) até a borda dos blocos. */
+(function () {
+  const cx = document.getElementById("av-cena");
+  if (!cx) return;
+  const ajusta = () => {
+    const orc = cx.querySelector(".orc"), pal = orc && orc.querySelector(".orc-palco");
+    if (!pal) return;
+    let z = "";
+    if (orc.dataset.modo === "pc") {
+      const w = parseFloat(pal.style.width) || 0;
+      if (w > 0 && cx.clientWidth > w) z = (cx.clientWidth / w).toFixed(4);
+    }
+    if (pal.style.zoom !== z) pal.style.zoom = z;
+  };
+  new MutationObserver(ajusta).observe(cx, {subtree: true, childList: true, attributes: true, attributeFilter: ["style", "data-modo"]});
+  addEventListener("resize", ajusta);
+  ajusta();
 })();
 
 </script>
