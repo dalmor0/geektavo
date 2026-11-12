@@ -18,10 +18,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Big+Shoulders+Display:wght@700;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Rajdhani:wght@500;600;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<link rel="stylesheet" href="andar.css?v=b831b275f0">
-<script src="andar.js?v=b831b275f0"></script>
-<script src="aovivo-sala.js?v=b831b275f0"></script>
-<script src="oraculo-cena.js?v=b831b275f0"></script>
+<link rel="stylesheet" href="andar.css?v=5f5a441d66">
+<script src="andar.js?v=5f5a441d66"></script>
+<script src="aovivo-sala.js?v=5f5a441d66"></script>
+<script src="oraculo-cena.js?v=5f5a441d66"></script>
 <script>try{const t=localStorage.getItem("central-tema");if(t==="claro"||t==="escuro")document.documentElement.dataset.theme=t==="claro"?"light":"dark";}catch(e){}</script>
 <style>
 /* Central DAL MORO · repaginada de 06/11/2026 (terminal Escritorio Unico).
@@ -6818,8 +6818,14 @@ const ETQ_PED = {novo: "mandado", entregue: "na central", distribuido: "distribu
 function linhaPedido(p) {
   const feito = p.estado === "feito";
   // 12/11 (rodada B): pedido sem entrega há mais de 2 min vem da ponte com "preso" (segundos) e fica vermelho
-  const preso = p.estado === "novo" && p.preso ? "preso há " + Math.max(2, Math.round((agoraS() - (p.criado_ts || agoraS())) / 60)) + " min" : "";
-  return linha(feito ? "saiu" : preso ? "anda erro" : "anda", [ponto(), tit(tituloPedido(p.texto)), et(preso || ETQ_PED[p.estado] || p.estado), tempoE(haQuanto(p.criado_ts))], null, () => abrirPedido(p), "d:" + (p.id || p.texto));
+  // 12/11 (fila não é preso): esperando vaga no terminal vem com "fila" e fica na cor de sempre; vermelho só com "preso",
+  // e aí com o motivo de verdade (a ponte parou, terminal sem corda no canvas, Maestri recusou, fila de mais de 15 min)
+  const min = Math.max(2, Math.round((agoraS() - (p.criado_ts || agoraS())) / 60));
+  const preso = p.estado === "novo" && p.preso ? (p.motivo ? "preso: " + p.motivo : "preso há " + min + " min") : "";
+  const fila = !preso && p.estado === "novo" && p.fila ? "na fila há " + min + " min" : "";
+  const li = linha(feito ? "saiu" : preso ? "anda erro" : "anda", [ponto(), tit(tituloPedido(p.texto)), et(preso || fila || ETQ_PED[p.estado] || p.estado), tempoE(haQuanto(p.criado_ts))], null, () => abrirPedido(p), "d:" + (p.id || p.texto));
+  if (fila) li.title = "na fila do terminal central, esperando ele ficar livre" + (p.ocupado ? " (ocupado com: " + p.ocupado + ")" : "");
+  return li;
 }
 
 function desenharAgora() {
@@ -6998,6 +7004,7 @@ function abrirPedido(p) {
     p.destino || p.resposta ? sec("Resposta", el("dl", {class: "o-dl"},
       p.destino ? [el("dt", {text: "foi pra"}), el("dd", {text: nomeTela(p.destino)})] : null,
       p.resposta ? [el("dt", {text: "disse"}), el("dd", {text: p.resposta})] : null)) : null,
+    p.estado === "novo" && (p.preso || p.fila) && p.motivo ? sec(p.preso ? "Por que está preso" : "Na fila", el("p", {text: p.motivo + (p.fila && p.ocupado ? "; ele está ocupado com: " + p.ocupado : "")})) : null,
     sec("O pedido inteiro", el("p", {text: limpoPedido(p.texto)})),
     (p.historico || []).length ? sec("Histórico", el("ol", {class: "o-passos"}, p.historico.slice(-6).map(([t, h]) => el("li", {class: "f", text: `${hora(t)} ${nomeTela(h)}`})))) : null].filter(Boolean));
 }

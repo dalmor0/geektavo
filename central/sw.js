@@ -2,7 +2,7 @@
    Página: rede primeiro, cópia guardada se cair. Ícones e manifesto: guardados.
    Dados (Supabase, /estado.json, Jarvis, Edição) nunca passam por aqui: a página guarda o último
    estado no próprio navegador e mostra com o aviso de dado velho. */
-const CAIXA = "central-v5-b831b275f0";   // 09/11: a torre do Andar 47 (andar.js, andar.css, fonte) também abre sem rede; 11/11: layout novo (cena da Cidade e sala do Ao vivo). O publicar.py põe a marca da versão no fim do nome
+const CAIXA = "central-v5-5f5a441d66";   // 09/11: a torre do Andar 47 (andar.js, andar.css, fonte) também abre sem rede; 11/11: layout novo (cena da Cidade e sala do Ao vivo). O publicar.py põe a marca da versão no fim do nome
 const FORA = ["cdn.jsdelivr.net", "fonts.googleapis.com", "fonts.gstatic.com"];   // biblioteca do banco e fontes: guardadas pra abrir sem rede
 const CASCA = ["./", "manifest.webmanifest", "icone-192.png", "icone-512.png", "icone-180.png", "andar.js", "andar.css", "jersey15.woff2", "oraculo-cena.js", "aovivo-sala.js"];
 const LIB = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js";
