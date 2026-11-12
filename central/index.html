@@ -18,10 +18,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Big+Shoulders+Display:wght@700;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Rajdhani:wght@500;600;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<link rel="stylesheet" href="andar.css?v=0f7536cdf1">
-<script src="andar.js?v=0f7536cdf1"></script>
-<script src="aovivo-sala.js?v=0f7536cdf1"></script>
-<script src="oraculo-cena.js?v=0f7536cdf1"></script>
+<link rel="stylesheet" href="andar.css?v=b831b275f0">
+<script src="andar.js?v=b831b275f0"></script>
+<script src="aovivo-sala.js?v=b831b275f0"></script>
+<script src="oraculo-cena.js?v=b831b275f0"></script>
 <script>try{const t=localStorage.getItem("central-tema");if(t==="claro"||t==="escuro")document.documentElement.dataset.theme=t==="claro"?"light":"dark";}catch(e){}</script>
 <style>
 /* Central DAL MORO · repaginada de 06/11/2026 (terminal Escritorio Unico).
@@ -350,6 +350,7 @@ section.espera{display:grid;gap:8px;align-content:start}
 .jv-r .r.pensa{color:var(--ciano)}
 .jv-r .r.erro{color:var(--cinza)}
 .jv-r .q{margin:0;font-size:14px;color:var(--cinza)}
+.jv-r .gasto{margin:2px 0 0;font-size:13px;line-height:1.4;color:var(--cinza);opacity:.85;overflow-wrap:anywhere}
 .painel-frame{width:100%;height:82vh;min-height:560px;border:1px solid var(--fio);background:var(--ceu);display:block}
 .mq{display:grid;gap:0}
 .mq div{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid var(--fio);font-size:15px}
@@ -1410,6 +1411,7 @@ body.o .o-barra input:focus,body.o .o-barra input:focus-visible{outline:0!import
 .o-resposta .o-r-voce{margin:0;font:400 13px/1.4 var(--o-sans);color:var(--o-apoio)}
 .o-resposta .o-r-tx{margin:0;font:400 16px/1.5 var(--o-sans);color:var(--o-texto);white-space:pre-wrap}
 .o-resposta .o-r-tx.pensa{color:var(--o-apoio)}
+.o-resposta .o-r-gasto{margin:2px 0 0;font:400 13px/1.4 var(--o-sans);color:var(--o-apoio);overflow-wrap:anywhere}
 .o-resposta .o-r-pe{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
 @media (max-width:820px){ .o-resposta{left:16px!important;right:16px;width:auto!important;bottom:calc(var(--o-nav-h) + env(safe-area-inset-bottom) + 72px)} }
 
@@ -2087,7 +2089,7 @@ body.o main#app #v-aovivo,body.o main#app #v-andar{display:grid;grid-template-co
       <div class="palco" id="pj-palco">
         <section class="centro" aria-label="Oráculo">
           <div class="reator-caixa" id="pj-reator-caixa"><canvas id="pj-reator" aria-hidden="true"></canvas></div>
-          <div class="reator-nome">JARVIS</div>
+          <div class="reator-nome">ORÁCULO</div>
           <div class="reator-estado" id="pj-voz-estado" data-estado="dormindo">dormindo</div>
           <p class="hud-legenda legenda--vazia" id="pj-legenda" aria-live="polite"></p>
           <div class="pj-acoes">
@@ -2256,7 +2258,7 @@ body.o main#app #v-aovivo,body.o main#app #v-andar{display:grid;grid-template-co
     <section class="secao" id="jv-senhas">
       <h2>Senhas faladas</h2>
       <div class="senhas">
-        <p class="rotulo">Na Alexa ou no microfone do PC: "Jarvis, acesso ilimitado" e a senha 1 liberam tudo que você pode, até a conversa fechar ou 30 min sem falar ("Jarvis, trava" fecha na hora). Apagar, gastar e mandar em seu nome pedem a senha 2 a cada vez, ou o Aprovar aqui no celular. As senhas ficam só no PC, guardadas embaralhadas.</p>
+        <p class="rotulo">Na Alexa ou no microfone do PC: chame a Oráculo, diga "acesso ilimitado" e a senha 1 libera tudo que você pode, até a conversa fechar ou 30 min sem falar ("trava" fecha na hora). Apagar, gastar e mandar em seu nome pedem a senha 2 a cada vez, ou o Aprovar aqui no celular. As senhas ficam só no PC, guardadas embaralhadas.</p>
         <p class="est" id="sh-est" role="status">…</p>
         <form class="lin2" id="f-s1">
           <label class="rotulo">Senha 1 (acesso ilimitado)<input id="sh-s1" type="password" autocomplete="new-password" maxlength="120" placeholder="nova senha 1"></label>
@@ -2423,7 +2425,7 @@ function el(tag, at = {}, ...filhos) {
 }
 const agoraS = () => Date.now() / 1000;
 const motivo = e => { const m = (e && e.message) || String(e || ""); return /Failed to fetch|NetworkError|Load failed|network/i.test(m) ? "sem internet agora; tente de novo quando a rede voltar" : m; };
-const nomeTela = n => (n || "").replace(/TERMMINAL/g, "TERMINAL");
+const nomeTela = n => (n || "").replace(/TERMMINAL/g, "TERMINAL").replace(/\bJarvis\b/g, "Oráculo");   // 11/11: por dentro segue Jarvis (terminal, pasta); na tela é Oráculo
 function haQuanto(s) {
   if (!s) return "";
   const t = typeof s === "number" ? s : Date.parse(s) / 1000;
@@ -2528,7 +2530,7 @@ function jarvisFala() {
   return {texto: "…", quando: ""};
 }
 const VERBOS = [["falar", "Resumo no PC", "fala o resumo do dia em voz alta na caixa de som do PC (pra conversar, use Conversar)"], ["calar", "Calar", "para de falar na hora"],
-  ["ouvir", "Ouvir", "abre o microfone do PC pra um pedido, igual a dizer ei Jarvis"], ["vigiar", "Vigiar", "roda a vigia agora, sem esperar os 5 min"]];
+  ["ouvir", "Ouvir", "abre o microfone do PC pra um pedido, igual a chamar a Oráculo"], ["vigiar", "Vigiar", "roda a vigia agora, sem esperar os 5 min"]];
 function verbos(box, msg) {
   const m = jarvisModo();
   const ativo = {falando: "falar", ouvindo: "ouvir", vigiando: "vigiar", pensando: "vigiar"}[m];
@@ -2586,13 +2588,14 @@ function desenharConversa() {
   const ids = new Set(MINHAS.map(m => m.id));
   const ls = [...MINHAS, ...daPonte.filter(x => !ids.has(x.id))].sort((a, b) => b.em - a.em).slice(0, 4);
   for (const m of MINHAS) if (m.semSinal && pcVivo()) m.semSinal = false;
-  const ch = JSON.stringify([ls.map(x => [x.id, x.estado, x.resposta, x.semSinal]), Math.floor(agoraS() / 60)]);
+  const ch = JSON.stringify([ls.map(x => [x.id, x.estado, x.resposta, x.semSinal, x.gasto]), Math.floor(agoraS() / 60)]);
   if (ch === convChave) return;
   convChave = ch;
   $("jv-resp").replaceChildren(...(ls.length ? ls.map(x => el("article", {class: "jv-r"},
     el("p", {class: "p"}, "Você: ", el("b", {text: x.pergunta})),
     el("p", {class: "r" + (x.estado === "pensando" ? " pensa" : x.estado === "erro" ? " erro" : ""), text: x.estado === "pensando" ? (x.via !== "celular" ? "A Oráculo está pensando…" : x.semSinal ? "O PC está sem sinal. A pergunta fica guardada e sai quando ele voltar." : "Pensando… a pergunta foi pro PC, a resposta chega aqui em até 1 min.") : String(x.resposta || "").replace(/\s*\(pedido mandado pro[\s\S]*$/i, "") || "Ele não disse nada."}),
-    el("p", {class: "q", text: [x.estado === "pensando" ? null : "Oráculo", haQuanto(x.em), x.velocidade === "trabalho" ? "virou pedido pros terminais" : null].filter(Boolean).join(" · ")})))
+    el("p", {class: "q", text: [x.estado === "pensando" ? null : "Oráculo", haQuanto(x.em), x.velocidade === "trabalho" ? "virou pedido pros terminais" : null].filter(Boolean).join(" · ")}),
+    x.gasto && x.estado === "ok" ? el("p", {class: "gasto", text: String(x.gasto)}) : null))
     : [el("p", {class: "vazio", text: "Nada perguntado ainda. A resposta aparece aqui."})]));
 }
 $("f-conversa").addEventListener("submit", async ev => {
@@ -2610,7 +2613,7 @@ $("f-conversa").addEventListener("submit", async ev => {
         body: JSON.stringify({texto: t, canal: "central", idioma: "pt", falar: false}), signal: AbortSignal.timeout ? AbortSignal.timeout(100000) : undefined});
       const d = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(d.erro === "fora do ar" ? "a Oráculo está fora do ar" : "a Oráculo não respondeu (" + r.status + ")");
-      Object.assign(item, {estado: "ok", resposta: d.fala_pt || d.legenda || d.fala || "", velocidade: d.velocidade});
+      Object.assign(item, {estado: "ok", resposta: d.fala_pt || d.legenda || d.fala || "", velocidade: d.velocidade, gasto: d.gasto || null});
     } else {
       const {error} = await comTempo(sb.from("votos").upsert({id: item.id, dia: hojeISO(), tipo: "central-jarvis", n: 0, veredito: "conversa", logline: t}));
       if (error) throw error;
@@ -2834,7 +2837,7 @@ const conversa = (() => {
           body: JSON.stringify({texto, canal: "central", idioma: "en", falar: false}), signal: AbortSignal.timeout ? AbortSignal.timeout(60000) : undefined});
         const x = await r.json().catch(() => ({}));
         if (!r.ok) throw new Error("a Oráculo não respondeu (" + r.status + ")");
-        d = {fala: x.fala || "", idioma: /[ãõçéêáíóú]/i.test(x.fala || "") ? "pt" : "en", velocidade: x.velocidade, acao: x.acao};
+        d = {fala: x.fala || "", idioma: /[ãõçéêáíóú]/i.test(x.fala || "") ? "pt" : "en", velocidade: x.velocidade, acao: x.acao, gasto: x.gasto};
       } else if (S.via === "ponte") {
         return pelaPonte(texto, p);
       } else d = await chamar("/falar", JSON.stringify({texto}), "application/json", 9000);
@@ -2853,6 +2856,7 @@ const conversa = (() => {
     p.className = "ele"; p.textContent = d.fala || "…";
     p.after(el("p", {class: "q", text: [(ms / 1000).toFixed(1).replace(".", ",") + " s", d.audios ? "voz da Oráculo" : "voz do aparelho",
       d.velocidade === "trabalho" ? "foi pro terminal central" : null].filter(Boolean).join(" · ")}));
+    if (d.gasto) p.nextElementSibling.after(el("p", {class: "q", text: String(d.gasto)}));   // 12/11: gasto à parte, a voz não lê
     await dizer(d);
     if (d.pendente && d.id) {
       estado("pensando");
@@ -4498,8 +4502,8 @@ function desenharEscritorio() {
   U = U0;
   const tam = JSC === 2 ? 22 : 12;
   ctx.font = `800 condensed ${tam}px Archivo,sans-serif`; ctx.textBaseline = "alphabetic";
-  ctx.fillStyle = PAL.giz; ctx.fillText("JARVIS", ox * U, (jy + 9 * JSC) * U);
-  const nomeW = ctx.measureText("JARVIS  ").width;
+  ctx.fillStyle = PAL.giz; ctx.fillText("ORÁCULO", ox * U, (jy + 9 * JSC) * U);
+  const nomeW = ctx.measureText("ORÁCULO  ").width;
   ctx.font = `400 condensed ${tam}px Archivo,sans-serif`;
   ctx.fillStyle = ["falando", "ouvindo"].includes(modo) ? PAL.ciano : PAL.cinza; ctx.fillText(JM[modo] || modo, ox * U + nomeW, (jy + 9 * JSC) * U);
   const jr = {x: jx * U, y: jy * U, w: (ox + ow * JSC - jx) * U, h: 30 * JSC * U, it: {nome: "Oráculo", status: modo}, sala: {tipo: "jarvis", nome: "Telhado"}};
@@ -5138,7 +5142,7 @@ const PJ = (() => {
   /* ---------- voz e reator ---------- */
   const NOME_ESTADO = {dormindo: "dormindo", ouvindo: "ouvindo", pensando: "pensando", falando: "falando"};
   const NOME_QUEM = {claude: "Claude", codex: "Codex"};
-  const DICA = {dormindo: MODO === "pc" ? 'Diga "ei Jarvis" pra chamar.' : "Toque em Falar com a Oráculo pra conversar.", ouvindo: "Pode falar.", pensando: "Um momento.", falando: ""};
+  const DICA = {dormindo: MODO === "pc" ? 'Diga "Oráculo" pra chamar.' : "Toque em Falar com a Oráculo pra conversar.", ouvindo: "Pode falar.", pensando: "Um momento.", falando: ""};
   const V = {estado: "dormindo", quem: "jarvis", nivel: 0, fora: false};
   function voz() {
     const v = vozAgora();
@@ -5960,7 +5964,7 @@ window.NOTAS = (() => {
     const cv = el("canvas", {"aria-hidden": "true"});
     cara(cv, a.tipo);
     const n = el("button", {type: "button", class: "nota " + (a.tipo || ""), "aria-label": a.f + ". Toque pra abrir"},
-      cv, el("span", {class: "q"}, a.q || "JARVIS", a.sobre ? el("small", {text: "sobre: " + a.sobre}) : null), el("span", {class: "f", text: a.f}));
+      cv, el("span", {class: "q"}, (!a.q || a.q === "JARVIS") ? "ORÁCULO" : a.q, a.sobre ? el("small", {text: "sobre: " + a.sobre}) : null), el("span", {class: "f", text: a.f}));
     n.addEventListener("click", () => { n.remove(); ir(a); });
     pilha.append(n);
     while (pilha.children.length > 3) pilha.firstElementChild.remove();
@@ -6813,7 +6817,9 @@ function linhaSaiu(x) {
 const ETQ_PED = {novo: "mandado", entregue: "na central", distribuido: "distribuído", feito: "feito"};
 function linhaPedido(p) {
   const feito = p.estado === "feito";
-  return linha(feito ? "saiu" : "anda", [ponto(), tit(tituloPedido(p.texto)), et(ETQ_PED[p.estado] || p.estado), tempoE(haQuanto(p.criado_ts))], null, () => abrirPedido(p), "d:" + (p.id || p.texto));
+  // 12/11 (rodada B): pedido sem entrega há mais de 2 min vem da ponte com "preso" (segundos) e fica vermelho
+  const preso = p.estado === "novo" && p.preso ? "preso há " + Math.max(2, Math.round((agoraS() - (p.criado_ts || agoraS())) / 60)) + " min" : "";
+  return linha(feito ? "saiu" : preso ? "anda erro" : "anda", [ponto(), tit(tituloPedido(p.texto)), et(preso || ETQ_PED[p.estado] || p.estado), tempoE(haQuanto(p.criado_ts))], null, () => abrirPedido(p), "d:" + (p.id || p.texto));
 }
 
 function desenharAgora() {
@@ -7040,10 +7046,12 @@ function posResposta() {
 }
 addEventListener("resize", () => { if (!resposta.hidden) posResposta(); });
 let olhando = null;
-function mostrarResposta(voce, texto, pensa, acoes) {
+function mostrarResposta(voce, texto, pensa, acoes, gasto) {
   posResposta();
   const fechar = bt("o-bt-fantasma", "Fechar", () => { resposta.hidden = true; clearInterval(olhando); });
+  // 12/11 (pedido jarvis-1794458958076): o gasto do plano sai numa linha pequena à parte, nunca dentro do texto falado
   resposta.replaceChildren(el("p", {class: "o-r-voce", text: "Você: " + voce}), el("p", {class: "o-r-tx" + (pensa ? " pensa" : ""), text: texto}),
+    gasto ? el("p", {class: "o-r-gasto", text: String(gasto)}) : null,
     el("div", {class: "o-r-pe"}, ...(acoes || []), fechar));
   resposta.hidden = false;
 }
@@ -7064,7 +7072,7 @@ barra.addEventListener("submit", ev => {
       if (item.estado === "pensando") { if (item.semSinal) mostrarResposta(t, "O PC está sem sinal. A pergunta fica guardada e sai quando ele voltar.", true); return; }
       clearInterval(olhando);
       const acoes = item.velocidade === "trabalho" ? [bt("o-bt-contorno", "Ver seus pedidos", () => { resposta.hidden = true; irPara("inicio"); $("o-b-pedidos") && $("o-b-pedidos").scrollIntoView({behavior: "smooth"}); })] : [];
-      mostrarResposta(t, item.resposta || (item.estado === "erro" ? "A Oráculo não conseguiu responder." : "Respondido."), false, acoes);
+      mostrarResposta(t, item.resposta || (item.estado === "erro" ? "A Oráculo não conseguiu responder." : "Respondido."), false, acoes, item.estado === "ok" ? item.gasto : null);
     }, 500);
   } else {
     $("pedido").value = t;
